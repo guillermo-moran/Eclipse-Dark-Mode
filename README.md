@@ -3,7 +3,26 @@ Information regarding EclipseX developer API's will be posted here, to aid devel
 
 ## Developer Information
 
-* This section is coming soon.
+#### Determining if Eclipse is enabled
+
+```
+NSDictionary *eclipsePrefs = [[[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.gmoran.eclipse.plist]?:[NSDictionary dictionary] copy];
+
+BOOL eclipseEnabled = [[eclipsePrefs objectForKey:@"enabled"] boolValue];
+
+if (eclipseEnabled) {
+    //handle it
+}
+```
+
+#### Having Eclipse ignore your UIView (Beta Feature)
+```
+UIView* viewToIgnore;
+viewToIgnore.tag = 199;
+
+// Eclipse automatically ignores all views tagged "199"
+
+```
 
 ## Licenses
 
