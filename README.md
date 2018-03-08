@@ -1,7 +1,7 @@
-# EclipseX - A Complete Nightmode (and more) for iOS 11
+# EclipseX - A Universal Nightmode (and more) for iOS 11
 Information regarding EclipseX developer API's will be posted here, to aid developers in developing extensions for EclipseX, as well as tweaks compatible with it.
 
-## Developer API Information
+## Developer Information
 
 * This section is coming soon.
 
