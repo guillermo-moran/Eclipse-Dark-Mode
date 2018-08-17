@@ -1,0 +1,434 @@
+Changes: Eclipse 5.0.8-5
+
+- Fixed action sheets in WhatsApp
+- Fixed white "plugins" bar in Messages apps
+- Fixed Collections headers in Photos app
+
+Changes: Eclipse 5.0.8-4
+
+- Fixed an issue where UIButtons with images as backgrounds would not darken
+- Fixed an issue where the contact page in Messages would be clear
+- Fixed an issue in Messages where link text would be white
+- Fixed an issue where the delete button in the phone app would blend with the background
+- Improved support for Twitter app
+
+
+Changes: Eclipse 5.0.4
+
+- Support for custom colors
+
+Changes: Eclipse 5.0.3
+
+- Twitter app fixes
+- Instagram app fixes
+
+
+Changes: Eclipse 5.0.1
+
+- Updated to support iOS 11
+
+Changes: Eclipse 4.1
+
+- Fixed Music App
+- Improved App Store App
+- Fixes for Whatsapp
+- API Improvements
+- Preparations for iOS 11
+
+Changes: Eclipse 4.0.4
+
+- Fixed crash in Music app
+- Fixed possible messages crash
+- Improved FB Messenger Support
+- Improved Snapchat support
+- Improved Kik support
+- Fixed small bugs
+
+Changes: Eclipse 4.0.3
+
+- Bug fixes for Action Sheets
+- Fixed text input cursor across all apps
+- Removed annoying "Closing apps" alert
+
+Changes: Eclipse 4.0.2
+
+- Fixes for permissions
+
+Changes: Eclipse 4.0
+
+- Initial iOS 10 Support
+
+Changes: Eclipse 3.0.1
+
+- Updated to support the latest snapchat release
+- Added a quick support feature with FAQ (in settings)
+- Fixes for Whatsapp
+- Application loading show be faster now.
+
+- Currently looking into issues with Google Docs, Notes, and Music App. :)
+
+Changes: Eclipse 3.0
+
+- Added iOS 9 support
+
+Changes: Eclipse 2.4.1
+
+- Support for last Snapchat and Whatsapp releases
+
+Changes: Eclipse 2.3-5
+
+- Fix giant spinner in status bar
+
+Changes: Eclipse 2.3-4
+
+- Fix Cydia’s Search bar
+- Fix for Kik Messenger
+- Fix for Facebook Messenger
+- UI Bug Fixes
+
+Changes: Eclipse 2.3-3
+
+- Cydia Support
+- UITableView bug fixes
+
+Coming Soon: Support for iOS 8.4 Music App
+
+Changes: Eclipse 2.3-2
+
+- Updated for Instagram 6.10.0
+- Updated for Twitter 6.25.1
+
+Changes: Eclipse 2.3
+
+- New feature: Color picker (with libcolorpicker)
+- New feature: Compatibility mode
+- New feature: Ability to toggle iMessage and SMS bubble tint
+- New feature: Reverse Mode
+- Removed auto color replacement (replaced by compatibility mode)
+
+Changes: Eclipse 2.2.5
+
+- Fixed Safari on iPad/iPhone 6+
+- Compatible with the latest Snapchat
+
+Changes: Eclipse 2.2.3
+
+- Option to disable keyboard coloring (finally.)
+- Fixes snapchat front facing flash (finally.)
+- Minor backend improvements
+
+Changes: Eclipse 2.2.2
+
+- Winterboard checkmarks are now visible
+
+Changes: Eclipse 2.2.1
+
+- Fixed rare lagging issue
+- Added option to tint SMS bubbles
+
+Changes Eclipse 2.2
+
+- Performance Improvements
+- Fixed SMS / iMessage bubble colors
+- Fixed issue where alerts would color when tweak was disabled
+- Fixed Notification Center Widgets
+- Fixed memory leak
+- Support for Aria + Other music tweaks
+- Improved support for Safari on 6+
+- Improved support for Instagram
+- Improved support for Kik Messenger
+- New feature: Color Springboard Statusbar
+
+Changes Eclipse 2.1.1
+
+- Fixed message bubbles when using white tint
+
+Changes: Eclipse 2.1
+
+**Not compatible with MessagesCustomiser**
+
+- Partial rewrite
+- Improved stability
+- Fixed recent buttons in app switcher
+- Fixed odd-looking control center
+- Fixed strange SMS bubble animations
+- Fixed untinted search bars in various apps
+- Bug fixes for Safari and Music app (iPad)
+- Improvements for auto color replacement
+- Improvements for UIAlerts and Action Sheets
+
+Changes: Eclipse 2.0.1
+
+- Safari lag fix
+
+Changes: Eclipse 2.0
+
+- iOS 8 Support
+
+Changes: Eclipse 1.4.6-4
+
+- Updated to support latest Instagram, WhatsApp
+- Fixed Viber crashing
+
+Changes: Eclipse 1.4.5-3
+
+- Support for Tinder
+- Fixes Whatsapp crashing w/ random colors
+
+Changes: Eclipse 1.4.5-2
+
+- Compatible with Threema
+- Improvements for instagram
+- Safari lag fix
+- Possibly fixed Whatsapp crashing?
+
+Changes: Eclipse 1.4.5-1
+
+- Full Facebook Messenger support
+
+Changes: Eclipse 1.4.5
+
+- Fixes for Whatsapp (Event Labels, Timestamps)
+
+Changes: Eclipse 1.4.4
+
+- Music App Improvements (iPad)
+- Fix for Whatsapp 2.11.9
+
+Changes: Eclipse 1.4.3
+
+- Removed BETA check
+
+Changes: Eclipse 1.4.2 (Unreleased)
+
+- Fixed close button on Safari (iPad)
+- Calendar Improvements (iPad)
+- BiteSMS Fixes
+- Temporarily unthemed Notes App
+
+Changes: Eclipse 1.4.1
+
+- Possibly fixes safari lag
+- Fixes textview bugs
+- Fixes whatsapp toolbar bug on pre-7.1 devices
+- Added ability to screenshot changelogs for free Reddit karma
+
+Changes: Eclipse 1.4
+
+- Improvements for iPad
+- Improvements for MobileSafari
+- New “Quit All Apps” option
+
+Changes: Eclipse 1.3-6
+
+- Fix issue where some apps would hang while typing
+
+Changes: Eclipse 1.3-5
+
+- Fix Message app bugs
+
+Changes: Eclipse 1.3-4 (Unreleased)
+
+- Fix TextView coloring bugs
+- UIAlertView improvements
+- Added option to disable Eclipse inside SpringBoard
+- Reduced the amount of complaints/bug reports in my inbox
+
+Changes: Eclipse 1.3-3
+
+- Fixed UIAlertView bugs
+- Couria fix (BiteSMS coming soon)
+- Fixed dock/control center conflicts
+- Compatible with Auxo 2
+- Fixed bug where Eclipse would “accidentally” message your ex
+
+Changes: Eclipse 1.3-2
+
+- Fixed text input on Safari
+- Fixed hex colors safemode
+
+Changes: Eclipse 1.3
+
+**For best results, update your device to 7.1.2!**
+
+- Performance improvements
+- 7.0 - 7.1.x compatibility
+- UIAlertViews, Action Sheets, Share sheets now themed
+- Whatsapp fix for 7.1.x
+- Phone App/Contacts fix for 7.1.x
+- AppStore/iTunes App Fixes
+- Fixed Dim Wallpaper feature
+- Music App Fixes
+- Nicer keyboard
+- Whiter text by default
+- Statusbar color removed from SpringBoard
+- Bioprotect Compatibility
+
+
+Changes: Eclipse (1.2.1-2)
+
+- 7.1.x Messages fix
+- Facebook Messenger crash fix
+
+Changes: Eclipse (1.2.1-1)
+
+- Activator & Flipswitch fixes
+- Splashscreen replacement fixes
+
+Changes: Eclipse (1.2.1)
+
+- Improved White Listing
+- Custom HEX Colors (Experimental Settings)
+- Snapchat Support
+- Soundcloud Support
+- Colorflow Support
+- Aria Support
+- Threema Support
+- Initial Uniformity support
+- Tweetbot Improvements
+- Facebook Messenger Improvements
+- Kik improvements
+- BlurredMusicApp improvements
+- Whatsapp Improvements
+
+Changes: Eclipse (1.1.9-1)
+
+- Revoke custom hex colors
+
+Changes: Eclipse (1.1.9)
+
+- New option: Custom HEX Colors
+- Fixed dim statusbar
+- Fixed red text views
+
+Changes: Eclipse (1.1.8)
+
+- Whiter fonts (Experimental)
+- Reorganized Preference Panel (It’s nicer now!)
+- Fully compatible with BlurredMusicApp and MessageCustomizer
+- Fixed bugs with SMS app
+- Fixed Calendar bugs
+- Fixed some bugs with BETA themes
+
+Changes: Eclipse (1.1.7-3)
+
+- Customized switches based on selected color
+- Fixed folder labels
+- Fixed whitelist bugs
+
+Changes: Eclipse (1.1.7-2)
+
+- Fixed Calendar StatusBar
+- Improved Table Selection Color
+
+Changes: Eclipse (1.1.7)
+
+- Added detail text toggles
+- Added translucent navigation bar options
+- Fixed bugs with “light” themes
+- Fixed bug where tint would appear when disabled
+
+Changes: Eclipse (1.1.6-1)
+
+- Calendar support (FINALLY)!
+- Separate option to select Navigation Bar Colors
+- Two new themes (beta)
+- Fixed Alert Views
+- Fixed small Navigation Bar Bugs
+- Fixed & Improved Table Cell detail text
+- Fixed Emergency Call screen
+
+Changes: Eclipse (1.1.5-2)
+
+- Added option to replace startup screens
+- Fixed conflicts with GBA4iOS, possibly other apps
+- Compatible with Twitter 1.4.3
+- Fixed a text field issue in Messages/BiteSMS
+- Fixed Safari reload and reader buttons
+
+Changes: Eclipse (1.1.5)
+
+- Renamed and improved “Bumble Bee” theme (Now “Limerick”)
+- Added beautiful new “Midnight” theme
+- Fixed Voice Memos crash (and possibly a few others)
+- Fixed mail selection (for real this time)
+- Improved memory consumption
+- Fixed a coding issue where Eclipse would attempt to hook inexistent classes
+- Rounded the settings icon
+- Eliminated more complaints by addressing the above bugs
+
+Changes: Eclipse (1.1.4-1)
+
+- Fixed issue where Activator would reset user settings
+- Fixed clear tableview section headers
+- Fixed white mail selection
+- Official Twitter App support
+
+Changes: Eclipse (1.1.4)
+
+- Added new color options
+
+Changes: Eclipse (1.1.3)
+
+- New configuration options
+- Blacklist Option appropriately renamed to “White List”
+- New Icon
+- Fixes AppStore Search
+- Fixes Voicemail Scrolling
+- Compatible with BlurredMusicApp
+- Compatible with Keyboard theming tweaks
+- Activator and Flipswitch Support
+- Fixed StatusBar issues
+- Fixed Droplr crashes
+- Fixed tint color stuck on random mode
+
+Changes: Eclipse (1.1.2)
+
+- Recalls text fields from the dark side
+- Many small Changes/improvements
+- Music, Phone, SMS, App Store, and Mail fixes
+- Fixes App Store description text
+- Fixes Mail App
+- Compatible with Message Customiser
+- Kik + Twitter fixes
+- Navigation Bar improvements
+
+Changes: Eclipse (1.1-1)
+
+- Attempts to fix rare Music App crash
+- Fixes folder label background color
+- Fixes iMessage bubbles
+
+Changes: Eclipse (1.1)
+
+- iPad Support (Beta)
+- Improve text colorization (Still a little buggy)
+- Compatibility with third party tweaks (BiteSMS, Couria, etc.)
+- Fixed issue where Group iMessages started from the top
+- Fixed Mail App not darkening properly
+- Fixed NavBar bug that caused views to move down on some apps (ex. Whatsapp)
+
+Changes: Eclipse (1.0.1-1)
+
+- Fixed Volume Bars being too dark
+- Fixed oversized sliders
+- Fixed Music App not darkening properly
+- Improved “Darken Wallpapers” option
+- Fixed phone dialer not darkening
+- Improved label colorization
+- Fixed Alert View text
+- Compatible with Instagram
+
+
+Tint Colors:
+Random = 0
+Baby Blue = 1
+White = 2
+Orange = 3
+Pink = 4
+Green = 5
+Purple = 6
+Red = 7
+Yellow = 8
+
+key = selectedTint
