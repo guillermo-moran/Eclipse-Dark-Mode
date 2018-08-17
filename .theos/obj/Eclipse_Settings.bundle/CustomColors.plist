@@ -19,27 +19,20 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
+			<key>key</key>
+			<string>customNavBarHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
 			<key>title</key>
 			<string>Nav Colors</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
+			<string>CSColorDisplayCell</string>
 			<key>label</key>
 			<string>Nav Bar Color</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>defaults</key>
-				<string>com.gmoran.eclipse</string>
-				<key>key</key>
-				<string>customNavBarHex</string>
-				<key>fallback</key>
-				<string>#474747</string>
-				<key>PostNotification</key>
-				<string>com.gmoran.eclipse.prefs-changed</string>
-				<key>alpha</key>
-				<true/>
-			</dict>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -60,27 +53,20 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>customThemeHex</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
 			<key>title</key>
 			<string>Theme Color</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
+			<string>CSColorDisplayCell</string>
 			<key>label</key>
 			<string>Theme Color</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>defaults</key>
-				<string>com.gmoran.eclipse</string>
-				<key>key</key>
-				<string>customThemeHex</string>
-				<key>fallback</key>
-				<string>#5C5C5C</string>
-				<key>PostNotification</key>
-				<string>com.gmoran.eclipse.prefs-changed</string>
-				<key>alpha</key>
-				<true/>
-			</dict>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -101,27 +87,20 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>key</key>
+			<string>customTintHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
 			<key>title</key>
 			<string>Tint Color</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
+			<string>CSColorDisplayCell</string>
 			<key>label</key>
 			<string>Tint Color</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>defaults</key>
-				<string>com.gmoran.eclipse</string>
-				<key>key</key>
-				<string>customTintHex</string>
-				<key>fallback</key>
-				<string>#5A88ED</string>
-				<key>PostNotification</key>
-				<string>com.gmoran.eclipse.prefs-changed</string>
-				<key>alpha</key>
-				<false/>
-			</dict>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -142,27 +121,20 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>key</key>
+			<string>customStatusbarHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
 			<key>title</key>
 			<string>Statusbar Color</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
+			<string>CSColorDisplayCell</string>
 			<key>label</key>
 			<string>Statusbar Color</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>defaults</key>
-				<string>com.gmoran.eclipse</string>
-				<key>key</key>
-				<string>customStatusbarHex</string>
-				<key>fallback</key>
-				<string>#FFFFFF</string>
-				<key>PostNotification</key>
-				<string>com.gmoran.eclipse.prefs-changed</string>
-				<key>alpha</key>
-				<false/>
-			</dict>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -183,27 +155,20 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>key</key>
+			<string>customTextHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
 			<key>title</key>
 			<string>Text Color</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
+			<string>CSColorDisplayCell</string>
 			<key>label</key>
 			<string>Text Color</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>defaults</key>
-				<string>com.gmoran.eclipse</string>
-				<key>key</key>
-				<string>customTextHex</string>
-				<key>fallback</key>
-				<string>#EDEDED</string>
-				<key>PostNotification</key>
-				<string>com.gmoran.eclipse.prefs-changed</string>
-				<key>alpha</key>
-				<false/>
-			</dict>
 		</dict>
 	</array>
 	<key>title</key>

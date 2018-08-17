@@ -18,17 +18,13 @@
 	return self;
 }
 
-- (void)layoutSubviews {
-    
-}
 
-/*
 - (void)viewWillAppear:(BOOL)animated
 {
     [self clearCache];
     [self reload];
     [super viewWillAppear:animated];
 }
-*/
+
 @end
 // vim:ft=objc

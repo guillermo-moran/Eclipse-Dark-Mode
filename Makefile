@@ -10,12 +10,12 @@ THEOS_DEVICE_IP = 192.168.1.84
 #THEOS_DEVICE_PORT=2222
 
 TWEAK_NAME = Eclipse
-#Eclipse_LDFLAGS += -Wl,-segalign,4000
+Eclipse_LDFLAGS += -lCSColorPicker
 #Eclipse_CFLAGS = -fobjc-arc
 Eclipse_FILES = Tweak.xmi Utils/UIColor+Eclipse.m Utils/UIImage+Eclipse.m Utils/WKWebView+Eclipse.m
 Eclipse_FRAMEWORKS = UIKit CoreGraphics CoreFoundation CoreText QuartzCore WebKit
 Eclipse_PRIVATE_FRAMEWORKS = BackBoardServices
-Eclipse_LIBRARIES = colorpicker
+# Eclipse_LIBRARIES = colorpicker
 
 include $(THEOS)/makefiles/common.mk
 

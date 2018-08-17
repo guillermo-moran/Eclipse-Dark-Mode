@@ -6,7 +6,7 @@ Eclipse_Settings_FILES = $(wildcard *.mm) $(wildcard *.m)
 Eclipse_Settings_INSTALL_PATH = /Library/PreferenceBundles
 Eclipse_Settings_FRAMEWORKS = UIKit
 Eclipse_Settings_PRIVATE_FRAMEWORKS = Preferences
-Eclipse_Settings_LIBRARIES = colorpicker #MobileGestalt
+# Eclipse_Settings_LIBRARIES = colorpicker #MobileGestalt
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 
