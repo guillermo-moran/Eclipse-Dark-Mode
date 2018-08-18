@@ -33,6 +33,7 @@
             [self setBarTintColor:NAV_COLOR];
             [self setBackgroundColor:NAV_COLOR];
             //[self setBarStyle:UIBarStyleBlack];
+            [self setTitleTextAttributes: @{NSForegroundColorAttributeName:TEXT_COLOR}];
 
         }
         @catch (NSException * e) {
