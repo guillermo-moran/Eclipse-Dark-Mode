@@ -52,13 +52,13 @@
     }
 }
 
-- (void)pixelfiredev {
+- (void)creaturesurvive {
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=pixelfiredev"]]) {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=CreatureSurvive"]]) {
         
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=pixelfiredev"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=CreatureSurvive"]];
     } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/pixelfiredev"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/CreatureSurvive"]];
     }
 }
 

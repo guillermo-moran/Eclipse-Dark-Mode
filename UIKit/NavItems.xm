@@ -28,13 +28,11 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        shouldOverrideStatusBarStyle = YES;
-
 
         @try {
             [self setBarTintColor:NAV_COLOR];
             [self setBackgroundColor:NAV_COLOR];
-            [self setBarStyle:UIBarStyleBlack];
+            //[self setBarStyle:UIBarStyleBlack];
 
         }
         @catch (NSException * e) {
@@ -52,12 +50,8 @@
     %orig;
     if (isEnabled) {
 
-
-        shouldOverrideStatusBarStyle = YES;
-
         @try {
             [self setBarTintColor:NAV_COLOR];
-            [self setBarStyle:UIBarStyleBlack];
 
         }
         @catch (NSException * e) {
@@ -72,11 +66,9 @@
 -(void)setBounds:(CGRect)arg1 {
     %orig;
     if (isEnabled) {
-        shouldOverrideStatusBarStyle = YES;
 
         @try {
             [self setBarTintColor:NAV_COLOR];
-            [self setBarStyle:UIBarStyleBlack];
 
         }
         @catch (NSException * e) {
@@ -159,21 +151,5 @@
     }
     %orig;
 }
-
-/*
--(void)setTranslucent:(BOOL)arg1 {
-    if (isEnabled && !(IsiPad)) {
-        %orig(NO);
-        return;
-    }
-    return %orig;
-}
--(BOOL)isTranslucent {
-    if (isEnabled && !(IsiPad)) {
-        return NO;
-    }
-    return %orig;
-}
- */
 
 %end

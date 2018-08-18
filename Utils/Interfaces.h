@@ -289,6 +289,10 @@
 -(void)checkRunningApp;
 @end
 
+@interface AppStoreFadeInDynamicTypeButton : UIButton
+@property (nonatomic, retain) CAGradientLayer *fadeLayer;
+@end
+
 //
 //  ColorPicker.h
 //

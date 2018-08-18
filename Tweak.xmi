@@ -589,16 +589,7 @@ static void checkRunningApp() {
         //dlopen("/Library/MobileSubstrate/DynamicLibraries/SleekPhone.dylib", RTLD_NOW);
     }
     if (idIsEqual(@"com.apple.mobilemail")) {
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.3")) {
-            isEnabled = NO;
-        }
-        else {
-            %init(MailApp);
-            shouldOverrideStatusBarStyle = YES;
-        }
-
-
-        //isEnabled = NO;
+        %init(MailApp);
     }
     if (idIsEqual(@"com.apple.mobilesafari")) {
         %init(SafariApp);
@@ -621,7 +612,7 @@ static void checkRunningApp() {
     }
     if (idIsEqual(@"com.apple.AppStore")) {
         //%init(AppstoreApp);
-        %init(AppstoreApp, AppStoreSearchHeaderView = objc_getClass("AppStore.SearchHeaderView"));
+        %init(AppstoreApp, AppStoreSearchHeaderView = objc_getClass("AppStore.SearchHeaderView"), FadeInDynamicTypeButton = objc_getClass("AppStore.FadeInDynamicTypeButton"));
 
     }
     if (idIsEqual(@"com.apple.mobilecal")) {
@@ -665,6 +656,8 @@ static void initializeApplications() {
 
     isEnabled = applicationIsEnabledInSettings && isTweakEnabled();
 
+    //isEnabled = false;
+
     checkAppBlackList();
 
 
@@ -675,19 +668,17 @@ static void initializeApplications() {
     //If Tweak enabled:
     if (isEnabled) {
         checkRunningApp();
+
         %init(_ungrouped);
+
 
         if (!idIsEqual(@"com.apple.mobilesafari")) {
             %init(SystemUIColors);
         }
 
         //Fix clock app crashing
-        if (idIsEqual(@"com.apple.mobiletimer")) {
-            isClockApp = YES;
-        }
-        else {
-            isClockApp = NO;
-        }
+        isClockApp = idIsEqual(@"com.apple.mobiletimer");
+
 
         //darkenUIElements();
 
@@ -714,70 +705,80 @@ static void initializeApplications() {
 
     NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
 	NSUInteger count = args.count;
-	if (count != 0) {
-		NSString *executablePath = args[0];
-		if (executablePath) {
-			NSString *processName = [executablePath lastPathComponent];
-			BOOL isSpringBoard = [processName isEqualToString:@"SpringBoard"];
-			BOOL isApplication = [executablePath rangeOfString:@"/Application"].location != NSNotFound;
-            //BOOL isApplication = YES;
 
-            if (isSpringBoard) {
-                %init(AppTerminator);
-                prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
-                registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
-            }
-            if (isApplication) {
-            //if (true) {
-                // IS APPLICATION
+    %init(AppTerminator);
+    prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
+    registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
 
-                //log bundle identifier
-                const char *msg = [[NSBundle mainBundle].bundleIdentifier UTF8String];
-                os_log(OS_LOG_DEFAULT, "ECLIPSE HOOKED BUNDLE IDENTIFIER : %s", msg);
+    initializeApplications();
 
-                prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
-            	// register to receive changed notifications
-            	registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
-                registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
+    %init(EclipseAlerts);
 
 
-                // NoctisXI Support
-
-                BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/NoctisXI.dylib"];
-                //BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/noctis_installed"];
-
-                if (noctisInstalled) {
-
-                    os_log(OS_LOG_DEFAULT, "NOCTIS INSTALLED");
-
-                    NSDictionary *applicationList = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_ENABLED_APPS]?:[NSDictionary dictionary] copy];
-
-                    NSDictionary *noctisxiPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTISXI_PREFS]?:[NSDictionary dictionary] copy];
-
-                    NSDictionary *noctisPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_PREFS]?:[NSDictionary dictionary] copy];
-
-                    NSArray* enabledApps = [applicationList objectForKey:@"Enabled Apps"];
-
-                    BOOL applicationsEnabled = [[noctisxiPrefs objectForKey:@"enabledApplications"] boolValue];
-                    BOOL noctisIsEnabled = [[noctisPrefs objectForKey:@"LQDDarkModeEnabled"] boolValue];
-
-                    if (applicationsEnabled && noctisIsEnabled) {
-                        if (![enabledApps containsObject:[NSBundle mainBundle].bundleIdentifier]) {
-                        	initializeApplications();
-                        }
-                    }
-                    else {
-                        initializeApplications();
-                    }
-                }
-                else {
-                    os_log(OS_LOG_DEFAULT, "NOCTIS NOT INSTALLED");
-                    initializeApplications();
-                    %init(EclipseAlerts);
-                }
-			}
-		}
-	}
+	// if (count != 0) {
+	// 	NSString *executablePath = args[0];
+	// 	if (executablePath) {
+	// 		NSString *processName = [executablePath lastPathComponent];
+	// 		BOOL isSpringBoard = [processName isEqualToString:@"SpringBoard"];
+	// 		BOOL isApplication = [executablePath rangeOfString:@"/Application"].location != NSNotFound;
+    //         //BOOL isApplication = YES;
+    //
+    //         if (isSpringBoard) {
+    //             %init(AppTerminator);
+    //             prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
+    //             registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
+    //         }
+    //         if (isApplication) {
+    //         //if (true) {
+    //             // IS APPLICATION
+    //
+    //             //log bundle identifier
+    //             const char *msg = [[NSBundle mainBundle].bundleIdentifier UTF8String];
+    //             os_log(OS_LOG_DEFAULT, "ECLIPSE HOOKED BUNDLE IDENTIFIER : %s", msg);
+    //
+    //             prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
+    //         	// register to receive changed notifications
+    //         	registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
+    //             registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
+    //
+    //
+    //             // NoctisXI Support
+    //
+    //             BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/NoctisXI.dylib"];
+    //             //BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/noctis_installed"];
+    //
+    //             if (noctisInstalled) {
+    //
+    //                 os_log(OS_LOG_DEFAULT, "NOCTIS INSTALLED");
+    //
+    //                 NSDictionary *applicationList = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_ENABLED_APPS]?:[NSDictionary dictionary] copy];
+    //
+    //                 NSDictionary *noctisxiPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTISXI_PREFS]?:[NSDictionary dictionary] copy];
+    //
+    //                 NSDictionary *noctisPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_PREFS]?:[NSDictionary dictionary] copy];
+    //
+    //                 NSArray* enabledApps = [applicationList objectForKey:@"Enabled Apps"];
+    //
+    //                 BOOL applicationsEnabled = [[noctisxiPrefs objectForKey:@"enabledApplications"] boolValue];
+    //                 BOOL noctisIsEnabled = [[noctisPrefs objectForKey:@"LQDDarkModeEnabled"] boolValue];
+    //
+    //                 if (applicationsEnabled && noctisIsEnabled) {
+    //                     if (![enabledApps containsObject:[NSBundle mainBundle].bundleIdentifier]) {
+    //                     	initializeApplications();
+    //                     }
+    //                 }
+    //                 else {
+    //                     initializeApplications();
+    //                 }
+    //             }
+    //             else {
+    //                 os_log(OS_LOG_DEFAULT, "NOCTIS NOT INSTALLED");
+    //                 initializeApplications();
+    //                 %init(EclipseAlerts);
+    //             }
+	// 		}
+	// 	}
+	// }
 
 
     [pool release];

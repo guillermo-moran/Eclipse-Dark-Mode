@@ -56,27 +56,17 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Libcolorpicker</string>
+			<string>Color Picker &amp; Bug Fixes</string>
 		</dict>
 		<dict>
+			<key>icon</key>
+			<string>twitter.png</string>
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
 			<key>action</key>
-			<string>pixelfiredev</string>
+			<string>creaturesurvive</string>
 			<key>label</key>
-			<string>PixelFireDev</string>
-			<key>icon</key>
-			<string>pixelfiredev.png</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>action</key>
-			<string>libcolorpicker</string>
-			<key>label</key>
-			<string>Libcolorpicker</string>
-			<key>icon</key>
-			<string>pixelfiredev.png</string>
+			<string>@CreatureSurvive</string>
 		</dict>
 		<dict>
 			<key>cell</key>
