@@ -233,6 +233,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Calendar.xm"
 #include "Application_Support/Maps.xm"
 #include "Application_Support/Photos.xm"
+#include "UIKit/WiFiKit.xm"
 
 // Third Party App Support
 
@@ -522,6 +523,11 @@ static void checkAppBlackList() {
     if (idIsEqual(@"com.apple.Camera")) {
         isEnabled = NO;
     }
+    if (idIsEqual(@"com.apple.Preferences")) {
+        if (isBetterSettingsInstalled()) {
+            isEnabled = NO;
+        }
+    }
 
 }
 
@@ -638,7 +644,9 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.apple.mobileslideshow")) {
         //%init(PhotosApp);
     }
-
+    if (idIsEqual(@"com.apple.Preferences")) {
+        %init(WiFiKitFix);
+    }
 
 }
 
@@ -722,7 +730,7 @@ static void initializeApplications() {
                 prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
                 registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
             }
-            if (isApplication) {
+            if (isApplication && !isSpringBoard) {
             //if (true) {
                 // IS APPLICATION
 

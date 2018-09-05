@@ -6,7 +6,6 @@ EclipseSB_FILES = Tweak.xm
 EclipseSB_FRAMEWORKS = UIKit CoreGraphics CoreFoundation CoreText QuartzCore
 EclipseSB_LIBRARIES = MobileGestalt
 
-export ARCHS = armv7 arm64
 
 TARGET_CXX = xcrun -sdk iphoneos clang++
 TARGET_LD = xcrun -sdk iphoneos clang++

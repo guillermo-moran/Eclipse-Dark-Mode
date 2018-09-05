@@ -268,6 +268,10 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
 }
 
+static BOOL isBetterSettingsInstalled() {
+    return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/rewriteSettings.dylib"];
+}
+
 
 static BOOL isTweakEnabled(void) {
     return _isTweakEnabled;
@@ -972,7 +976,7 @@ static BOOL isTextDarkColor(UIColor* color) {
    return ((white <= 0.5) && (red <= 0.5) && (green <= 0.5)  && (blue <= 0.5) && (![color isEqual:selectedTintColor()]));
      */
 
-    if ([UIColor color:color isEqualToColor:[UIColor blackColor] withTolerance:0.7] && (![color isEqual:selectedTintColor()])) {
+    if ([UIColor color:color isEqualToColor:[UIColor blackColor] withTolerance:0.6] && (![color isEqual:selectedTintColor()])) {
         return YES;
     }
     else {

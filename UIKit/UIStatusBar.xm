@@ -16,7 +16,12 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        self.foregroundColor = selectedStatusbarTintColor();
+        if (isBetterSettingsInstalled() && idIsEqual(@"com.apple.Preferences")) {
+            //do nothing
+        }
+        else {
+            self.foregroundColor = selectedStatusbarTintColor();
+        }
         //self.foregroundColor = selectedStatusbarTintColor();
     }
 }
@@ -27,7 +32,7 @@
 
 -(id)foregroundColor {
     UIColor* color = %orig;
-    if (isEnabled && shouldOverrideStatusBarStyle) {
+    if (isEnabled) {
         color = selectedStatusbarTintColor();
     }
     return color;
