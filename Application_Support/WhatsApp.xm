@@ -10,13 +10,19 @@
 
 %group WhatsappApp
 
+@interface WAActionSheetButton : UIImageView
+
+@property (nonatomic, copy, readwrite) UIColor *BackgroundColor;
+
+@end
+
 %hook WAActionSheetButton
 
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-        [self setBackgroundColor: VIEW_COLOR];
-    }
+- (void)layoutSubviews {
+
+// this reduces alpha by 0.2 which makes it dark, 1 alpha makes it true black.
+    self.BackgroundColor = [VIEW_COLOR colorWithAlphaComponent:0.8];
+
 }
 
 %end

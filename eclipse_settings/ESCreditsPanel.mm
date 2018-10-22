@@ -22,6 +22,16 @@
 	return self;
 }
 
+- (void)dpkg_ {
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=dpkg_"]]) {
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=dpkg_"]];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/dpkg_"]];
+    }
+}
+
 - (void)fr0st {
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=fr0st"]]) {
