@@ -1,7 +1,7 @@
 Package: me.gmoran.eclipsex
 Name: Eclipse X (iOS 11)
 Depends: mobilesubstrate, preferenceloader, applist, com.creaturesurvive.libcscolorpicker, firmware (>= 11.0)
-Version: 5.1.4
+Version: 5.1.6
 Architecture: iphoneos-arm
 Description: Night Mode (and more!) for all your apps!
 Depiction: http://gmoran.me/eclipse_x_repo.html

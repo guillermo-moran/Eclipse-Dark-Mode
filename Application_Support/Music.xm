@@ -151,6 +151,14 @@
 
 %hook UILabel
 
+
+- (BOOL)_textColorFollowsTintColor
+{
+
+        return NO;
+
+}
+
 -(UIColor *)textColor {
 	if (isEnabled) {
 		return [UIColor whiteColor];
@@ -166,6 +174,7 @@
 }
 
 -(void)layoutSubviews {
+    self.textColor = [UIColor whiteColor];
 	if ([self.superview isMemberOfClass:objc_getClass("Music.MiniPlayerButton")]) {
 
 	}
