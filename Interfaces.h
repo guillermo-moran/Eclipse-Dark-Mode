@@ -7,7 +7,7 @@
  | (      | |      | |         | |   | (            ) || (
  | (____/\| (____/\| (____/\___) (___| )      /\____) || (____/\
  (_______/(_______/(_______/\_______/|/       \_______)(_______/
-
+ 
  NIGHT MODE FOR IOS - Interfaces
  COPYRIGHT © 2014 GUILLERMO MORAN
  */
@@ -24,9 +24,11 @@
 
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
+//Kek
+
 #define IsiPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
-#define IS_BETA_BUILD YES
+#define IS_BETA_BUILD NO
 
 #define registerNotification(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
@@ -37,16 +39,7 @@
 
 #define PREFS_FILE_PATH @"/var/mobile/Library/Preferences/com.gmoran.eclipse.plist"
 
-#define NOCTISXI_PREFS @"/var/mobile/Library/Preferences/com.laughingquoll.noctisxiprefs.plist"
-#define NOCTIS_PREFS @"/var/mobile/Library/Preferences/com.laughingquoll.noctis.plist"
-#define NOCTIS_ENABLED_APPS @"/var/mobile/Library/Preferences/com.laughingquoll.noctis.enabledapp.plist"
-
-//#define PREFS_FILE_PATH @"/bootstrap/Library/Preferences/com.gmoran.eclipse.plist"
-
 #define VIEW_EXCLUDE_TAG 199
-
-//#define idIsEqual(id) [[NSBundle mainBundle].bundleIdentifier isEqualToString:id]
-#define idIsEqual(id) [[UIApplication displayIdentifier] isEqualToString:id]
 
 //Continue
 
@@ -56,8 +49,7 @@
 
 //Table Colors
 
-//#define MIDNIGHT_TABLE_COLOR [UIColor midnightTableColor]
-#define MIDNIGHT_TABLE_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_TABLE_COLOR [UIColor midnightTableColor]
 
 #define NIGHT_TABLE_COLOR [UIColor nightTableColor]
 
@@ -96,8 +88,7 @@
 
 //View Colors (Table - 10 or 15)
 
-//#define MIDNIGHT_VIEW_COLOR [UIColor midnightViewColor]
-#define MIDNIGHT_VIEW_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_VIEW_COLOR [UIColor midnightViewColor]
 
 #define NIGHT_VIEW_COLOR [UIColor nightViewColor]
 
@@ -136,8 +127,7 @@
 
 //Nav Colors (Table - 30)
 
-//#define MIDNIGHT_BAR_COLOR [UIColor midnightBarColor]
-#define MIDNIGHT_BAR_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_BAR_COLOR [UIColor midnightBarColor]
 
 #define NIGHT_BAR_COLOR [UIColor nightBarColor]
 
@@ -233,7 +223,7 @@
 @end
 
 @interface _UITextFieldRoundedRectBackgroundViewNeue : UIImageView {
-
+    
 }
 -(void)setFillColor:(id)arg1 ;
 
@@ -257,9 +247,9 @@
 @end
 
 @interface SBDisplayItem : NSObject {
-
+    
     NSString* _displayIdentifier;
-
+    
 }
 -(NSString *)displayIdentifier;
 
@@ -282,14 +272,7 @@
 @interface CKUIBehaviorPad : CKUIBehavior
 @end
 
-@interface UIApplication(Eclipse)
-+(id)displayIdentifier;
--(void)checkRunningApp;
-@end
 
-@interface AppStoreFadeInDynamicTypeButton : UIButton
-@property (nonatomic, retain) CAGradientLayer *fadeLayer;
-@end
 
 //
 //  ColorPicker.h

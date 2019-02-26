@@ -5,7 +5,7 @@
 
 -(void)fr0st;
 -(void)krevony;
--(void)andywiik;
+-(void)beatjunky;
 -(void)reddit;
 
 @end
@@ -20,26 +20,6 @@
 	}
     
 	return self;
-}
-
-- (void)dpkg_ {
-    
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=dpkg_"]]) {
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=dpkg_"]];
-    } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/dpkg_"]];
-    }
-}
-
-- (void)laughingquoll {
-    
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=laughingquoll"]]) {
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=laughingquoll"]];
-    } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/laughingquoll"]];
-    }
 }
 
 - (void)fr0st {
@@ -72,13 +52,13 @@
     }
 }
 
-- (void)creaturesurvive {
+- (void)pixelfiredev {
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=CreatureSurvive"]]) {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=pixelfiredev"]]) {
         
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=CreatureSurvive"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=pixelfiredev"]];
     } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/CreatureSurvive"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/pixelfiredev"]];
     }
 }
 
@@ -87,13 +67,13 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://bitbucket.org/pixelfiredev/libcolorpicker/"]];
 }
 
-- (void)andywiik {
+- (void)beatjunky {
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=andywiik"]]) {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=beatjunky99"]]) {
         
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=andywiik"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=beatjunky99"]];
     } else {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/andywiik"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/beatjunky99"]];
     }
 }
 

@@ -1,8 +1,6 @@
 #import <Preferences/Preferences.h>
 #import <UIKit/UITableViewCell+Private.h>
 
-#include <spawn.h>
-
 #define QUIT_APPS_NOTIF "com.gmoran.eclipse.quit-apps"
 extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 
@@ -26,12 +24,7 @@ extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void
 }
 
 -(void)respring {
-
-    pid_t pid;
-    int status;
-    const char* args[] = {"killall", "-9", "backboardd", NULL};
-    posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char* const*)args, NULL);
-    waitpid(pid, &status, WEXITED);//wait untill the process completes (only if you need to do that)
+    system("killall -9 SpringBoard");
 }
 
 -(void)twitter {
@@ -45,13 +38,13 @@ extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void
 }
 
 -(void)mail {
-    NSString *url = @"mailto:gmorandotme@gmail.com?&subject=Eclipse%20Support";
+    NSString *url = @"mailto:guillermo@gmoran.me?&subject=Eclipse%20Support";
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
     
 -(void)faq {
-    NSString *url = @"https://gmoran.me/repo/EclipseFAQ.html";
+    NSString *url = @"http://gmoran.me/repo/EclipseFAQ.html";
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }

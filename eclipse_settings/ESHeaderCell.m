@@ -22,16 +22,42 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 
         
 		UILabel *typeLabel = [[[UILabel alloc] init] autorelease];
-        typeLabel.backgroundColor = [UIColor clearColor];
-        typeLabel.font = [UIFont systemFontOfSize:qHeaderCellFontSize];
+        
+        //Start DRM
+        
         
         typeLabel.text = @"Eclipse";
        
+        
+        //End DRM
 		
+		typeLabel.backgroundColor = [UIColor clearColor];
+		typeLabel.font = [UIFont systemFontOfSize:qHeaderCellFontSize];
+		
+
 		UILabel *statusLabel = [[[UILabel alloc] init] autorelease];
         
-        statusLabel.text = @" Dark Mode";
+        //Start DRM
+        
        
+        statusLabel.text = @" 4";
+       
+        
+        //End DRM
+        /*
+        UIWebView *webview=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
+        
+        webview.center = CGPointMake(window.center.x, window.center.y + ((window.center.y / 3) * 2)  );
+        webview.scrollView.scrollEnabled = NO;
+        
+        NSString *url = @"http://gmoran.me/repo/depictions/EclipseAd.html";
+        NSURL *nsurl = [NSURL URLWithString:url];
+        NSURLRequest *nsrequest = [NSURLRequest requestWithURL:nsurl];
+        [webview loadRequest:nsrequest];
+        [window addSubview:webview];
+        
+        [webview release];
+        */
         
 		statusLabel.backgroundColor = [UIColor clearColor];
 		statusLabel.font = [UIFont boldSystemFontOfSize:qHeaderCellFontSize];
@@ -48,15 +74,39 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 		imageView.center = CGPointMake(imageView.center.x, containerView.frame.size.height / 3.f);
         
         
+        //Start DRM Ad Code
+        //Link Mobile Gestalt
         
-        //BOOL listFileExists = YES;
-        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse12.list"];
+        /*
+        
+         
+        OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
+        
+        CFStringRef UDNumber = MGCopyAnswer(CFSTR("UniqueDeviceID"));
+        NSString* UDID = (NSString*)UDNumber;
+        //NSString* UDID = @"kek";
+
+        NSString *url =[NSString stringWithFormat:@"http://gmoran.me/api/check.php?UDID=%@", UDID];
+        
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        
+        [req setHTTPMethod:@"GET"];
+        
+        NSHTTPURLResponse* urlResponse = nil;
+        
+        NSData *responseData = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:nil];
+        
+        NSString *result = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        CFRelease(UDNumber);
+         
+         */
+        
+        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/org.thebigboss.eclipse4.list"];
 
         
         //if ([result isEqualToString:@"Not Licensed"] || !listFileExists) {
         if (!listFileExists) {
 
-            /*
             UIWebView *webview = [[UIWebView alloc]initWithFrame:CGRectMake(self.contentView.frame.size.width / 8, 0, 330, 65)];
             
             webview.delegate = self;
@@ -73,15 +123,8 @@ static CGFloat const qHeaderCellFontSize = 30.f;
             [self.contentView addSubview:webview];
             
             [webview release];
-             */
-            
-            typeLabel.text = @"Pirated";
-            statusLabel.text = @":(";
 
-
-            [containerView addSubview:imageView];
-            [containerView addSubview:typeLabel];
-            [containerView addSubview:statusLabel];
+        
             
         }
         else {

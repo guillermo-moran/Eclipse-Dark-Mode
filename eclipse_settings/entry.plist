@@ -5,6 +5,6 @@
 		detail = ESListController;
 		icon = "eclipse.png";
 		isController = 1;
-		label = "Eclipse Dark Mode";
+		label = "Eclipse 4";
 	};
 }

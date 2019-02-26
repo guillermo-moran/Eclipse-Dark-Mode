@@ -10,7 +10,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>© 2019 Guillermo Morán</string>
+			<string>© 2017 Guillermo Morán</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -19,8 +19,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Select which apps should use Eclipse</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -32,37 +30,9 @@
 			<key>key</key>
 			<string>enabled</string>
 			<key>label</key>
-			<string>Enable Eclipse</string>
+			<string>Enabled</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
-		</dict>
-		<dict>
-			<key>enabled</key>
-			<true/>
-			<key>cell</key>
-			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Applications</string>
-			<key>isController</key>
-			<true/>
-			<key>bundle</key>
-			<string>AppList</string>
-			<key>ALNavigationTitle</key>
-			<string>Enabled Applications</string>
-			<key>ALSingleEnabledMode</key>
-			<false/>
-			<key>ALChangeNotification</key>
-			<string>com.gmoran.eclipse.prefs-changed</string>
-			<key>ALAllowsSelection</key>
-			<false/>
-			<key>ALSettingsPath</key>
-			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
-			<key>ALSettingsKeyPrefix</key>
-			<string>EnabledApps-</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -88,7 +58,7 @@
 			<key>key</key>
 			<string>reverseModeEnabled</string>
 			<key>label</key>
-			<string>Lighter Table Cells</string>
+			<string>Alternative Mode</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
@@ -102,7 +72,7 @@
 			<key>key</key>
 			<string>cellSeparatorsEnabled</string>
 			<key>label</key>
-			<string>Show Cell Separators</string>
+			<string>Show Table Separators</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
@@ -157,6 +127,56 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Beta Test: &quot;Override Whites&quot; automatically replaces all black colors to your selected text color. Use this for apps that are otherwise not compatible with Eclipse.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Enabled Applications</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>ALNavigationTitle</key>
+			<string>Enabled Applications</string>
+			<key>ALSingleEnabledMode</key>
+			<false/>
+			<key>ALChangeNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>ALAllowsSelection</key>
+			<false/>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
+			<key>ALSettingsKeyPrefix</key>
+			<string>EnabledApps-</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Override Whites</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>ALNavigationTitle</key>
+			<string>Override Whites</string>
+			<key>ALSingleEnabledMode</key>
+			<false/>
+			<key>ALChangeNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>ALAllowsSelection</key>
+			<false/>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
+			<key>ALSettingsKeyPrefix</key>
+			<string>AutoColorReplacement-</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>isController</key>
@@ -180,7 +200,7 @@
 			<key>action</key>
 			<string>faq</string>
 			<key>label</key>
-			<string>Common Issues/Questions</string>
+			<string>Quick Support</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -200,6 +220,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Eclipse Dark Mode</string>
+	<string>Eclipse</string>
 </dict>
 </plist>

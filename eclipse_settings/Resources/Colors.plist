@@ -288,8 +288,6 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
 			<key>isController</key>
 			<true/>
 			<key>cell</key>
@@ -305,7 +303,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Eclipse 12 by Guillermo Morán (@fr0st) © 2019</string>
+			<string>Eclipse 3 by Guillermo Morán (@fr0st) © 2015</string>
 		</dict>
 	</array>
 	<key>title</key>

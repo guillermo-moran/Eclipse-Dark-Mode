@@ -46,6 +46,20 @@
 				<integer>0</integer>
 				<integer>1</integer>
 				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+				<string>8</string>
+				<string>9</string>
+				<string>10</string>
+				<string>11</string>
+				<string>12</string>
+				<string>13</string>
+				<string>14</string>
+				<string>15</string>
+				<string>16</string>
 			</array>
 			<key>shortTitles</key>
 			<array>
@@ -54,6 +68,20 @@
 				<string>Night</string>
 				<string>Graphite</string>
 				<string>Silver</string>
+				<string>Crimson</string>
+				<string>Rose</string>
+				<string>Grape</string>
+				<string>Wine</string>
+				<string>Violet</string>
+				<string>Sky</string>
+				<string>Lapis</string>
+				<string>Navy</string>
+				<string>Dusk</string>
+				<string>Jungle</string>
+				<string>Bamboo</string>
+				<string>Saffron</string>
+				<string>Citrus</string>
+				<string>Amber</string>
 			</array>
 			<key>validTitles</key>
 			<array>
@@ -62,6 +90,20 @@
 				<string>Night</string>
 				<string>Graphite</string>
 				<string>Silver</string>
+				<string>Crimson</string>
+				<string>Rose</string>
+				<string>Grape</string>
+				<string>Wine</string>
+				<string>Violet</string>
+				<string>Sky</string>
+				<string>Lapis</string>
+				<string>Navy</string>
+				<string>Dusk</string>
+				<string>Jungle</string>
+				<string>Bamboo</string>
+				<string>Saffron</string>
+				<string>Citrus</string>
+				<string>Amber</string>
 			</array>
 		</dict>
 		<dict>
@@ -69,8 +111,6 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -85,8 +125,6 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
@@ -173,8 +211,20 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>translucentNavbars</string>
+			<key>label</key>
+			<string>Translucent Navigation Bars</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -189,8 +239,6 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -208,35 +256,25 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Experimental Features</string>
+			<string>SpringBoard Options</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>enabled</key>
+			<false/>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
 			<string>com.gmoran.eclipse</string>
 			<key>key</key>
-			<string>darkWebEnabled</string>
+			<string>themeNC</string>
 			<key>label</key>
-			<string>Website Dark Mode (Beta)</string>
+			<string>Theme Notification Center (Coming Soon)</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>SpringBoard Options</string>
-			<key>footer</key>
-			<string>Greyed-out features are coming soon</string>
-		</dict>
-		<dict>
-			<key>enabled</key>
-			<false/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -251,8 +289,6 @@
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<false/>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
@@ -262,7 +298,91 @@
 			<key>key</key>
 			<string>selectedDockColor</string>
 			<key>label</key>
-			<string>Dock Color (Coming Soon)</string>
+			<string>Dock Color</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>validValues</key>
+			<array>
+				<string>-2</string>
+				<string>-1</string>
+				<integer>0</integer>
+				<integer>1</integer>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+				<string>8</string>
+				<string>9</string>
+				<string>10</string>
+				<string>11</string>
+				<string>12</string>
+				<string>13</string>
+				<string>14</string>
+				<string>15</string>
+				<string>16</string>
+			</array>
+			<key>shortTitles</key>
+			<array>
+				<string>None (Default)</string>
+				<string>Midnight</string>
+				<string>Night</string>
+				<string>Graphite</string>
+				<string>Silver</string>
+				<string>Crimson</string>
+				<string>Rose</string>
+				<string>Grape</string>
+				<string>Wine</string>
+				<string>Violet</string>
+				<string>Sky</string>
+				<string>Lapis</string>
+				<string>Navy</string>
+				<string>Dusk</string>
+				<string>Jungle</string>
+				<string>Bamboo</string>
+				<string>Saffron</string>
+				<string>Citrus</string>
+				<string>Amber</string>
+			</array>
+			<key>validTitles</key>
+			<array>
+				<string>None (Default)</string>
+				<string>Midnight</string>
+				<string>Night</string>
+				<string>Graphite</string>
+				<string>Silver</string>
+				<string>Crimson</string>
+				<string>Rose</string>
+				<string>Grape</string>
+				<string>Wine</string>
+				<string>Violet</string>
+				<string>Sky</string>
+				<string>Lapis</string>
+				<string>Navy</string>
+				<string>Dusk</string>
+				<string>Jungle</string>
+				<string>Bamboo</string>
+				<string>Saffron</string>
+				<string>Citrus</string>
+				<string>Amber</string>
+			</array>
+		</dict>
+		<dict>
+			<key>enabled</key>
+			<false/>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>default</key>
+			<integer>-2</integer>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>selectedCCColor</string>
+			<key>label</key>
+			<string>Control Center Color (Coming Soon)</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 			<key>detail</key>
@@ -336,6 +456,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>More Options</string>
+	<string>Advanced Options</string>
 </dict>
 </plist>
