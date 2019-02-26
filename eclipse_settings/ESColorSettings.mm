@@ -16,8 +16,5 @@
 	return self;
 }
 
-
-
-
 @end
 // vim:ft=objc

@@ -5,22 +5,12 @@
 	<key>items</key>
 	<array>
 		<dict>
-			<key>footerAlignment</key>
-			<integer>1</integer>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>© 2019 Guillermo Morán</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>ESHeaderCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Select which apps should use Eclipse</string>
+			<string>Disable in SpringBoard to fix colored Control Center or colored Docks.</string>
+			<key>label</key>
+			<string>Toggles</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -32,37 +22,9 @@
 			<key>key</key>
 			<string>enabled</string>
 			<key>label</key>
-			<string>Enable Eclipse</string>
+			<string>Enabled</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
-		</dict>
-		<dict>
-			<key>enabled</key>
-			<true/>
-			<key>cell</key>
-			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Applications</string>
-			<key>isController</key>
-			<true/>
-			<key>bundle</key>
-			<string>AppList</string>
-			<key>ALNavigationTitle</key>
-			<string>Enabled Applications</string>
-			<key>ALSingleEnabledMode</key>
-			<false/>
-			<key>ALChangeNotification</key>
-			<string>com.gmoran.eclipse.prefs-changed</string>
-			<key>ALAllowsSelection</key>
-			<false/>
-			<key>ALSettingsPath</key>
-			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
-			<key>ALSettingsKeyPrefix</key>
-			<string>EnabledApps-</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -80,51 +42,73 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.gmoran.eclipse</string>
-			<key>key</key>
-			<string>reverseModeEnabled</string>
-			<key>label</key>
-			<string>Lighter Table Cells</string>
-			<key>PostNotification</key>
-			<string>com.gmoran.eclipse.prefs-changed</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.gmoran.eclipse</string>
-			<key>key</key>
-			<string>cellSeparatorsEnabled</string>
-			<key>label</key>
-			<string>Show Cell Separators</string>
-			<key>PostNotification</key>
-			<string>com.gmoran.eclipse.prefs-changed</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>alignment</key>
-			<string>1</string>
-			<key>action</key>
-			<string>respring</string>
-			<key>label</key>
-			<string>Reload SpringBoard</string>
-		</dict>
-		<dict>
-			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>alignment</key>
 			<string>1</string>
 			<key>action</key>
 			<string>quitApps</string>
 			<key>label</key>
-			<string>Close All Apps</string>
+			<string>Quit All Apps</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>darkenKeyboard</string>
+			<key>label</key>
+			<string>Color Keyboard</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>replaceSplashScreens</string>
+			<key>label</key>
+			<string>Color Loading Screens</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>translucentNavbars</string>
+			<key>label</key>
+			<string>Translucent Navigation Bars</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>darkenWallpapers</string>
+			<key>label</key>
+			<string>Dim Wallpapers</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.wallpaper-changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -140,19 +124,27 @@
 			<key>detail</key>
 			<string>ESColorSettings</string>
 			<key>label</key>
-			<string>Color Options</string>
+			<string>Color Settings</string>
 		</dict>
 		<dict>
-			<key>isController</key>
-			<true/>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>default</key>
-			<true/>
-			<key>detail</key>
-			<string>ESAdvancedSettings</string>
 			<key>label</key>
-			<string>More Options</string>
+			<string>White-List Apps</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>ALNavigationTitle</key>
+			<string>&quot;White&quot; List</string>
+			<key>ALChangeNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>ALAllowsSelection</key>
+			<false/>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
+			<key>ALSettingsKeyPrefix</key>
+			<string>BlackListed-</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -173,20 +165,10 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>action</key>
-			<string>faq</string>
-			<key>label</key>
-			<string>Common Issues/Questions</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Contact</string>
+			<key>footerText</key>
+			<string>Eclipse by Guillermo Morán (@fr0st) © 2014</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -198,8 +180,18 @@
 			<key>icon</key>
 			<string>twitter.png</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>action</key>
+			<string>mail</string>
+			<key>label</key>
+			<string>Email @fr0st</string>
+			<key>icon</key>
+			<string>mail.png</string>
+		</dict>
 	</array>
 	<key>title</key>
-	<string>Eclipse Dark Mode</string>
+	<string>Eclipse</string>
 </dict>
 </plist>

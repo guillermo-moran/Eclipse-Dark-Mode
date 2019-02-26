@@ -1,188 +1,13 @@
-Changes: Eclipse 6.0.1
+Changes: Eclipse 1.4.6-1
 
-- iOS 12 Support
-- Dark Websites Support
-- Fix Share Sheets
-- Fix wifi icons
+- Updated for Snapchat
+- Removed unnecessary code
 
-Changes: 5.1.7
+Changes: Eclipse 1.4.6
 
-- Share Sheet fix
-- Two Factor Fix
-- Wifi icon fix
-- Compiled with iOS 11 SDK
-
-Changes: Eclipse 5.0.8-5
-
-- Fixed action sheets in WhatsApp
-- Fixed white "plugins" bar in Messages apps
-- Fixed Collections headers in Photos app
-
-Changes: Eclipse 5.0.8-4
-
-- Fixed an issue where UIButtons with images as backgrounds would not darken
-- Fixed an issue where the contact page in Messages would be clear
-- Fixed an issue in Messages where link text would be white
-- Fixed an issue where the delete button in the phone app would blend with the background
-- Improved support for Twitter app
-
-
-Changes: Eclipse 5.0.4
-
-- Support for custom colors
-
-Changes: Eclipse 5.0.3
-
-- Twitter app fixes
-- Instagram app fixes
-
-
-Changes: Eclipse 5.0.1
-
-- Updated to support iOS 11
-
-Changes: Eclipse 4.1
-
-- Fixed Music App
-- Improved App Store App
-- Fixes for Whatsapp
-- API Improvements
-- Preparations for iOS 11
-
-Changes: Eclipse 4.0.4
-
-- Fixed crash in Music app
-- Fixed possible messages crash
-- Improved FB Messenger Support
-- Improved Snapchat support
-- Improved Kik support
-- Fixed small bugs
-
-Changes: Eclipse 4.0.3
-
-- Bug fixes for Action Sheets
-- Fixed text input cursor across all apps
-- Removed annoying "Closing apps" alert
-
-Changes: Eclipse 4.0.2
-
-- Fixes for permissions
-
-Changes: Eclipse 4.0
-
-- Initial iOS 10 Support
-
-Changes: Eclipse 3.0.1
-
-- Updated to support the latest snapchat release
-- Added a quick support feature with FAQ (in settings)
-- Fixes for Whatsapp
-- Application loading show be faster now.
-
-- Currently looking into issues with Google Docs, Notes, and Music App. :)
-
-Changes: Eclipse 3.0
-
-- Added iOS 9 support
-
-Changes: Eclipse 2.4.1
-
-- Support for last Snapchat and Whatsapp releases
-
-Changes: Eclipse 2.3-5
-
-- Fix giant spinner in status bar
-
-Changes: Eclipse 2.3-4
-
-- Fix Cydia’s Search bar
-- Fix for Kik Messenger
-- Fix for Facebook Messenger
-- UI Bug Fixes
-
-Changes: Eclipse 2.3-3
-
-- Cydia Support
-- UITableView bug fixes
-
-Coming Soon: Support for iOS 8.4 Music App
-
-Changes: Eclipse 2.3-2
-
-- Updated for Instagram 6.10.0
-- Updated for Twitter 6.25.1
-
-Changes: Eclipse 2.3
-
-- New feature: Color picker (with libcolorpicker)
-- New feature: Compatibility mode
-- New feature: Ability to toggle iMessage and SMS bubble tint
-- New feature: Reverse Mode
-- Removed auto color replacement (replaced by compatibility mode)
-
-Changes: Eclipse 2.2.5
-
-- Fixed Safari on iPad/iPhone 6+
-- Compatible with the latest Snapchat
-
-Changes: Eclipse 2.2.3
-
-- Option to disable keyboard coloring (finally.)
-- Fixes snapchat front facing flash (finally.)
-- Minor backend improvements
-
-Changes: Eclipse 2.2.2
-
-- Winterboard checkmarks are now visible
-
-Changes: Eclipse 2.2.1
-
-- Fixed rare lagging issue
-- Added option to tint SMS bubbles
-
-Changes Eclipse 2.2
-
-- Performance Improvements
-- Fixed SMS / iMessage bubble colors
-- Fixed issue where alerts would color when tweak was disabled
-- Fixed Notification Center Widgets
-- Fixed memory leak
-- Support for Aria + Other music tweaks
-- Improved support for Safari on 6+
-- Improved support for Instagram
-- Improved support for Kik Messenger
-- New feature: Color Springboard Statusbar
-
-Changes Eclipse 2.1.1
-
-- Fixed message bubbles when using white tint
-
-Changes: Eclipse 2.1
-
-**Not compatible with MessagesCustomiser**
-
-- Partial rewrite
-- Improved stability
-- Fixed recent buttons in app switcher
-- Fixed odd-looking control center
-- Fixed strange SMS bubble animations
-- Fixed untinted search bars in various apps
-- Bug fixes for Safari and Music app (iPad)
-- Improvements for auto color replacement
-- Improvements for UIAlerts and Action Sheets
-
-Changes: Eclipse 2.0.1
-
-- Safari lag fix
-
-Changes: Eclipse 2.0
-
-- iOS 8 Support
-
-Changes: Eclipse 1.4.6-4
-
-- Updated to support latest Instagram, WhatsApp
-- Fixed Viber crashing
+- Updated for latest Instagram, Kik
+- Re-enabled Notes app
+- Fixes for Dropbox on iOS 7
 
 Changes: Eclipse 1.4.5-3
 
@@ -245,7 +70,7 @@ Changes: Eclipse 1.3-4 (Unreleased)
 
 - Fix TextView coloring bugs
 - UIAlertView improvements
-- Added option to disable Eclipse inside SpringBoard
+- Added option to disable Eclipse inside SpringBoard 
 - Reduced the amount of complaints/bug reports in my inbox
 
 Changes: Eclipse 1.3-3
@@ -259,7 +84,7 @@ Changes: Eclipse 1.3-3
 Changes: Eclipse 1.3-2
 
 - Fixed text input on Safari
-- Fixed hex colors safemode
+- Fixed hex colors safemode 
 
 Changes: Eclipse 1.3
 
@@ -357,7 +182,7 @@ Changes: Eclipse (1.1.5-2)
 - Added option to replace startup screens
 - Fixed conflicts with GBA4iOS, possibly other apps
 - Compatible with Twitter 1.4.3
-- Fixed a text field issue in Messages/BiteSMS
+- Fixed a text field issue in Messages/BiteSMS 
 - Fixed Safari reload and reader buttons
 
 Changes: Eclipse (1.1.5)
@@ -433,6 +258,11 @@ Changes: Eclipse (1.0.1-1)
 - Fixed Alert View text
 - Compatible with Instagram
 
+Known Issues:
+- Notes app isn’t to pretty
+- iTunes App not darkening
+- UIScrollViews do not darken (sometimes)
+- Greyed out text in some areas
 
 Tint Colors:
 Random = 0
@@ -446,3 +276,4 @@ Red = 7
 Yellow = 8
 
 key = selectedTint
+ 

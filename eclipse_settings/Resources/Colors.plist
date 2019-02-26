@@ -51,56 +51,32 @@
 				<string>6</string>
 				<string>7</string>
 				<string>8</string>
-				<string>9</string>
-				<string>10</string>
-				<string>11</string>
-				<string>12</string>
-				<string>13</string>
-				<string>14</string>
-				<string>15</string>
-				<string>16</string>
 			</array>
 			<key>shortTitles</key>
 			<array>
 				<string>Midnight</string>
 				<string>Night</string>
-				<string>Graphite</string>
-				<string>Silver</string>
+				<string>Sapphire</string>
 				<string>Crimson</string>
-				<string>Rose</string>
-				<string>Grape</string>
-				<string>Wine</string>
-				<string>Violet</string>
-				<string>Sky</string>
-				<string>Lapis</string>
-				<string>Navy</string>
-				<string>Dusk</string>
-				<string>Jungle</string>
-				<string>Bamboo</string>
-				<string>Saffron</string>
-				<string>Citrus</string>
-				<string>Amber</string>
+				<string>Raspberry</string>
+				<string>Fuchsia</string>
+				<string>Amazon</string>
+				<string>Limerick</string>
+				<string>Cerise (BETA)</string>
+				<string>Malachite (BETA)</string>
 			</array>
 			<key>validTitles</key>
 			<array>
 				<string>Midnight</string>
 				<string>Night</string>
-				<string>Graphite</string>
-				<string>Silver</string>
+				<string>Sapphire</string>
 				<string>Crimson</string>
-				<string>Rose</string>
-				<string>Grape</string>
-				<string>Wine</string>
-				<string>Violet</string>
-				<string>Sky</string>
-				<string>Lapis</string>
-				<string>Navy</string>
-				<string>Dusk</string>
-				<string>Jungle</string>
-				<string>Bamboo</string>
-				<string>Saffron</string>
-				<string>Citrus</string>
-				<string>Amber</string>
+				<string>Raspberry</string>
+				<string>Fuchsia</string>
+				<string>Amazon</string>
+				<string>Limerick</string>
+				<string>Cerise (BETA)</string>
+				<string>Malachite (BETA)</string>
 			</array>
 		</dict>
 		<dict>
@@ -130,56 +106,32 @@
 				<string>6</string>
 				<string>7</string>
 				<string>8</string>
-				<string>9</string>
-				<string>10</string>
-				<string>11</string>
-				<string>12</string>
-				<string>13</string>
-				<string>14</string>
-				<string>15</string>
-				<string>16</string>
 			</array>
 			<key>shortTitles</key>
 			<array>
 				<string>Midnight</string>
 				<string>Night</string>
-				<string>Graphite</string>
-				<string>Silver</string>
+				<string>Sapphire</string>
 				<string>Crimson</string>
-				<string>Rose</string>
-				<string>Grape</string>
-				<string>Wine</string>
-				<string>Violet</string>
-				<string>Sky</string>
-				<string>Lapis</string>
-				<string>Navy</string>
-				<string>Dusk</string>
-				<string>Jungle</string>
-				<string>Bamboo</string>
-				<string>Saffron</string>
-				<string>Citrus</string>
-				<string>Amber</string>
+				<string>Raspberry</string>
+				<string>Fuchsia</string>
+				<string>Amazon</string>
+				<string>Limerick</string>
+				<string>Cerise (BETA)</string>
+				<string>Malachite (BETA)</string>
 			</array>
 			<key>validTitles</key>
 			<array>
 				<string>Midnight</string>
 				<string>Night</string>
-				<string>Graphite</string>
-				<string>Silver</string>
+				<string>Sapphire</string>
 				<string>Crimson</string>
-				<string>Rose</string>
-				<string>Grape</string>
-				<string>Wine</string>
-				<string>Violet</string>
-				<string>Sky</string>
-				<string>Lapis</string>
-				<string>Navy</string>
-				<string>Dusk</string>
-				<string>Jungle</string>
-				<string>Bamboo</string>
-				<string>Saffron</string>
-				<string>Citrus</string>
-				<string>Amber</string>
+				<string>Raspberry</string>
+				<string>Fuchsia</string>
+				<string>Amazon</string>
+				<string>Limerick</string>
+				<string>Cerise (BETA)</string>
+				<string>Malachite (BETA)</string>
 			</array>
 		</dict>
 		<dict>
@@ -286,26 +238,90 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom HEX Colors (Example: #FF6600)</string>
+			<key>footerText</key>
+			<string>Leave fields black for default Eclipse colors</string>
 		</dict>
 		<dict>
-			<key>enabled</key>
-			<true/>
-			<key>isController</key>
-			<true/>
 			<key>cell</key>
-			<string>PSLinkCell</string>
+			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
-			<key>detail</key>
-			<string>ESCustomColorSettings</string>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>customColorsEnabled</string>
 			<key>label</key>
-			<string>Custom Colors</string>
+			<string>Use Custom Colors</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>NavBar Color</string>
+			<key>key</key>
+			<string>customNavBarHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Theme Color</string>
+			<key>key</key>
+			<string>customThemeHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Tint Color</string>
+			<key>key</key>
+			<string>customTintHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Statusbar Color</string>
+			<key>key</key>
+			<string>customStatusbarHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Text Color</string>
+			<key>key</key>
+			<string>customTextHex</string>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Eclipse 12 by Guillermo Morán (@fr0st) © 2019</string>
+			<string>Eclipse by Guillermo Morán (@fr0st) © 2014</string>
 		</dict>
 	</array>
 	<key>title</key>

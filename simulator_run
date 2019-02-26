@@ -1,5 +1,0 @@
-#!/bin/bash
-
-xcrun simctl spawn booted launchctl debug system/com.apple.SpringBoard --environment DYLD_INSERT_LIBRARIES=.theos/obj/debug/Eclipse.dylib
-
-xcrun simctl spawn booted launchctl stop com.apple.SpringBoard

@@ -2,21 +2,15 @@ OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
 
 %hook SpringBoard
 
-%new
--(void)safeMode {
-    system("killall -SEGV SpringBoard");
-}
-
 -(void)applicationDidFinishLaunching:(BOOL)beh {
     
     %orig;
     
     CFStringRef UDNumber = MGCopyAnswer(CFSTR("UniqueDeviceID"));
-    //NSString* UDID = (NSString*)UDNumber;
-    NSString* UDID = @"kek";
+    NSString* UDID = (NSString*)UDNumber;
     
-    NSString *url =[NSString stringWithFormat:@"http://gmoran.me/api/check.php?UDID=%@", UDID];
-    
+    NSString *url =[NSString stringWithFormat:@"http://gmoran.me/api/eclipse.php?UDID=%@", UDID];
+
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [req setHTTPMethod:@"GET"];
     
@@ -27,37 +21,49 @@ OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
     NSString *result = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     CFRelease(UDNumber);
     
-    if ([result isEqualToString:@"Not Licensed"]) {
+    if (IS_BETA_BUILD) {
+        /*
+        NSString *url =[NSString stringWithFormat:@"http://gmoran.me/api/eclipse_beta.php"];
         
-        if (IS_BETA_BUILD) {
-            
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [req setHTTPMethod:@"GET"];
+        
+        NSHTTPURLResponse* urlResponse = nil;
+        
+        NSData *responseData = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:nil];
+        
+        NSString *result = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        if (![result isEqualToString:@""]) {
             UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle:@"Eclipse 2 Beta"
-                                  message:@"Beta access is restricted to paying customers."
+                                  initWithTitle:@"Eclipse Beta"
+                                  message:result
                                   delegate:nil
-                                  cancelButtonTitle:nil
+                                  cancelButtonTitle:@"Okay"
                                   otherButtonTitles:nil];
             [alert show];
             [alert release];
-            
-            [NSTimer scheduledTimerWithTimeInterval:5.0
-                                             target:self
-                                           selector:@selector(safeMode)
-                                           userInfo:nil
-                                            repeats:NO];
-
+        }
+        [result release];
+         */
+    }
+    
+    if ([result isEqualToString:@"Not Licensed"]) {
+        
+        if (IS_BETA_BUILD) {
+            system("killall -SEGV SpringBoard");
         }
         else {
             /*
-             UIAlertView *alert = [[UIAlertView alloc]
-             initWithTitle:@"Eclipse"
-             message:@"It appears that you are running an unlicensed version of Eclipse. If you enjoy Eclipse, please consider purchasing it on the Cydia Store for $0.99 :) \n\n\n Love, @fr0st"
-             delegate:nil
-             cancelButtonTitle:@"Okay"
-             otherButtonTitles:nil];
-             [alert show];
-             [alert release];
-             [result release];
+            UIAlertView *alert = [[UIAlertView alloc]
+                                  initWithTitle:@"Eclipse"
+                                  message:@"It appears that you are running an unlicensed version of Eclipse. If you enjoy Eclipse, please consider purchasing it on the Cydia Store for $0.99 :) \n\n\n Love, @fr0st"
+                                  delegate:nil
+                                  cancelButtonTitle:@"Okay"
+                                  otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            [result release];
              */
             
             //Enough.
