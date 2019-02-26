@@ -1,0 +1,4945 @@
+/*
+ _______  _______  _       _________ _______  _______  _______
+ (  ____ \(  ____ \( \      \__   __/(  ____ )(  ____ \(  ____ \
+ | (    \/| (    \/| (         ) (   | (    )|| (    \/| (    \/
+ | (__    | |      | |         | |   | (____)|| (_____ | (__
+ |  __)   | |      | |         | |   |  _____)(_____  )|  __)
+ | (      | |      | |         | |   | (            ) || (
+ | (____/\| (____/\| (____/\___) (___| )      /\____) || (____/\
+ (_______/(_______/(_______/\_______/|/       \_______)(_______/
+ 
+ NIGHT MODE FOR IOS - UIKit Hooks
+ COPYRIGHT © 2014 GUILLERMO MORAN
+ 
+*/
+
+#import <objc/runtime.h>
+
+#include "Interfaces.h"
+#include "UIColor+Eclipse.h"
+
+#include <notify.h>
+
+/*
+d8888b. d8888b. d88888b d88888b .d8888.
+88  `8D 88  `8D 88'     88'     88'  YP
+88oodD' 88oobY' 88ooooo 88ooo   `8bo.
+88~~~   88`8b   88~~~~~ 88~~~     `Y8b.
+88      88 `88. 88.     88      db   8D
+88      88   YD Y88888P YP      `8888Y'
+*/
+
+///
+
+
+
+static BOOL shouldOverrideStatusBarStyle = YES;
+
+static NSDictionary *prefs = nil;
+
+extern "C" void BKSTerminateApplicationGroupForReasonAndReportWithDescription(int a, int b, int c, NSString *description);
+
+static void quitAllApps() {
+    
+    SBUIController *sharedUI = [%c(SBUIController) sharedInstance];
+    SBAppSwitcherController *appSwitcherCont = [sharedUI _appSwitcherController];
+    id iconController =  MSHookIvar<id>(appSwitcherCont, "_iconController");
+    
+    NSMutableArray *displayItemList = MSHookIvar<NSMutableArray *>(iconController, "_appList");
+    
+    NSMutableArray *toKill = [[NSMutableArray alloc] init];
+    
+    
+    for (SBDisplayLayout *displayLayout in displayItemList) {
+        NSMutableArray *dispItems = [[NSMutableArray alloc] initWithArray:[displayLayout.displayItems copy]];
+        
+        SBDisplayItem *dispItem = dispItems[0];
+        
+        if (![dispItem.type isEqualToString:@"Homescreen"]) {
+            
+            [toKill addObject:dispItem];
+            
+        }
+    }
+    
+    for (id killApp in toKill) {
+        
+        [appSwitcherCont _quitAppWithDisplayItem:killApp];
+    }
+     
+    
+}
+    
+extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+
+static void quitAppsRequest(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"Please Wait"
+                          message:@"Terminating All Applications..."
+                          delegate:nil
+                          cancelButtonTitle:nil
+                          otherButtonTitles:nil];
+    [alert show];
+    
+    quitAllApps();
+    
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+static void wallpaperChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    
+    
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR(PREFS_CHANGED_NOTIF), NULL, NULL, TRUE);
+    
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Eclipse 2"
+    message:@"Please respring your device for changes to take effect."
+    delegate:nil
+    cancelButtonTitle:@"OK"
+    otherButtonTitles: nil];
+    [alert show];
+    
+}
+
+
+
+static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    
+	// reload prefs
+	[prefs release];
+    
+    //Delete old prefs file
+    
+	if ((prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH]) == nil) {
+        
+        NSLog(@"CREATING PREFERENCE FILE");
+            
+        prefs = @{@"enabled": @NO,
+                  @"themeNPView": @NO,
+                  @"colorDetailText": @YES,
+                  @"translucentNavbars": @NO,
+                  @"replaceSplashScreens": @NO,
+                  @"disableInSB": @NO,
+                  @"cellSeparatorsEnabled": @NO,
+                  @"tintSMSBubbles": @NO,
+                  @"tintMessageBubbles": @NO,
+                  @"reverseModeEnabled": @NO,
+                  
+                  //Selections
+                  @"selectedTint": @0,
+                  @"selectedTheme": @0,
+                  @"selectedNavColor": @0,
+                  
+                  @"selectedKeyboardColor": @0,
+                  @"selectedSplashScreenColor": @0,
+                  @"selectedDockColor": @0,
+                  @"selectedCCColor": @0,
+                  
+                  //Colors
+                  @"customColorsEnabled": @NO,
+                  @"customNavBarHex":@"",
+                  @"customThemeHex":@"",
+                  @"customTintHex":@"",
+                  @"customStatusbarHex":@"",
+                  @"customTextHex":@"",
+                  
+                  
+                  @"darkenWallpapers": @NO};
+        
+		[prefs writeToFile:PREFS_FILE_PATH atomically:YES];
+		prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
+	}
+}
+
+
+static BOOL isTweakEnabled(void) {
+	return (prefs) ? [prefs[@"enabled"] boolValue] : NO;
+    
+}
+
+static BOOL shouldColorDetailText(void) {
+	return (prefs) ? [prefs[@"colorDetailText"] boolValue] : YES;
+}
+
+static BOOL translucentNavbarEnabled(void) {
+	return (prefs) ? [prefs[@"translucentNavbars"] boolValue] : YES;
+}
+
+
+static BOOL customColorEnabled(void) {
+    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+ 
+
+static BOOL cellSeparatorsEnabled(void) {
+    return (prefs) ? [prefs[@"cellSeparatorsEnabled"] boolValue] : YES;
+}
+
+static BOOL tintSMSBubbles(void) {
+    return (prefs) ? [prefs[@"tintSMSBubbles"] boolValue] : YES;
+}
+static BOOL tintMessageBubbles(void) {
+    return (prefs) ? [prefs[@"tintMessageBubbles"] boolValue] : YES;
+}
+static BOOL reverseModeEnabled(void) {
+    return (prefs) ? [prefs[@"reverseModeEnabled"] boolValue] : YES;
+}
+
+//Custom Colors
+static BOOL customNavColorEnabled(void) {
+   // if (IS_BETA_BUILD) {
+        return (prefs) ? [prefs[@"customNavColorsEnabled"] boolValue] : YES;
+   // }
+    
+    //return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+
+static BOOL customThemeColorEnabled(void) {
+   // if (IS_BETA_BUILD) {
+        return (prefs) ? [prefs[@"customThemeColorsEnabled"] boolValue] : YES;
+   // }
+    
+    //return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+
+static BOOL customTintColorEnabled(void) {
+    
+   // if (IS_BETA_BUILD) {
+        return (prefs) ? [prefs[@"customTintColorsEnabled"] boolValue] : YES;
+    //}
+    //return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+
+static BOOL customStatusbarColorEnabled(void) {
+    //if (IS_BETA_BUILD) {
+        return (prefs) ? [prefs[@"customStatusbarColorsEnabled"] boolValue] : YES;
+    //}
+    
+    //return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+
+static BOOL customTextColorEnabled(void) {
+   // if (IS_BETA_BUILD) {
+        return (prefs) ? [prefs[@"customTextColorsEnabled"] boolValue] : YES;
+    //}
+    
+    //return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+}
+
+//Installed Checks
+
+static BOOL isMessageCustomiserInstalled() {
+     return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/CustomMessagesColour.dylib"];
+    
+}
+
+//Experimental Features
+static BOOL darkenKeyboard(void) {
+	return (prefs) ? [prefs[@"darkenKeyboard"] boolValue] : NO;
+}
+
+
+static BOOL isEnabled = isTweakEnabled();
+
+
+
+//Useful Macros
+
+#define colorWithHexString(h,a) [UIColor colorWithHexString:h alpha:a]
+#define darkerColorForColor(c) [UIColor darkerColorForColor:c]
+
+
+//Selections
+
+static int selectedTheme(void) {
+    int selectedTheme = [[prefs objectForKey:@"selectedTheme"] intValue];
+    return selectedTheme;
+}
+
+static int selectedNavColor(void) {
+    int selectedTheme = [[prefs objectForKey:@"selectedNavColor"] intValue];
+    return selectedTheme;
+}
+
+static int selectedKeyboardColor(void) {
+    int selectedTheme = [[prefs objectForKey:@"selectedKeyboardColor"] intValue];
+    return selectedTheme;
+}
+
+//HEX Colors
+
+/*
+ @"customColorEnabled": @NO,
+ @"customNavBarHex":@"",
+ @"customThemeHex":@"",
+ @"customTintHex":@"",
+ @"customStatusbarHex":@"",
+*/
+
+static UIColor* hexNavColor(void) {
+    
+    NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
+    NSString* hex = [prefs objectForKey:@"customNavBarHex"];
+    
+    if (![hex isEqualToString:@""]) {
+        return colorWithHexString(hex,1);
+    }
+    return nil;
+    
+    
+    //UIColor *color = colorFromDefaultsWithKey(@"com.gmoran.eclipse", @"customNavBarHex", @"#0A0A0A");
+    //return color;
+}
+
+static UIColor* hexThemeColor(void) {
+    
+    NSString* hex = [prefs objectForKey:@"customThemeHex"];
+    
+    if (![hex isEqualToString:@""]) {
+        return colorWithHexString(hex,1);
+    }
+    return nil;
+    
+    
+    //UIColor *color = colorFromDefaultsWithKey(@"com.gmoran.eclipse", @"customThemeHex", @"#1E1E1E");
+    //return color;
+}
+
+static UIColor* hexTintColor(void) {
+
+    NSString* hex = [prefs objectForKey:@"customTintHex"];
+    hex = [hex stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (![hex isEqualToString:@""]) {
+        return colorWithHexString(hex,1);
+    }
+    return nil;
+    
+    
+    //UIColor *color = colorFromDefaultsWithKey(@"com.gmoran.eclipse", @"customTintHex", @"#00A3EB");
+    //return color;
+}
+
+static UIColor* hexStatusbarColor(void) {
+    
+    NSString* hex = [prefs objectForKey:@"customStatusbarHex"];
+    hex = [hex stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (![hex isEqualToString:@""]) {
+        return colorWithHexString(hex,1);
+    }
+    return nil;
+    
+     
+    //UIColor *color = colorFromDefaultsWithKey(@"com.gmoran.eclipse", @"customStatusbarHex", @"#E6E6E6");
+    //return color;
+}
+
+static UIColor* hexTextColor(void) {
+    
+    NSString* hex = [prefs objectForKey:@"customTextHex"];
+    
+    if (![hex isEqualToString:@""]) {
+        return colorWithHexString(hex,1);
+    }
+    return nil;
+    
+    
+    //UIColor *color = colorFromDefaultsWithKey(@"com.gmoran.eclipse", @"customTextHex", @"#E6E6E6");
+    //return color;
+}
+
+/* -------------------------- */
+
+static UIColor* textColor(void) {
+    if (customTextColorEnabled()) {
+        if (hexTextColor()) {
+            return hexTextColor();
+        }
+    }
+    
+    return [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
+}
+
+static UIColor* selectedTableColor(void) {
+    int number = [[prefs objectForKey:@"selectedTheme"] intValue];
+    
+    if (customThemeColorEnabled()) {
+        if (hexThemeColor()) {
+            return hexThemeColor();
+        }
+    }
+    
+    if (number == -1) {
+        return MIDNIGHT_TABLE_COLOR;
+    }
+    
+    else if (number == 0) {
+        return NIGHT_TABLE_COLOR;
+    }
+    else if (number == 1) {
+        return GRAPHITE_TABLE_COLOR;
+    }
+    else if (number == 2) {
+        return SILVER_TABLE_COLOR;
+    }
+    else if (number == 3) {
+        return CRIMSON_TABLE_COLOR;
+    }
+    else if (number == 4) {
+        return ROSE_PINK_TABLE_COLOR;
+    }
+    else if (number == 5) {
+        return GRAPE_TABLE_COLOR;
+    }
+    else if (number == 6) {
+        return WINE_TABLE_COLOR;
+    }
+    else if (number == 7) {
+        return VIOLET_TABLE_COLOR;
+    }
+    else if (number == 8) {
+        return SKY_TABLE_COLOR;
+    }
+    else if (number == 9) {
+        return LAPIS_TABLE_COLOR;
+    }
+    else if (number == 10) {
+        return NAVY_TABLE_COLOR;
+    }
+    else if (number == 11) {
+        return DUSK_TABLE_COLOR;
+    }
+    else if (number == 12) {
+        return JUNGLE_TABLE_COLOR;
+    }
+    else if (number == 13) {
+        return BAMBOO_TABLE_COLOR;
+    }
+    else if (number == 14) {
+        return SAFFRON_TABLE_COLOR;
+    }
+    else if (number == 15) {
+        return CITRUS_TABLE_COLOR;
+    }
+    else if (number == 16) {
+        return AMBER_TABLE_COLOR;
+    }
+    
+    else {
+        return NIGHT_TABLE_COLOR;
+    }
+
+}
+
+static UIColor* selectedViewColor(void) {
+    int number = [[prefs objectForKey:@"selectedTheme"] intValue];
+    
+    if (customThemeColorEnabled()) {
+        if (hexThemeColor()) {
+            return darkerColorForColor(hexThemeColor());
+        }
+    }
+    
+    if (number == -1) {
+        return MIDNIGHT_VIEW_COLOR;
+    }
+    else if (number == 0) {
+        return NIGHT_VIEW_COLOR;
+    }
+    else if (number == 1) {
+        return GRAPHITE_VIEW_COLOR;
+    }
+    else if (number == 2) {
+        return SILVER_VIEW_COLOR;
+    }
+    else if (number == 3) {
+        return CRIMSON_VIEW_COLOR;
+    }
+    else if (number == 4) {
+        return ROSE_PINK_VIEW_COLOR;
+    }
+    else if (number == 5) {
+        return GRAPE_VIEW_COLOR;
+    }
+    else if (number == 6) {
+        return WINE_VIEW_COLOR;
+    }
+    else if (number == 7) {
+        return VIOLET_VIEW_COLOR;
+    }
+    else if (number == 8) {
+        return SKY_VIEW_COLOR;
+    }
+    else if (number == 9) {
+        return LAPIS_VIEW_COLOR;
+    }
+    else if (number == 10) {
+        return NAVY_VIEW_COLOR;
+    }
+    else if (number == 11) {
+        return DUSK_VIEW_COLOR;
+    }
+    else if (number == 12) {
+        return JUNGLE_VIEW_COLOR;
+    }
+    else if (number == 13) {
+        return BAMBOO_VIEW_COLOR;
+    }
+    else if (number == 14) {
+        return SAFFRON_VIEW_COLOR;
+    }
+    else if (number == 15) {
+        return CITRUS_VIEW_COLOR;
+    }
+    else if (number == 16) {
+        return AMBER_VIEW_COLOR;
+    }
+    
+    
+    else {
+        return NIGHT_VIEW_COLOR;
+    }
+
+}
+
+static UIColor* selectedBarColor(void) {
+    int number = [[prefs objectForKey:@"selectedNavColor"] intValue];
+    
+    if (customNavColorEnabled()) {
+        if (hexNavColor()) {
+            return hexNavColor();
+        }
+    }
+    
+    if (number == -1) {
+        return MIDNIGHT_BAR_COLOR;
+    }
+    else if (number == 0) {
+        return NIGHT_BAR_COLOR;
+    }
+    else if (number == 1) {
+        return GRAPHITE_BAR_COLOR;
+    }
+    else if (number == 2) {
+        return SILVER_BAR_COLOR;
+    }
+    else if (number == 3) {
+        return CRIMSON_BAR_COLOR;
+    }
+    else if (number == 4) {
+        return ROSE_PINK_BAR_COLOR;
+    }
+    else if (number == 5) {
+        return GRAPE_BAR_COLOR;
+    }
+    else if (number == 6) {
+        return WINE_BAR_COLOR;
+    }
+    else if (number == 7) {
+        return VIOLET_BAR_COLOR;
+    }
+    else if (number == 8) {
+        return SKY_BAR_COLOR;
+    }
+    else if (number == 9) {
+        return LAPIS_BAR_COLOR;
+    }
+    else if (number == 10) {
+        return NAVY_BAR_COLOR;
+    }
+    else if (number == 11) {
+        return DUSK_BAR_COLOR;
+    }
+    else if (number == 12) {
+        return JUNGLE_BAR_COLOR;
+    }
+    else if (number == 13) {
+        return BAMBOO_BAR_COLOR;
+    }
+    else if (number == 14) {
+        return SAFFRON_BAR_COLOR;
+    }
+    else if (number == 15) {
+        return CITRUS_BAR_COLOR;
+    }
+    else if (number == 16) {
+        return AMBER_BAR_COLOR;
+    }
+    
+    
+    else {
+        return NIGHT_BAR_COLOR;
+    }
+
+}
+
+static UIColor* theTableColor(void) {
+    if (reverseModeEnabled()) {
+        return selectedViewColor();
+    }
+    else {
+        return selectedTableColor();
+    }
+}
+
+static UIColor* theViewColor(void) {
+    if (reverseModeEnabled()) {
+        return selectedTableColor();
+    }
+    else {
+        return selectedViewColor();
+    }
+}
+
+#define TABLE_COLOR theTableColor() //Used for TableView
+
+#define NAV_COLOR selectedBarColor() //Used for NavBars, Toolbars, TabBars
+
+#define VIEW_COLOR theViewColor() //Used for TableCells, UIViews
+
+//Advanced Settings
+
+static UIColor* keyboardColor(void) {
+    int number = selectedKeyboardColor();
+    
+    /*
+    if (customColorEnabled()) {
+        if (hexNavColor()) {
+            return hexNavColor();
+        }
+    }
+     */
+    
+    if (number == -2) {
+        return VIEW_COLOR;
+    }
+    
+    else if (number == -1) {
+        return MIDNIGHT_TABLE_COLOR;
+    }
+    
+    else if (number == 0) {
+        return NIGHT_TABLE_COLOR;
+    }
+    else if (number == 1) {
+        return GRAPHITE_TABLE_COLOR;
+    }
+    else if (number == 2) {
+        return SILVER_TABLE_COLOR;
+    }
+    else if (number == 3) {
+        return CRIMSON_TABLE_COLOR;
+    }
+    else if (number == 4) {
+        return ROSE_PINK_TABLE_COLOR;
+    }
+    else if (number == 5) {
+        return GRAPE_TABLE_COLOR;
+    }
+    else if (number == 6) {
+        return WINE_TABLE_COLOR;
+    }
+    else if (number == 7) {
+        return VIOLET_TABLE_COLOR;
+    }
+    else if (number == 8) {
+        return SKY_TABLE_COLOR;
+    }
+    else if (number == 9) {
+        return LAPIS_TABLE_COLOR;
+    }
+    else if (number == 10) {
+        return NAVY_TABLE_COLOR;
+    }
+    else if (number == 11) {
+        return DUSK_TABLE_COLOR;
+    }
+    else if (number == 12) {
+        return JUNGLE_TABLE_COLOR;
+    }
+    else if (number == 13) {
+        return BAMBOO_TABLE_COLOR;
+    }
+    else if (number == 14) {
+        return SAFFRON_TABLE_COLOR;
+    }
+    else if (number == 15) {
+        return CITRUS_TABLE_COLOR;
+    }
+    else if (number == 16) {
+        return AMBER_TABLE_COLOR;
+    }
+    
+    else {
+        return TABLE_COLOR;
+    }
+}
+
+
+
+
+
+
+
+//Other Colors
+
+//#define ALT_TEXT_COLOR [UIColor colorWithRed:180.0/255.0f green:180.0/255.0f blue:180.0/255.0f alpha:1.0f] //Replaces text colors
+
+#define TEXT_COLOR textColor()
+
+//#define TABLE_SEPARATOR_COLOR [UIColor colorWithRed:60.0/255.0f green:60.0/255.0f blue:60.0/255.0f alpha:1.0f] //Table Separators
+
+static UIColor* tableSeparatorColor(void) {
+    if (cellSeparatorsEnabled()) {
+        return [UIColor colorWithRed:60.0/255.0f green:60.0/255.0f blue:60.0/255.0f alpha:1.0f];
+    }
+    else {
+        return [UIColor darkerColorForSelectionColor:TABLE_COLOR];
+    }
+}
+
+#define TABLE_SEPARATOR_COLOR TABLE_COLOR
+
+
+
+static UIColor* selectedStatusbarTintColor(void) {
+    int number = [[prefs objectForKey:@"statusbarTint"] intValue];
+    
+    if (customStatusbarColorEnabled()) {
+        if (hexStatusbarColor()) {
+            return hexStatusbarColor();
+        }
+    }
+    
+    if (number == 0) {
+        //return textColor(); //White
+        return WHITE_COLOR;
+    }
+    else if (number == 1) {
+        return BABY_BLUE_COLOR;
+    }
+    else if (number == 2) {
+        return DARK_ORANGE_COLOR;
+    }
+    else if (number == 3) {
+        return PINK_COLOR;
+    }
+    else if (number == 4) {
+        return GREEN_COLOR;
+    }
+    else if (number == 5) {
+        return PURPLE_COLOR;
+    }
+    else if (number == 6) {
+        return RED_COLOR;
+    }
+    else if (number == 7) {
+        return YELLOW_COLOR;
+    }
+    
+    else {
+        //return textColor(); //White
+        return WHITE_COLOR;
+    }
+
+}
+
+
+static UIColor* selectedTintColor(void) {
+   
+    int number = [[prefs objectForKey:@"selectedTint"] intValue];
+    
+    if (customTintColorEnabled()) {
+        if (hexTintColor()) {
+            return hexTintColor();
+        }
+    }
+    
+    if (number == 0) {
+        return BABY_BLUE_COLOR;
+    }
+    if (number == 1) {
+        return WHITE_COLOR;
+    }
+    if (number == 2) {
+        return DARK_ORANGE_COLOR;
+    }
+    if (number == 3) {
+        return PINK_COLOR;
+    }
+    if (number == 4) {
+        return GREEN_COLOR;
+    }
+    if (number == 5) {
+        return PURPLE_COLOR;
+    }
+    if (number == 6) {
+        return RED_COLOR;
+    }
+    if (number == 7) {
+        return YELLOW_COLOR;
+    }
+    if (number == 8) {
+        
+        
+        NSArray* availableColors = @[BABY_BLUE_COLOR, WHITE_COLOR, PINK_COLOR, DARK_ORANGE_COLOR, GREEN_COLOR, PURPLE_COLOR, RED_COLOR, YELLOW_COLOR];
+        
+        UIColor* rand = availableColors.count == 0 ? nil : availableColors[arc4random_uniform(availableColors.count)];
+        
+        return rand;
+        
+        /*
+         CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
+         CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
+         CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
+         UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+         
+         return color;
+         */
+    }
+    else {
+        return BABY_BLUE_COLOR;
+    }
+
+    
+}
+
+static void setTintColors() {
+    [[UINavigationBar appearance] setTintColor:selectedTintColor()];
+    [[UISlider appearance] setMinimumTrackTintColor:selectedTintColor()];
+    [[UIToolbar appearance] setTintColor:selectedTintColor()];
+    [[UITabBar appearance] setTintColor:selectedTintColor()];
+    
+    [[UITextView appearance] setTintColor:selectedTintColor()];
+    [[UITextField appearance] setTintColor:selectedTintColor()];
+    
+    [[UITableView appearance] setTintColor:selectedTintColor()];
+    /*
+    //Experimental
+     
+    [[UIApplication sharedApplication] keyWindow].tintColor = selectedTintColor();
+    
+    //[[UIView appearance] setTintColor:selectedTintColor()]; //Buggy?
+    [[UITableView appearance] setTintColor:selectedTintColor()];
+    [[UITableViewCell appearance] setTintColor:selectedTintColor()];
+    [[UIButton appearance] setTintColor:selectedTintColor()];
+     */
+    
+    //[[UIButton appearance] setTintColor:selectedTintColor()];
+    
+}
+
+static BOOL isLightColor(UIColor* color) {
+    
+        
+    //BOOL is = NO;
+        
+    CGFloat white = 0;
+    CGFloat red = 0;
+    CGFloat green = 0;
+    CGFloat blue = 0;
+    CGFloat alpha = 0;
+    [color getWhite:&white alpha:&alpha];
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+        
+    //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:selectedTintColor()]));
+
+    if ((red <= 0.5) || (green <= 0.5) || (blue <= 0.5)) {
+        return NO;
+    }
+    else if (white >= 0.5 && alpha > 0.7) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+    
+    
+}
+
+static BOOL isTextDarkColor(UIColor* color) {
+    
+    /*
+    CGFloat white = 0;
+    CGFloat red = 0;
+    CGFloat green = 0;
+    CGFloat blue = 0;
+    [color getWhite:&white alpha:nil];
+    [color getRed:&red green:&green blue:&blue alpha:nil];
+    
+   return ((white <= 0.5) && (red <= 0.5) && (green <= 0.5)  && (blue <= 0.5) && (![color isEqual:selectedTintColor()]));
+     */
+    
+    if ([UIColor color:color isEqualToColor:[UIColor blackColor] withTolerance:0.7] && (![color isEqual:selectedTintColor()])) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+    
+}
+
+//Uniformity Support
+
+
+static void darkenUIElements() {
+
+    setTintColors();
+    
+    //[[UINavigationBar appearance] setBarTintColor:NAV_COLOR];
+    [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
+    
+    //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
+    
+    //[[UISearchBar appearance] setBarStyle:UIBarStyleBlack];
+    
+    [[UIToolbar appearance] setBarTintColor:NAV_COLOR];
+    //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
+    
+    [[UITabBar appearance] setBarTintColor:NAV_COLOR];
+    [[UITabBar appearance] setBarStyle:UIBarStyleBlack];
+    
+    [[UISwitch appearance] setTintColor:[selectedTintColor() colorWithAlphaComponent:0.6]];
+    [[UISwitch appearance] setOnTintColor:[selectedTintColor() colorWithAlphaComponent:0.3]];
+    //[[UISwitch appearance] setThumbTintColor:TEXT_COLOR];
+    
+    
+}
+
+
+/*
+  .d8b.  db      d88888b d8888b. d888888b .d8888.
+ d8' `8b 88      88'     88  `8D `~~88~~' 88'  YP
+ 88ooo88 88      88ooooo 88oobY'    88    `8bo.
+ 88~~~88 88      88~~~~~ 88`8b      88      `Y8b.
+ 88   88 88booo. 88.     88 `88.    88    db   8D
+ YP   YP Y88888P Y88888P 88   YD    YP    `8888Y'
+*/
+
+
+%hook _UITextFieldRoundedRectBackgroundViewNeue
+
+-(id)fillColor {
+    if (isEnabled) {
+        return [UIColor clearColor];
+    }
+    return %orig;
+}
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id ok = %orig;
+    if (isEnabled) {
+        [self setFillColor:[UIColor clearColor]];
+    }
+    return ok;
+}
+%end
+
+%hook _UIBackdropViewSettings
+
+-(id)colorTint {
+    UIColor* color = %orig;
+    
+    id _backdrop = MSHookIvar<id>(self, "_backdrop");
+    
+    //if ([[_backdrop superview] isKindOfClass:[UIActionSheet class]] && [self style] != 2060) {
+    
+    
+    /* ==== INFORMATION ====
+     
+     _UIBackdropViewSettingsAdaptiveLight = 2060 || iOS 7 Control Center
+     
+     _UIBackdropViewSettingsUltraLight = 2010 || App Store, iTunes, Action Sheets, and Share Sheets
+     
+     _UIBackdropViewSettingsLight = 0, 1000, 1003, 2020, 10090, 10100 || Dock, Spotlight, Folders
+     
+     */
+    
+    
+    
+    if (isEnabled && [self class] == %c(_UIBackdropViewSettingsUltraLight)) {
+        
+        color = [NAV_COLOR colorWithAlphaComponent:0.9];
+        [_backdrop setAlpha:0.9];
+    }
+    
+    
+    if (isEnabled && darkenKeyboard() && [_backdrop isKindOfClass:objc_getClass("UIKBBackdropView")]) {
+        color = [keyboardColor() colorWithAlphaComponent:0.9];
+        [_backdrop setAlpha:0.9];
+    }
+    
+    
+    return color;
+}
+
+%end
+
+
+%hook _UIModalItemAlertContentView
+
+-(void)layout {
+    %orig;
+    
+    if (isTweakEnabled()) {
+        UIView* _2ButtonsSeparators = MSHookIvar<UIView*>(self, "_2ButtonsSeparators");
+        _2ButtonsSeparators.backgroundColor = selectedTintColor();
+        
+        UIView* _tableViewTopSeparator = MSHookIvar<UIView*>(self, "_tableViewTopSeparator");
+        _tableViewTopSeparator.backgroundColor = selectedTintColor();
+        
+    
+        
+        
+    }
+    
+}
+
+%end
+
+%hook _UIModalItemAlertBackgroundView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isTweakEnabled()) {
+        id _effectView = MSHookIvar<id>(self, "_effectView");
+        UIImageView* _fillingView = MSHookIvar<UIImageView*>(self, "_fillingView");
+        
+        [_effectView setHidden:YES];
+        
+        _fillingView.image = nil;
+        _fillingView.backgroundColor = NAV_COLOR;
+        
+    }
+    
+}
+
+%end
+
+%hook _UIModalItemContentView
+
+-(id)titleLabel {
+    UILabel* label = %orig;
+    
+    if (isTweakEnabled()) {
+        label.textColor = selectedTintColor();
+    }
+    return label;
+}
+
+-(id)subtitleLabel {
+    UILabel* label = %orig;
+    
+    if (isTweakEnabled()) {
+        label.textColor = TEXT_COLOR;
+    }
+    return label;
+}
+
+-(id)messageLabel {
+    UILabel* label = %orig;
+    
+    if (isTweakEnabled()) {
+        label.textColor = TEXT_COLOR;
+    }
+    return label;
+}
+
+%end
+
+/*
+ d8b   db  .d8b.  db    db      d888888b d888888b d88888b .88b  d88. .d8888.
+ 888o  88 d8' `8b 88    88        `88'   `~~88~~' 88'     88'YbdP`88 88'  YP
+ 88V8o 88 88ooo88 Y8    8P         88       88    88ooooo 88  88  88 `8bo.
+ 88 V8o88 88~~~88 `8b  d8'         88       88    88~~~~~ 88  88  88   `Y8b.
+ 88  V888 88   88  `8bd8'         .88.      88    88.     88  88  88 db   8D
+ VP   V8P YP   YP    YP         Y888888P    YP    Y88888P YP  YP  YP `8888Y'
+*/
+
+
+%hook UINavigationBar
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        shouldOverrideStatusBarStyle = YES;
+       
+        
+        @try {
+            [self setBarTintColor:NAV_COLOR];
+            [self setBarStyle:UIBarStyleBlackTranslucent];
+            
+        }
+        @catch (NSException * e) {
+            //Nah
+        }
+        @finally {
+            //NSLog(@"Eclipse 2: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
+        }
+        
+        
+    }
+}
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        
+        
+        shouldOverrideStatusBarStyle = YES;
+        
+        @try {
+            [self setBarTintColor:NAV_COLOR];
+            [self setBarStyle:UIBarStyleBlackTranslucent];
+            
+        }
+        @catch (NSException * e) {
+            //Nah
+        }
+        @finally {
+            NSLog(@"Eclipse 2: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
+        }
+    }
+}
+
+-(void)setBounds:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        shouldOverrideStatusBarStyle = YES;
+        
+        @try {
+            [self setBarTintColor:NAV_COLOR];
+            [self setBarStyle:UIBarStyleBlackTranslucent];
+            
+        }
+        @catch (NSException * e) {
+            //Nah
+        }
+        @finally {
+            NSLog(@"Eclipse 2: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
+        }
+    }
+}
+
+-(void)setBarTintColor:(UIColor*)color {
+    if (isEnabled) {
+        color = NAV_COLOR;
+        if (translucentNavbarEnabled()) {
+            [self setAlpha:0.9];
+        }
+    }
+    %orig(color);
+}
+ 
+
+
+
+%end
+
+%hook UITabBar
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
+    }
+}
+
+-(void)setBarTintColor:(id)arg1 {
+    if (isEnabled) {
+        %orig(NAV_COLOR);
+        return;
+    }
+    %orig;
+}
+
+%end
+
+
+%hook UIToolbar
+
+
+/*
+-(void)setBarStyle:(int)arg1 {
+    if (isEnabled && !(IsiPad)) {
+        [self setBarTintColor:NAV_COLOR];
+        return;
+    }
+    %orig;
+}
+*/
+
+-(void)setBarTintColor:(id)arg1 {
+    if (isEnabled && !(IsiPad)) {
+        %orig(NAV_COLOR);
+        return;
+    }
+    %orig;
+}
+
+/*
+-(void)setTranslucent:(BOOL)arg1 {
+    if (isEnabled && !(IsiPad)) {
+        %orig(NO);
+        return;
+    }
+    return %orig;
+}
+-(BOOL)isTranslucent {
+    if (isEnabled && !(IsiPad)) {
+        return NO;
+    }
+    return %orig;
+}
+ */
+
+%end
+
+
+
+
+/*
+ db    db d888888b  .o88b.  .d88b.  db       .d88b.  d8888b.
+ 88    88   `88'   d8P  Y8 .8P  Y8. 88      .8P  Y8. 88  `8D
+ 88    88    88    8P      88    88 88      88    88 88oobY'
+ 88    88    88    8b      88    88 88      88    88 88`8b
+ 88b  d88   .88.   Y8b  d8 `8b  d8' 88booo. `8b  d8' 88 `88.
+ ~Y8888P' Y888888P  `Y88P'  `Y88P'  Y88888P  `Y88P'  88   YD
+*/
+
+
+%hook UIColor
+
++(UIColor*)systemGreenColor {
+    if (isEnabled && (selectedTintColor() != WHITE_COLOR)) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
+
++(UIColor*)systemBlueColor {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
+
+%end
+
+/*
+  .o88b.  .d88b.  db      db           db    db d888888b d88888b db   d8b   db
+ d8P  Y8 .8P  Y8. 88      88           88    88   `88'   88'     88   I8I   88
+ 8P      88    88 88      88           Y8    8P    88    88ooooo 88   I8I   88
+ 8b      88    88 88      88           `8b  d8'    88    88~~~~~ Y8   I8I   88
+ Y8b  d8 `8b  d8' 88booo. 88booo.       `8bd8'    .88.   88.     `8b d8'8b d8'
+  `Y88P'  `Y88P'  Y88888P Y88888P         YP    Y888888P Y88888P  `8b8' `8d8'
+ */
+
+/*
+ 
+ Collection View in Videos is 0 alpha BGColor. Figure it out, asshole.
+ 
+%hook UICollectionView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        
+        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ![self isKindOfClass:%c(HBFPBackgroundView)]) {
+            
+            [self setBackgroundColor:VIEW_COLOR];
+        }
+    }
+}
+
+%end
+ */
+
+/*
+ 
+ UIImageView
+ 
+*/
+
+%group AutoReplaceColor
+
+%hook UIImageView
+
+
+
+-(void)layoutSubviews {
+    %orig;
+    
+    if ([UIColor color:[UIColor getDominantColor:self.image] isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
+    //if ([UIColor color:[self.image averageColor] isEqualToColor:[UIColor whiteColor] withTolerance:0.9]) {
+  
+        //self.image = [self.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        //[self setTintColor:VIEW_COLOR];
+        
+        [self setAlpha:0.3];
+   }
+    
+    
+}
+%end
+%end
+
+/*
+ db    db d888888b db    db d888888b d88888b db   d8b   db
+ 88    88   `88'   88    88   `88'   88'     88   I8I   88
+ 88    88    88    Y8    8P    88    88ooooo 88   I8I   88
+ 88    88    88    `8b  d8'    88    88~~~~~ Y8   I8I   88
+ 88b  d88   .88.    `8bd8'    .88.   88.     `8b d8'8b d8'
+ ~Y8888P' Y888888P    YP    Y888888P Y88888P  `8b8' `8d8'
+*/
+
+%hook UIKBBackdropView
+
+-(id)initWithFrame:(CGRect)arg1 style:(long long)arg2 primaryBackdrop:(BOOL)arg3 {
+    id kek = %orig;
+    [self setTag:VIEW_EXCLUDE_TAG];
+    
+    for (UIView* view in [self subviews]) {
+        [view setTag:VIEW_EXCLUDE_TAG];
+    }
+    return kek;
+}
+
+%end
+
+@interface UIView(Eclipse)
+-(void)override;
+@end
+
+
+%hook UIView
+
+//HBFPBackgroundView == FlagPaint
+
+#define FLAGPAINT objc_getClass("HBFPBackgroundView")
+
+%new
+-(void)override {
+    
+    if (isEnabled) {
+        
+        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+            
+            [self setBackgroundColor:VIEW_COLOR];
+        }
+    }
+}
+
+-(id)backgroundColor {
+    id color = %orig;
+    if (isEnabled) {
+        
+        if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+            
+            return VIEW_COLOR;
+        }
+    }
+    return %orig;
+    
+}
+
+-(id)initWithCoder:(CGRect)arg1 {
+    id ok = %orig;
+    [self override];
+    return ok;
+}
+
+-(id)init {
+    id ok = %orig;
+    [self override];
+    return ok;
+}
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id ok = %orig;
+    [self override];
+    return ok;
+}
+
+-(id)initWithSize:(CGSize)arg1 {
+    id ok = %orig;
+    [self override];
+    return ok;
+}
+
+//#define KB_BG_COLOR [UIColor colorWithRed:1.0f green:0.87f blue:0.87f alpha:0.87] //Fuck You Apple. (Some apps don't use whiteColor)
+
+
+
+//if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
+
+-(void)setBackgroundColor:(UIColor*)color {
+    if (isEnabled) {
+         if (isLightColor(color) && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+             
+            color = VIEW_COLOR;
+             
+        }
+    }
+    %orig(color);
+}
+
+
+-(void)layoutSubviews {
+    
+    %orig;
+    
+    if (isEnabled) {
+        
+        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+            
+            for (id v in self.subviews){
+                
+                if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+                    
+                    if (isTextDarkColor([v textColor])) {
+                        [v setTag:52961101];
+                        [v setBackgroundColor:[UIColor clearColor]];
+                        [v setTextColor: TEXT_COLOR];
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+ 
+ //Comment to fix crashing on Viber, possibly others.
+
+-(void)didAddSubview:(id)v {
+    %orig;
+    
+    if (isEnabled) {
+        
+        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+            
+            if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+                
+                if (isTextDarkColor([v textColor])) {
+                    [v setTag:52961101];
+                    [v setBackgroundColor:[UIColor clearColor]];
+                    [v setTextColor: TEXT_COLOR];
+                }
+            }
+        }
+    }
+}
+
+-(void)addSubview:(id)v {
+    %orig;
+    
+    if (isEnabled) {
+        
+        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+            
+            if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+                
+                if (isTextDarkColor([v textColor])) {
+                    [v setTag:52961101];
+                    [v setBackgroundColor:[UIColor clearColor]];
+                    [v setTextColor: TEXT_COLOR];
+                }
+            }
+        }
+    }
+
+}
+ 
+ */
+
+%end
+ 
+ 
+/*
+ d888888b db    db d888888b db    db d888888b d88888b db   d8b   db
+ `~~88~~' `8b  d8' `~~88~~' 88    88   `88'   88'     88   I8I   88
+    88     `8bd8'     88    Y8    8P    88    88ooooo 88   I8I   88
+    88     .dPYb.     88    `8b  d8'    88    88~~~~~ Y8   I8I   88
+    88    .8P  Y8.    88     `8bd8'    .88.   88.     `8b d8'8b d8'
+    YP    YP    YP    YP       YP    Y888888P Y88888P  `8b8' `8d8'
+*/
+
+%hook UITextView
+
+-(id)init {
+    id  wow = %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return wow;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+    return wow;
+}
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id  wow = %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return wow;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+    return wow;
+}
+
+-(id)initWithCoder:(id)arg1 {
+    id  wow = %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return wow;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+    return wow;
+}
+
+-(id)initWithFrame:(CGRect)arg1 font:(id)arg2 {
+    
+    id  wow = %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return wow;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+    return wow;
+}
+
+-(id)initWithFrame:(CGRect)arg1 textContainer:(id)arg2 {
+    id  wow = %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return wow;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+    return wow;
+}
+
+
+
+
+
+-(id)backgroundColor {
+    UIColor* color = %orig;
+    if (isEnabled) {
+        if (!isLightColor(color)) {
+            
+            color = [UIColor clearColor];
+        }
+    }
+    return color;
+}
+
+-(id)textColor {
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                return TEXT_COLOR;
+                
+            }
+        }
+    }
+    return %orig;
+}
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+}
+
+//These methods cause hanging
+
+/*
+-(void)setFrame:(CGRect)arg1 {
+}
+ */
+/*
+-(void)setBounds:(CGRect)arg1 {
+}
+*/
+
+/*
+-(void)layoutSubviews {
+}
+ */
+
+%end
+
+/*
+ d888888b db    db d888888b d88888b d888888b d88888b db      d8888b.
+ `~~88~~' `8b  d8' `~~88~~' 88'       `88'   88'     88      88  `8D
+    88     `8bd8'     88    88ooo      88    88ooooo 88      88   88
+    88     .dPYb.     88    88~~~      88    88~~~~~ 88      88   88
+    88    .8P  Y8.    88    88        .88.   88.     88booo. 88  .8D
+    YP    YP    YP    YP    YP      Y888888P Y88888P Y88888P Y8888D'
+*/
+
+%hook UISearchBar
+
+-(void)drawRect:(CGRect)rect {
+    %orig;
+    if (isEnabled) {
+        [self setBarTintColor:NAV_COLOR];
+    }
+}
+
+%end
+
+%hook UITextField
+
+%new
+-(void)override {
+    if (isEnabled) {
+        
+        //[self setKeyboardAppearance:UIKeyboardAppearanceDark];
+        if (!isLightColor(self.backgroundColor)) {
+            
+            //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+            
+        }
+        
+        [self setTextColor:TEXT_COLOR];
+        //self.textColor = TEXT_COLOR;
+    }
+}
+/*
+ - (void)drawPlaceholderInRect:(CGRect)rect {
+ [DARKER_ORANGE_COLOR setFill];
+ [[self placeholder] drawInRect:rect withFont:[UIFont systemFontOfSize:12]];
+ }
+ */
+
+//-(void)setKeyboardAppearance:(int)arg1 ;
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id christmasPresents = %orig;
+    [self override];
+    return christmasPresents;
+}
+
+
+ -(id)initWithCoder:(id)arg1 {
+     id christmasPresents = %orig;
+     [self override];
+     return christmasPresents;
+ }
+
+-(id)init {
+    id christmasPresents = %orig;
+    [self override];
+    return christmasPresents;
+}
+/*
+ -(void)setKeyboardAppearance:(int)arg1 {
+ if (isEnabled) {
+ %orig(UIKeyboardAppearanceDark);
+ return;
+ }
+ %orig;
+ }
+ */
+
+-(void)setTextColor:(id)arg1 {
+    if (isEnabled) {
+        if (![self isKindOfClass:%c(SBSearchField)]) {
+            
+            if (!isLightColor(self.backgroundColor)) {
+                //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+            }
+            
+            %orig(TEXT_COLOR);
+            return;
+        }
+    }
+    %orig;
+}
+ 
+
+-(id)textColor {
+    UIColor* color = %orig;
+    if (isEnabled) {
+        
+        if (![self isKindOfClass:%c(SBSearchField)]) {
+            
+            if (!isLightColor(self.backgroundColor)) {
+                
+                //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+            }
+            color = TEXT_COLOR;
+            
+        }
+    }
+    return color;
+}
+ 
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        if (![self isKindOfClass:%c(SBSearchField)]) {
+            
+            if (!isLightColor(self.backgroundColor)) {
+                [self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+            }
+            
+                
+            [self setTextColor:TEXT_COLOR];
+            //self.textColor = TEXT_COLOR;
+            
+        }
+    }
+}
+
+
+%end
+
+/*
+ db    db d888888b db       .d8b.  d8888b. d88888b db
+ 88    88   `88'   88      d8' `8b 88  `8D 88'     88
+ 88    88    88    88      88ooo88 88oooY' 88ooooo 88
+ 88    88    88    88      88~~~88 88~~~b. 88~~~~~ 88
+ 88b  d88   .88.   88booo. 88   88 88   8D 88.     88booo.
+ ~Y8888P' Y888888P Y88888P YP   YP Y8888P' Y88888P Y88888P
+*/
+
+
+
+@interface UILabel(Eclipse)
+-(void)override;
+@end
+
+%hook UILabel
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.superview.backgroundColor)) {
+            
+            if (isTextDarkColor(self.textColor)) {
+                //self.tag = 52961101;
+                [self setBackgroundColor:[UIColor clearColor]];
+                [self setTextColor:TEXT_COLOR];
+            }
+        }
+    }
+}
+
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.superview.backgroundColor)) {
+            
+            if (isTextDarkColor(self.textColor)) {
+                //self.tag = 52961101;
+                [self setBackgroundColor:[UIColor clearColor]];
+                [self setTextColor:TEXT_COLOR];
+            }
+        }
+    }
+}
+
+-(void)didMoveToSuperview {
+    %orig;
+    
+    if (isEnabled) {
+        if (!isLightColor(self.superview.backgroundColor)) {
+            
+            if (isTextDarkColor(self.textColor)) {
+                //self.tag = 52961101;
+                [self setBackgroundColor:[UIColor clearColor]];
+                [self setTextColor:TEXT_COLOR];
+            }
+        }
+    }
+}
+
+
+
+-(void)setTextColor:(id)color {
+    if (isEnabled) {
+        if (self.tag == 52961101) {
+            color = TEXT_COLOR;
+            %orig(color);
+            return;
+        }
+        if (!isLightColor(self.superview.backgroundColor)) {
+            
+            if (isTextDarkColor(color)) {
+                //self.tag = 52961101;
+                self.backgroundColor = [UIColor clearColor];
+                color = TEXT_COLOR;
+            }
+        }
+    }
+    
+    %orig(color);
+}
+
+%end
+
+
+
+/*
+ d888888b  .d8b.  d8888b. db      d88888b
+ `~~88~~' d8' `8b 88  `8D 88      88'
+    88    88ooo88 88oooY' 88      88ooooo
+    88    88~~~88 88~~~b. 88      88~~~~~
+    88    88   88 88   8D 88booo. 88.
+    YP    YP   YP Y8888P' Y88888P Y88888P
+*/
+
+#define TABLE_BG_COLOR [UIColor colorWithRed:0.937255 green:0.937255 blue:0.956863 alpha:1.0f] //Default Table BG Color
+
+static CGColorSpaceRef tableBGColorSpace = CGColorGetColorSpace([TABLE_BG_COLOR CGColor]);
+
+#define CELL_WHITE [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0f] //Fuck You Apple. (Some apps don't use whiteColor)
+
+static CGColorSpaceRef cellWhiteColorSpace = CGColorGetColorSpace([CELL_WHITE CGColor]);
+
+#define IPAD_CELL_WHITE [UIColor colorWithRed:0.145098 green:0.145098 blue:0.145098 alpha:1.0f]
+
+static CGColorSpaceRef iPadCellWhiteColorSpace = CGColorGetColorSpace([IPAD_CELL_WHITE CGColor]);
+
+
+static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteColor] CGColor]);
+
+
+%hook UITableView
+
+
+%new
+-(void)override {
+    
+    if (isEnabled) {
+        
+        CGColorSpaceRef origColorSpace = CGColorGetColorSpace([self.backgroundColor CGColor]);
+        
+        //if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
+        
+        if ([UIColor color:self.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
+            
+            
+            self.sectionIndexBackgroundColor = [UIColor clearColor];
+            
+            
+            [self setSeparatorColor:TABLE_SEPARATOR_COLOR];
+            self.separatorColor = TABLE_SEPARATOR_COLOR;
+            
+            [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
+            self.sectionIndexTrackingBackgroundColor = [UIColor clearColor];
+            
+            [self setSectionIndexColor:selectedTintColor()];
+            self.sectionIndexColor = selectedTintColor();
+           
+        
+            [self setBackgroundColor: TABLE_COLOR];
+            self.backgroundColor = TABLE_COLOR;
+            
+        }
+    }
+}
+
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id itsTenPM = %orig;
+    [self override];
+    return itsTenPM;
+}
+
+
+-(id)initWithCoder:(id)arg1 {
+    id itsTenPM = %orig;
+    [self override];
+    return itsTenPM;
+}
+
+ 
+
+-(id)init {
+    id itsTenPM = %orig;
+    [self override];
+    return itsTenPM;
+}
+ 
+
+
+-(void)setBackgroundColor:(id)arg1 {
+    
+    if (isEnabled) {
+        CGColorSpaceRef argColorSpace = CGColorGetColorSpace([arg1 CGColor]);
+        
+        //if (argColorSpace == tableBGColorSpace || [arg1 isEqual:[UIColor whiteColor]] ) {
+        
+        if ([UIColor color:arg1 isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
+            
+            [self setSeparatorColor:TABLE_SEPARATOR_COLOR];
+            [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
+            
+            [self setSectionIndexColor:selectedTintColor()];
+            
+            self.sectionIndexBackgroundColor = [UIColor clearColor];
+            //[self setTableHeaderBackgroundColor:TABLE_COLOR];
+            
+            
+            %orig(TABLE_COLOR);
+            return;
+        }
+        
+        %orig;
+        return;
+    }
+    %orig;
+}
+
+-(id)backgroundColor {
+    
+    id bgc = %orig;
+    
+    if (isEnabled) {
+        
+        CGColorSpaceRef origColorSpace = CGColorGetColorSpace([bgc CGColor]);
+        
+        //if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
+        
+        if ([UIColor color:bgc isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
+            
+            
+            self.sectionIndexBackgroundColor = [UIColor clearColor];
+            
+            [self setSeparatorColor:TABLE_SEPARATOR_COLOR];
+            self.separatorColor = TABLE_SEPARATOR_COLOR;
+            
+            [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
+            self.sectionIndexTrackingBackgroundColor = [UIColor clearColor];
+            
+            
+            [self setSectionIndexColor:selectedTintColor()];
+            self.sectionIndexColor = selectedTintColor();
+             
+            
+            //[self sectionBorderColor];
+            bgc = TABLE_COLOR;
+        }
+        return bgc;
+    }
+    return bgc;
+}
+
+
+/*
+-(void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        self.sectionIndexBackgroundColor = [UIColor clearColor];
+        
+        
+        [self setSeparatorColor:TABLE_SEPARATOR_COLOR];
+        //self.separatorColor = TABLE_SEPARATOR_COLOR;
+        
+        [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
+        //self.sectionIndexTrackingBackgroundColor = [UIColor clearColor];
+        
+        [self setSectionIndexColor:selectedTintColor()];
+        //self.sectionIndexColor = selectedTintColor();
+        
+        //This actually came in handy... Wow.
+        if ([UIColor color:self.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:2] && ![UIColor color:self.backgroundColor isEqualToColor:[UIColor clearColor] withTolerance:0.2]) {
+            [self setBackgroundColor:TABLE_COLOR];
+        }
+        
+    }
+    
+    
+}
+ */
+
+-(id)sectionBorderColor {
+    if (isEnabled) {
+        return [UIColor clearColor];
+    }
+    return %orig;
+}
+
+-(id)separatorColor {
+    if (isEnabled) {
+        return TABLE_SEPARATOR_COLOR;
+    }
+    return %orig;
+}
+
+-(id)sectionIndexTrackingBackgroundColor {
+    if (isEnabled) {
+        return [UIColor clearColor];
+    }
+    return %orig;
+}
+-(void)setSectionIndexTrackingBackgroundColor:(id)arg1 {
+    if (isEnabled) {
+        %orig ([UIColor clearColor]);
+        return;
+    }
+    %orig;
+}
+
+-(void)setSectionIndexColor:(id)arg1 {
+    if (isEnabled) {
+        self.sectionIndexBackgroundColor = [UIColor clearColor];
+        
+        arg1 = selectedTintColor();
+    }
+    %orig(arg1);
+}
+
+-(void)setTableHeaderBackgroundColor:(id)arg1 {
+    if (isEnabled) {
+        self.sectionIndexBackgroundColor = [UIColor clearColor];
+        arg1 = TABLE_COLOR;
+    }
+    %orig(arg1);
+}
+-(id)tableHeaderBackgroundColor {
+    if (isEnabled) {
+        return TABLE_COLOR;
+    }
+    return %orig;
+}
+ 
+
+
+%end
+
+//Table Index
+
+%hook UITableViewIndex
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id k = %orig;
+    
+    if (isEnabled) {
+        [self setIndexTrackingBackgroundColor:[UIColor clearColor]];
+        [self setIndexBackgroundColor:[UIColor clearColor]];
+        [self setIndexColor:selectedTintColor()];
+    }
+    
+    return k;
+}
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    
+    if (isEnabled) {
+        [self setIndexTrackingBackgroundColor:[UIColor clearColor]];
+        [self setIndexBackgroundColor:[UIColor clearColor]];
+        [self setIndexColor:selectedTintColor()];
+    }
+    
+}
+
+-(UIColor *)indexTrackingBackgroundColor {
+    if (isEnabled) {
+        return [UIColor clearColor];
+    }
+    return %orig;
+}
+-(UIColor *)indexBackgroundColor {
+    if (isEnabled) {
+        return [UIColor clearColor];
+    }
+    return %orig;
+}
+
+-(UIColor *)indexColor {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
+
+%end
+
+/*
+ db   db d88888b db    db d8888b.  d888b
+ 88   88 88'     88    88 88  `8D 88' Y8b
+ 88ooo88 88ooo   Y8    8P 88oooY' 88
+ 88~~~88 88~~~   `8b  d8' 88~~~b. 88  ooo
+ 88   88 88       `8bd8'  88   8D 88. ~8~
+ YP   YP YP         YP    Y8888P'  Y888P
+*/
+
+%hook _UITableViewHeaderFooterViewBackground
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id bgView = %orig;
+    if (isEnabled && ([[self backgroundColor] isEqual:[UIColor clearColor]])) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+   
+    return bgView;
+}
+
+%end
+
+
+
+/*
+  .o88b. d88888b db      db      .d8888.
+ d8P  Y8 88'     88      88      88'  YP
+ 8P      88ooooo 88      88      `8bo.
+ 8b      88~~~~~ 88      88        `Y8b.
+ Y8b  d8 88.     88booo. 88booo. db   8D
+  `Y88P' Y88888P Y88888P Y88888P `8888Y'
+*/
+
+
+%hook UIGroupTableViewCellBackground
+
+- (id)_fillColor {
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return %orig;
+}
+
+- (id)_separatorColor {
+    if (isEnabled) {
+        return TABLE_SEPARATOR_COLOR;
+    }
+    return %orig;
+}
+
+%end
+
+@interface UITableViewCell(Eclipse)
+-(void)override;
+-(BOOL)isLightColor:(id)clr;
+-(void)setSelectionTintColor:(id)arg1;
+@end
+
+%hook UITableViewCell
+
+%new
+-(void)override {
+    
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
+            [self setBackgroundColor:VIEW_COLOR];
+            
+            
+        }
+    }
+}
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    
+    if ([self selectionStyle] != UITableViewCellSelectionStyleNone) {
+        [self setSelectionTintColor:[UIColor darkerColorForSelectionColor:selectedTintColor()]];
+    }
+    
+    
+    
+}
+ 
+
+-(id)_detailTextLabel {
+    UILabel* label = %orig;
+    
+    if (isEnabled) {
+        if (shouldColorDetailText()) {
+            [label setTextColor:selectedTintColor()];
+        }
+        else {
+            [label setTextColor:TEXT_COLOR];
+        }
+    }
+    return label;
+}
+
+-(id)init {
+    id iRanOutOfNamesForThisID = %orig;
+    [self override];
+    return iRanOutOfNamesForThisID;
+}
+
+
+-(void)setBackgroundColor:(id)arg1 {
+    
+    if (isEnabled) {
+        
+        if (!isLightColor(arg1) && ![arg1 isEqual:[UIColor clearColor]]) {
+            //[self.textLabel setTextColor:TEXT_COLOR];
+            
+            arg1 = VIEW_COLOR;
+        }
+    }
+    %orig(arg1);
+}
+
+
+-(id)backgroundColor {
+    
+    id kitties = %orig;
+    
+    if (isEnabled) {
+        
+        if (!isLightColor(kitties) && ![kitties isEqual:[UIColor clearColor]]) {
+            //[((UITableViewCell*)self).textLabel setTextColor:TEXT_COLOR];
+            kitties = VIEW_COLOR;
+        }
+    }
+    return kitties;
+}
+ 
+
+-(id)selectionTintColor {
+    if (isEnabled) {
+        return [UIColor darkerColorForSelectionColor:selectedTintColor()];
+    }
+    return %orig;
+}
+
+%end
+
+//Cell Selection
+
+
+//Cell Edit Control (CONFLICTS WITH WINTERBOARD)
+/*
+%hook UITableViewCellEditControl
+
+-(id)backgroundColor {
+    
+    UIColor* bgColor = %orig;
+    
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return bgColor;
+}
+
+%end
+*/
+
+/*
+ db   dD d88888b db    db d8888b.  .d88b.   .d8b.  d8888b. d8888b.
+ 88 ,8P' 88'     `8b  d8' 88  `8D .8P  Y8. d8' `8b 88  `8D 88  `8D
+ 88,8P   88ooooo  `8bd8'  88oooY' 88    88 88ooo88 88oobY' 88   88
+ 88`8b   88~~~~~    88    88~~~b. 88    88 88~~~88 88`8b   88   88
+ 88 `88. 88.        88    88   8D `8b  d8' 88   88 88 `88. 88  .8D
+ YP   YD Y88888P    YP    Y8888P'  `Y88P'  YP   YP 88   YD Y8888D'
+*/
+
+
+%hook UITextInputTraits
+
+
+-(int)keyboardAppearance {
+    if (isEnabled && darkenKeyboard()) {
+        return 0;
+    }
+    return %orig;
+}
+
+
+%end
+
+
+%hook UIKBRenderConfig
+
+-(BOOL)lightKeyboard {
+    if (isEnabled && darkenKeyboard()) {
+        return NO;
+    }
+    return %orig;
+}
+
+
+%end
+ 
+
+%hook UIKeyboard
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id meow = %orig;
+    if (isEnabled && darkenKeyboard()) {
+        [self setBackgroundColor:keyboardColor()];
+    }
+    return meow;
+}
+
+%end
+
+
+
+
+
+
+/*
+ .d8888. d888888b  .d8b.  d888888b db    db .d8888. d8888b.  .d8b.  d8888b.
+ 88'  YP `~~88~~' d8' `8b `~~88~~' 88    88 88'  YP 88  `8D d8' `8b 88  `8D
+ `8bo.      88    88ooo88    88    88    88 `8bo.   88oooY' 88ooo88 88oobY'
+ `  Y8b.    88    88~~~88    88    88    88   `Y8b. 88~~~b. 88~~~88 88`8b
+ db   8D    88    88   88    88    88b  d88 db   8D 88   8D 88   88 88 `88.
+ `8888Y'    YP    YP   YP    YP    ~Y8888P' `8888Y' Y8888P' YP   YP 88   YD
+ */
+
+%hook UIStatusBar
+
+-(id)foregroundColor {
+    UIColor* color = %orig;
+    if (isEnabled && shouldOverrideStatusBarStyle) {
+        color = selectedStatusbarTintColor();
+    }
+    return color;
+}
+%end
+
+
+
+/*
+ d8888b. db   db  .d88b.  d8b   db d88888b
+ 88  `8D 88   88 .8P  Y8. 888o  88 88'
+ 88oodD' 88ooo88 88    88 88V8o 88 88ooooo
+ 88~~~   88~~~88 88    88 88 V8o88 88~~~~~
+ 88      88   88 `8b  d8' 88  V888 88.
+ 88      YP   YP  `Y88P'  VP   V8P Y88888P
+*/
+
+@interface PhoneViewController : UIViewController{}
+@end
+
+%group PhoneApp
+
+
+%hook TSSuperBottomBarButton
+
+-(id)init {
+    id meh = %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:selectedTintColor()];
+    }
+    return meh;
+}
+
+%end
+
+
+%hook PhoneViewController
+
+- (void)viewDidLoad {
+    %orig;
+    if (isEnabled) {
+        [self.view setBackgroundColor:selectedTintColor()];
+    }
+}
+
+%end
+
+
+%hook PHHandsetDialerView
+
+- (id)dialerColor {
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return %orig;
+}
+
+%end
+
+
+
+%hook TPNumberPadButton
+
++(id)imageForCharacter:(unsigned)arg1 highlighted:(BOOL)arg2 whiteVersion:(BOOL)arg3 {
+    
+    if (isEnabled) {
+        return %orig(arg1, arg2, YES);
+    }
+    return %orig;
+}
+
+%end
+%end
+
+//Disable in Emergency Dial
+
+ %hook PHEmergencyHandsetDialerView
+ 
+ 
+ - (id)initWithFrame:(struct CGRect)arg1 {
+ isEnabled = NO;
+ id meow = %orig;
+ isEnabled = isTweakEnabled();
+ return meow;
+ 
+ }
+ 
+ %end
+
+
+
+/*
+  .d8b.  d8888b. d8888b. d8888b. d88888b .d8888. .d8888. d8888b. db   dD
+ d8' `8b 88  `8D 88  `8D 88  `8D 88'     88'  YP 88'  YP 88  `8D 88 ,8P'
+ 88ooo88 88   88 88   88 88oobY' 88ooooo `8bo.   `8bo.   88oooY' 88,8P
+ 88~~~88 88   88 88   88 88`8b   88~~~~~   `Y8b.   `Y8b. 88~~~b. 88`8b
+ 88   88 88  .8D 88  .8D 88 `88. 88.     db   8D db   8D 88   8D 88 `88.
+ YP   YP Y8888D' Y8888D' 88   YD Y88888P `8888Y' `8888Y' Y8888P' YP   YD
+*/
+
+%group ContactsApp
+
+%hook UITextView
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        if (!isLightColor(self.backgroundColor)) {
+            
+            if (![self.superview isKindOfClass:[UIImageView class]]) {
+                
+                id balloon = objc_getClass("CKBalloonTextView");
+                
+                if ([self class] == balloon) {
+                    return;
+                }
+                else {
+                    [self setBackgroundColor:[UIColor clearColor]];
+                    [self setTextColor:TEXT_COLOR];
+                }
+            }
+        }
+    }
+}
+
+%end
+%end
+
+//DO NOT GROUP THIS.
+
+
+//iOS 7.1+
+%hook ABStyleProvider
+
+- (id)membersBackgroundColor {
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return %orig;
+}
+
+- (id)memberNameTextColor {
+    return TEXT_COLOR;
+}
+
+- (id)membersHeaderContentViewBackgroundColor {
+    if (isEnabled) {
+        return NAV_COLOR;
+    }
+    return %orig;
+}
+
+
+%end
+
+%hook ABContactView
+
+-(id)backgroundColor {
+    if (isEnabled) {
+        return TABLE_COLOR;
+    }
+    return %orig;
+}
+
+%end
+
+/*
+ .d8888. .88b  d88. .d8888.
+ 88'  YP 88'YbdP`88 88'  YP
+ `8bo.   88  88  88 `8bo.
+   `Y8b. 88  88  88   `Y8b.
+ db   8D 88  88  88 db   8D
+ `8888Y' YP  YP  YP `8888Y'
+*/
+
+//Do not group (text bubbles in compose views system-wide)
+
+%hook CKConversationListCell
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        id _dateLabel = MSHookIvar<id>(self, "_dateLabel");
+        id _summaryLabel = MSHookIvar<id>(self, "_summaryLabel");
+        
+        if (shouldColorDetailText()) {
+            [_dateLabel setTextColor:selectedTintColor()];
+            [_summaryLabel setTextColor:selectedTintColor()];
+        }
+        else {
+            [_dateLabel setTextColor:TEXT_COLOR];
+            [_summaryLabel setTextColor:TEXT_COLOR];
+        }
+    }
+    
+}
+
+%end
+/*
+%hook CKGradientView
+
+-(NSArray *)colors {
+    if (isEnabled) {
+        
+        int number = [[prefs objectForKey:@"selectedTint"] intValue];
+        
+        if (number == 1) {
+        
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.7]), [selectedTintColor() colorWithAlphaComponent:0.7]];
+            return color;
+        }
+        
+        else {
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.8]),selectedTintColor()];
+            return color;
+        }
+    }
+    return %orig;
+}
+ */
+
+%hook CKUIBehavior
+
+- (id)green_balloonColors {
+    if (tintSMSBubbles() && isEnabled) {
+     
+        int number = [[prefs objectForKey:@"selectedTint"] intValue];
+        
+        if (number == 1) {
+            
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.7]), [selectedTintColor() colorWithAlphaComponent:0.7]];
+            return color;
+        }
+        
+        else {
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.8]),selectedTintColor()];
+            return color;
+        }
+    }
+    return %orig;
+}
+
+- (id)green_balloonTextColor {
+    int number = [[prefs objectForKey:@"selectedTint"] intValue];
+    if (isEnabled && (number == 1) && tintSMSBubbles()) {
+        
+        id _textView = MSHookIvar<id>(self, "_textView");
+        return [UIColor blackColor];
+    }
+    return %orig;
+}
+
+
+- (id)blue_balloonColors {
+    if (tintMessageBubbles() && isEnabled) {
+        
+        int number = [[prefs objectForKey:@"selectedTint"] intValue];
+        
+        if (number == 1) {
+            
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.7]), [selectedTintColor() colorWithAlphaComponent:0.7]];
+            return color;
+        }
+        
+        else {
+            NSArray* color = @[darkerColorForColor([selectedTintColor() colorWithAlphaComponent:0.8]),selectedTintColor()];
+            return color;
+        }
+    }
+    return %orig;
+}
+
+- (id)blue_balloonTextColor {
+    int number = [[prefs objectForKey:@"selectedTint"] intValue];
+    if (isEnabled && (number == 1) && tintMessageBubbles()) {
+        
+        id _textView = MSHookIvar<id>(self, "_textView");
+        return [UIColor blackColor];
+    }
+    return %orig;
+}
+
+%end
+
+%hook CKTextBalloonView
+
+-(void)layoutSubviews {
+    %orig;
+    
+    int number = [[prefs objectForKey:@"selectedTint"] intValue];
+    if (isEnabled && (number == 1)) {
+        
+        id _textView = MSHookIvar<id>(self, "_textView");
+        [_textView setTextColor:[UIColor blackColor]];
+    }
+}
+
+-(void)setCanUseOpaqueMask:(BOOL)canit {
+    if (isEnabled) {
+        %orig(NO);
+        return;
+    }
+    %orig;
+}
+
+
+%end
+
+%hook CKImageBalloonView
+
+-(void)setCanUseOpaqueMask:(BOOL)canit {
+    if (isEnabled) {
+        %orig(NO);
+        return;
+    }
+    %orig;
+}
+
+%end
+ 
+
+%hook CKColoredBalloonView
+
+-(void)setCanUseOpaqueMask:(BOOL)arg1 {
+    if (isEnabled) {
+        %orig(NO);
+        return;
+    }
+    %orig;
+}
+
+%end
+/*
+@interface _UITextFieldRoundedRectBackgroundViewNeue : NSObject
+-(void)setFillColor:(UIColor*)color ;
+@end
+ */
+
+%hook CKMessageEntryView
+
+-(id)initWithFrame:(CGRect)arg1 shouldShowSendButton:(bool)arg2 shouldShowSubject:(bool)arg3 shouldShowPhotoButton:(bool)arg4 shouldShowCharacterCount:(bool)arg5 {
+    id entryView = %orig;
+    if (isEnabled) {
+        _UITextFieldRoundedRectBackgroundViewNeue* _coverView = MSHookIvar<_UITextFieldRoundedRectBackgroundViewNeue*>(self, "_coverView");
+        
+        [_coverView setFillColor:VIEW_COLOR];
+    }
+    return entryView;
+}
+
+-(id)coverView {
+    _UITextFieldRoundedRectBackgroundViewNeue* coverView = %orig;
+    if (isEnabled) {
+        //_UITextFieldRoundedRectBackgroundViewNeue* coverView = MSHookIvar<_UITextFieldRoundedRectBackgroundViewNeue*>(self, "_coverView");
+        [coverView setFillColor:VIEW_COLOR];
+    }
+    return coverView;
+}
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        _UITextFieldRoundedRectBackgroundViewNeue* _coverView = MSHookIvar<_UITextFieldRoundedRectBackgroundViewNeue*>(self, "_coverView");
+        
+        [_coverView setFillColor:VIEW_COLOR];
+        
+        UIButton* _audioButton = MSHookIvar<UIButton*>(self, "_audioButton");
+        [_audioButton setTintColor:TEXT_COLOR];
+        UIButton* _photoButton = MSHookIvar<UIButton*>(self, "_photoButton");
+        [_photoButton setTintColor:TEXT_COLOR];
+        
+        
+    }
+}
+
+%end
+
+%hook CKMessageEntryContentView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        id textView = MSHookIvar<id>(self, "_textView");
+        [textView setTextColor:TEXT_COLOR];
+    }
+}
+
+%end
+
+%hook _MFAtomTextView
+
+- (void)drawRect:(CGRect)rect  {
+    %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+}
+
+%end
+
+
+
+/*
+ .88b  d88.  .d8b.  d888888b db
+ 88'YbdP`88 d8' `8b   `88'   88
+ 88  88  88 88ooo88    88    88
+ 88  88  88 88~~~88    88    88
+ 88  88  88 88   88   .88.   88booo.
+ YP  YP  YP YP   YP Y888888P Y88888P
+*/
+
+%group MailApp
+
+%hook MFMessageWebLayer
+
+static NSString* css = @"font-face { font-family: 'Chalkboard'; src: local('ChalkboardSE-Regular'); } body { background-color: none; color: #C7C7C7; font-family: Chalkboard;} a { color: #3E98BD; text-decoration: none;}";
+
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        [self setOpaque:NO];
+        
+    }
+}
+
+- (void)_webthread_webView:(id)arg1 didFinishDocumentLoadForFrame:(id)arg2 {
+    if (isEnabled) {
+        [self setUserStyleSheet:css];
+    }
+    %orig;
+    
+}
+
+- (void)_webthread_webView:(id)arg1 didFinishLoadForFrame:(id)arg2 {
+    if (isEnabled) {
+        [self setUserStyleSheet:css];
+    }
+    %orig;
+}
+
+- (void)webView:(id)arg1 didFinishLoadForFrame:(id)arg2 {
+    if (isEnabled) {
+        [self setUserStyleSheet:css];
+    }
+    %orig;
+}
+
+- (void)webThreadWebView:(id)arg1 resource:(id)arg2 didFinishLoadingFromDataSource:(id)arg3 {
+    if (isEnabled) {
+        [self setUserStyleSheet:css];
+    }
+    %orig;
+}
+
+%end
+
+
+%hook MFSubjectWebBrowserView
+
+
+-(void)loadHTMLString:(id)arg1 baseURL:(id)arg2 {
+    
+    if (isEnabled) {
+        arg1 = [arg1 stringByReplacingOccurrencesOfString:@"color: #000"
+                                               withString:@"color: #C7C7C7"];
+        [self setOpaque:NO];
+    }
+    
+    
+    %orig(arg1, arg2);
+}
+
+%end
+
+%hook _CellStaticView
+
+- (void)layoutSubviews {
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+%end
+
+//Do not group (Body compose view)
+
+%hook MFMailComposeView
+
+-(id)bodyTextView {
+    id view = %orig;
+    if (isEnabled) {
+        [view setTextColor:TEXT_COLOR];
+    }
+    return view;
+}
+
+%end
+
+
+/*
+.d8888.  .d8b.  d88888b  .d8b.  d8888b. d888888b 
+88'  YP d8' `8b 88'     d8' `8b 88  `8D   `88'   
+`8bo.   88ooo88 88ooo   88ooo88 88oobY'    88    
+  `Y8b. 88~~~88 88~~~   88~~~88 88`8b      88    
+db   8D 88   88 88      88   88 88 `88.   .88.   
+`8888Y' YP   YP YP      YP   YP 88   YD Y888888P
+*/
+
+@interface _UIBackdropView : UIView
+@end
+
+@interface NavigationBarBackdrop : _UIBackdropView
+- (void)applySettings:(id)arg1;
+@end
+
+
+@interface DimmingButton : UIButton
+-(UIImage *)maskImage:(UIImage*)image withColor:(UIColor *)color;
+@end
+
+
+%group SafariApp
+
+
+%hook NavigationBar
+
+- (id)initWithFrame:(struct CGRect)arg1 {
+    id frame = %orig;
+    if (isEnabled) {
+        
+        //int tintStyle = MSHookIvar<int>(self, "_tintStyle");
+        
+        //tintStyle = 1;
+        
+        [self setTintStyle:1];
+        
+        
+        
+        //UIView* view = [[[UIView alloc] init] autorelease];
+        //view.frame = backdropView.frame;
+        //[view setBackgroundColor:VIEW_COLOR];
+        ///[backdropView addSubview:view];
+        
+    }
+    return frame;
+}
+
+-(void)setTintStyle:(int)i {
+    if (isEnabled) {
+        
+        _UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:2010];
+        [settings setColorTint:NAV_COLOR];
+        
+        NavigationBarBackdrop* backdropView = MSHookIvar<NavigationBarBackdrop*>(self, "_backdrop");
+        
+        [backdropView applySettings:settings];
+        
+        %orig(1);
+        return;
+    }
+    %orig;
+}
+
+%end
+
+%hook TabBarItemView
+
+-(void)_layoutCloseButton {
+    %orig;
+    
+    if (isEnabled && IsiPad) {
+        UIButton* closeButton = MSHookIvar<UIButton*>(self, "_closeButton");
+        [closeButton setTintColor:selectedTintColor()];
+    }
+}
+
+- (void)setFrame:(struct CGRect)arg1 {
+    %orig;
+    
+    UILabel *_titleOverlayLabel = MSHookIvar<UILabel*>(self, "_titleOverlayLabel");
+
+    _titleOverlayLabel.alpha = 1;
+    _titleOverlayLabel.textColor = TEXT_COLOR;
+}
+
+%end
+
+%hook TabBar
+
+- (void)layoutSubviews {
+    
+    %orig;
+    
+    if (isEnabled) {
+        
+        UIView *_leftContainer = MSHookIvar<UIButton*>(self, "_leftContainer");
+        
+        UIView *_rightContainer = MSHookIvar<UIButton*>(self, "_rightContainer");
+        
+        UIView *_leftBackgroundTintView = MSHookIvar<UIButton*>(self, "_leftBackgroundTintView");
+        
+        UIView *_rightBackgroundTintView = MSHookIvar<UIButton*>(self, "_rightBackgroundTintView");
+        
+        UIView *_leftBackgroundOverlayView = MSHookIvar<UIButton*>(self, "_leftBackgroundOverlayView");
+        
+        UIView *_rightBackgroundOverlayView = MSHookIvar<UIButton*>(self, "_rightBackgroundOverlayView");
+        
+        _leftBackgroundOverlayView.tag = VIEW_EXCLUDE_TAG;
+        _rightBackgroundOverlayView.tag = VIEW_EXCLUDE_TAG;
+        
+        [_leftBackgroundOverlayView removeFromSuperview];
+        [_rightBackgroundOverlayView removeFromSuperview];
+        
+        _rightBackgroundTintView.tag = VIEW_EXCLUDE_TAG;
+        _leftBackgroundTintView.tag = VIEW_EXCLUDE_TAG;
+        
+        _rightContainer.tag = VIEW_EXCLUDE_TAG;
+        _leftContainer.tag = VIEW_EXCLUDE_TAG;
+        
+    }    
+}
+
+%end
+
+%hook BrowserToolbar
+
+- (void)layoutSubviews {
+    %orig;
+    
+    
+    if (isEnabled) {
+        _UIBackdropView* backdropView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
+        
+        _UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:2010];
+        [settings setColorTint:NAV_COLOR];
+        [backdropView applySettings:settings];
+        
+        //backdropView.hidden = YES;
+        
+        
+        
+    }
+}
+
+%end
+
+%end
+
+/*
+ d8888b.  .d8b.  .d8888. .d8888. d8888b.  .d88b.   .d88b.  db   dD
+ 88  `8D d8' `8b 88'  YP 88'  YP 88  `8D .8P  Y8. .8P  Y8. 88 ,8P'
+ 88oodD' 88ooo88 `8bo.   `8bo.   88oooY' 88    88 88    88 88,8P
+ 88~~~   88~~~88   `Y8b.   `Y8b. 88~~~b. 88    88 88    88 88`8b
+ 88      88   88 db   8D db   8D 88   8D `8b  d8' `8b  d8' 88 `88.
+ 88      YP   YP `8888Y' `8888Y' Y8888P'  `Y88P'   `Y88P'  YP   YD
+*/
+
+%group PassbookApp
+
+%hook WLEasyToHitCustomView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        for (UIView* button in [self subviews]) {
+            if ([button isKindOfClass:[UIButton class]]) {
+                [button setBackgroundColor:[UIColor clearColor]];
+            }
+        }
+    }
+}
+
+%end
+
+%end
+
+/*
+ d8888b. d88888b .88b  d88. d888888b d8b   db d8888b. d88888b d8888b. .d8888.
+ 88  `8D 88'     88'YbdP`88   `88'   888o  88 88  `8D 88'     88  `8D 88'  YP
+ 88oobY' 88ooooo 88  88  88    88    88V8o 88 88   88 88ooooo 88oobY' `8bo.
+ 88`8b   88~~~~~ 88  88  88    88    88 V8o88 88   88 88~~~~~ 88`8b     `Y8b.
+ 88 `88. 88.     88  88  88   .88.   88  V888 88  .8D 88.     88 `88. db   8D
+ 88   YD Y88888P YP  YP  YP Y888888P VP   V8P Y8888D' Y88888P 88   YD `8888Y'
+*/
+
+%group RemindersApp
+
+%hook RemindersSearchView
+
+#warning Reminders needs work
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIView* searchView = MSHookIvar<UIView*>(self, "_searchResultsView");
+    }
+    
+}
+
+%end
+
+%hook RemindersCardBackgroundView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setAlpha:0.9];
+        for (UIView* view in [self subviews]) {
+            
+            //[view setAlpha:0.7];
+            [view setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.8]];
+        }
+    }
+}
+
+%end
+
+%end
+
+/*
+ .88b  d88. db    db .d8888. d888888b  .o88b.
+ 88'YbdP`88 88    88 88'  YP   `88'   d8P  Y8
+ 88  88  88 88    88 `8bo.      88    8P
+ 88  88  88 88    88   `Y8b.    88    8b
+ 88  88  88 88b  d88 db   8D   .88.   Y8b  d8
+ YP  YP  YP ~Y8888P' `8888Y' Y888888P  `Y88P'
+*/
+
+static BOOL BlurredMusicAppInstalled() {
+    return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/BlurredMusicApp.dylib"];
+}
+
+static BOOL ColorFlowInstalled() {
+    return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/ColorFlow.dylib"];
+}
+
+static BOOL AriaInstalled() {
+    return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Aria.dylib"];
+}
+
+
+static BOOL playsNice() {
+
+    
+    if (BlurredMusicAppInstalled()) {
+        dlopen("/Library/MobileSubstrate/DynamicLibraries/BlurredMusicApp.dylib", RTLD_NOW);
+        return NO;
+    }
+    if (ColorFlowInstalled()) {
+         dlopen("/Library/MobileSubstrate/DynamicLibraries/ColorFlow.dylib", RTLD_NOW);
+        return NO;
+    }
+    if (AriaInstalled()) {
+         dlopen("/Library/MobileSubstrate/DynamicLibraries/Aria.dylib", RTLD_NOW);
+        return NO;
+    }
+    return YES;
+}
+
+%group MusicApp
+
+%hook UIColor
+//such hacky
+
++(id)blackColor {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
++(id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
+    
+    if (isEnabled && playsNice()) {
+        if ((red == 0.0) && (green == 0.0) && (blue == 0.0) && (alpha < 0.7)) {
+            return TEXT_COLOR;
+        }
+    }
+    return %orig;
+}
+
++(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+    
+    id color = %orig;
+    
+    if (isEnabled && playsNice()) {
+        if ((arg1 < .5)) {
+            return [TEXT_COLOR colorWithAlphaComponent:0.4];
+        }
+    }
+    return %orig;
+}
+%end
+
+
+%hook MPUVignetteBackgroundView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        for (UIImageView* imageView in [self subviews]) {
+            imageView.hidden = YES;
+        }
+    }
+}
+
+%end
+
+%hook MPUNowPlayingIndicatorView
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id hook = %orig;
+    
+    if (isEnabled && playsNice()) {
+        [self setBackgroundColor: NAV_COLOR];
+    }
+    return hook;
+}
+
+%end
+
+%hook MPUTableViewController
+
+-(void)tableView:(id)arg1 willDisplayCell:(id)arg2 forRowAtIndexPath:(id)arg3 {
+    %orig;
+    if (isEnabled) {
+        [arg2 setBackgroundColor:VIEW_COLOR];
+    }
+    
+}
+
+%end
+
+%hook MusicNowPlayingTransportControls
+
+-(id)tintColorForPart:(unsigned long long)arg1 {
+    id tint = %orig;
+    
+    if (isEnabled && playsNice()) {
+        tint = TEXT_COLOR;
+        
+    }
+    return tint;
+}
+%end
+
+@interface MusicNowPlayingPlaybackControlsView : UIView{}
+@end
+
+%hook MusicNowPlayingPlaybackControlsView
+
+-(void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled && playsNice()) {
+        [self setBackgroundColor:VIEW_COLOR];
+        [self setTintColor:selectedTintColor()];
+        
+        UISlider* volumeSlider = MSHookIvar<UISlider*>(self, "_volumeSlider");
+        [volumeSlider setMinimumTrackTintColor:selectedTintColor()];
+    }
+}
+
+%end
+
+%hook MusicMiniPlayerMusicTransportControls
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        for (UIButton* button in [self subviews]) {
+            [button setTintColor:TEXT_COLOR];
+        }
+    }
+}
+
+%end
+
+%end
+
+/*
+ d8b   db  .d88b.  d888888b d88888b .d8888.
+ 888o  88 .8P  Y8. `~~88~~' 88'     88'  YP
+ 88V8o 88 88    88    88    88ooooo `8bo.
+ 88 V8o88 88    88    88    88~~~~~   `Y8b.
+ 88  V888 `8b  d8'    88    88.     db   8D
+ VP   V8P  `Y88P'     YP    Y88888P `8888Y'
+*/
+
+%group NotesApp
+
+%hook UIColor
+//such hacky
+
++(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+    
+    id color = %orig;
+    
+    if (isEnabled) {
+        if (arg1 < .5) {
+            return TEXT_COLOR;
+        }
+    }
+    return %orig;
+}
+%end
+
+%hook NotesTextureView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self removeFromSuperview];
+    }
+}
+
+%end
+
+%end
+
+/*
+  .d8b.  d8888b. d8888b. .d8888. d888888b  .d88b.  d8888b. d88888b
+ d8' `8b 88  `8D 88  `8D 88'  YP `~~88~~' .8P  Y8. 88  `8D 88'
+ 88ooo88 88oodD' 88oodD' `8bo.      88    88    88 88oobY' 88ooooo
+ 88~~~88 88~~~   88~~~     `Y8b.    88    88    88 88`8b   88~~~~~
+ 88   88 88      88      db   8D    88    `8b  d8' 88 `88. 88.
+ YP   YP 88      88      `8888Y'    YP     `Y88P'  88   YD Y88888P
+*/
+
+%group MobileStoreApp
+
+%hook UIColor
+//such hacky
+
++(id)blackColor {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
++(id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
+    
+    if (isEnabled) {
+        if ((red == 0.0) && (green == 0.0) && (blue == 0.0) && (alpha < 0.7)) {
+            return TEXT_COLOR;
+        }
+    }
+    return %orig;
+}
+
++(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+    
+    id color = %orig;
+    
+    if (isEnabled) {
+        if ((arg1 < .5)) {
+            return TEXT_COLOR;
+        }
+    }
+    return %orig;
+}
+%end
+
+
+%end
+
+%group AppstoreApp
+
+%hook UIColor
+//such hacky
+
++(id)blackColor {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
++(id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
+    
+    if (isEnabled) {
+        if ((red == 0.0) && (green == 0.0) && (blue == 0.0) && (alpha < 0.7)) {
+            return TEXT_COLOR;
+        }
+    }
+    return %orig;
+}
+
++(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+    
+    id color = %orig;
+    
+    if (isEnabled) {
+        if ((arg1 < .5)) {
+            return [TEXT_COLOR colorWithAlphaComponent:0.4];
+        }
+    }
+    return %orig;
+}
+%end
+
+
+
+%hook SKUITableViewCell
+
+-(void)layoutSubviews {
+    %orig;
+    [self setBackgroundColor:VIEW_COLOR];
+}
+
+%end
+
+%hook SKUITextBoxView
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id frame = %orig;
+    if (isEnabled) {
+        id _colorScheme = MSHookIvar<id>(self, "_colorScheme");
+        id colorScheme = [[[%c(SKUIColorScheme) alloc] init] autorelease];
+        [colorScheme setPrimaryTextColor:TEXT_COLOR];
+        [colorScheme setSecondaryTextColor:selectedTintColor()];
+        
+        _colorScheme = colorScheme;
+        
+        [self setColorScheme:_colorScheme];
+        
+    }
+    return frame;
+}
+
+%end
+
+%hook SKUIAttributedStringView
+
+-(id)init {
+    id string = %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+    return string;
+}
+
+-(id)layoutSubviews {
+    id string = %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+    return string;
+}
+
+%end
+
+%hook SKUIProductPageHeaderLabel
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+}
+
+%end
+%end
+
+//Calendar
+
+%group CalendarApp
+%hook UIColor
+
+//such hacky
+
++(id)whiteColor {
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return %orig;
+}
+
++(id)blackColor {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
++(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+    UIColor* color = %orig;
+    if (![color isEqual:TEXT_COLOR] && (isLightColor(color)) && (IsiPad)) {
+        return VIEW_COLOR;
+    }
+    return color;
+}
+
+%end
+%end
+
+%group CalendarFix
+%hook UIStatusBar
+
+-(id)foregroundColor {
+    UIColor* color = %orig;
+    if (isEnabled) {
+        if ([selectedStatusbarTintColor() isEqual:WHITE_COLOR]) {
+            color = [UIColor lightGrayColor];
+        }
+        else {
+            color = selectedStatusbarTintColor();
+        }
+    }
+    return color;
+}
+%end
+%end
+
+
+@interface PFColorViewController : UIViewController{}
+@end
+
+%hook PFColorViewController
+
+- (id)initForContentSize:(CGSize)size {
+    id cat = %orig;
+    
+    UIView* _pushedView = MSHookIvar<UIView*>(self, "_pushedView");
+    UIView* transparent = MSHookIvar<UIView*>(self, "transparent");
+    UIView* controlsContainer = MSHookIvar<UIView*>(self, "controlsContainer");
+    
+    _pushedView.tag = VIEW_EXCLUDE_TAG;
+    transparent.tag = VIEW_EXCLUDE_TAG;
+    controlsContainer.tag = VIEW_EXCLUDE_TAG;
+    
+    self.view.tag = VIEW_EXCLUDE_TAG;
+    return cat;
+}
+%end
+
+//Winterboard
+
+/*
+%hook WBSThemesController
+
+static UIImage* checkImage;
+static UIImage* uncheckedImage;
+
++ (void) initialize {
+    
+    
+    if (isEnabled) {
+        
+        NSAutoreleasePool *pool([[NSAutoreleasePool alloc] init]);
+        
+        checkImage = [[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/Eclipse_Settings.bundle/NewWinterboardCheck.png"] retain];
+        
+        uncheckedImage = [[UIImage imageWithContentsOfFile:@"/System/Library/PreferenceBundles/WinterBoardSettings.bundle/SearchResultsCheckmarkClear.png"] retain];
+        
+        [pool release];
+    }
+    else {
+        %orig;
+    }
+
+    
+    
+}
+
+
+%end
+ */
+
+
+/*
+ _____         _                    _
+ |____ |       | |                  | |
+     / /_ __ __| |  _ __   __ _ _ __| |_ _   _
+     \ \ '__/ _` | | '_ \ / _` | '__| __| | | |
+ .___/ / | | (_| | | |_) | (_| | |  | |_| |_| |
+ \____/|_|  \__,_| | .__/ \__,_|_|   \__|\__, |
+                   | |                    __/ |
+                   |_|                   |___/
+*/
+
+
+
+/*
+  .o88b.  .d88b.  db    db d8888b. d888888b  .d8b.
+ d8P  Y8 .8P  Y8. 88    88 88  `8D   `88'   d8' `8b
+ 8P      88    88 88    88 88oobY'    88    88ooo88
+ 8b      88    88 88    88 88`8b      88    88~~~88
+ Y8b  d8 `8b  d8' 88b  d88 88 `88.   .88.   88   88
+`  Y88P'  `Y88P'  ~Y8888P' 88   YD Y888888P YP   YP
+ */
+
+%hook CouriaController
+
+-(void)present {
+    isEnabled = NO;
+    %orig;
+}
+
+-(void)dismiss {
+    isEnabled = isTweakEnabled();
+    %orig;
+}
+
+%end
+
+/*
+ db   d8b   db db   db  .d8b.  d888888b .d8888.  .d8b.  d8888b. d8888b.
+ 88   I8I   88 88   88 d8' `8b `~~88~~' 88'  YP d8' `8b 88  `8D 88  `8D
+ 88   I8I   88 88ooo88 88ooo88    88    `8bo.   88ooo88 88oodD' 88oodD'
+ Y8   I8I   88 88~~~88 88~~~88    88      `Y8b. 88~~~88 88~~~   88~~~
+ `8b d8'8b d8' 88   88 88   88    88    db   8D 88   88 88      88
+  `8b8' `8d8'  YP   YP YP   YP    YP    `8888Y' YP   YP 88      88
+ */
+
+%group WhatsappApp
+
+%hook WALabel
+
+-(id)initWithFrame:(CGRect)frame {
+    id meh = %orig;
+    
+    if (isEnabled) {
+        
+        [self setTextColor:RED_COLOR];
+    }
+    return meh;
+}
+
+%end
+
+%hook WAInputTextView
+
+- (id)initWithFrame:(struct CGRect)arg1 {
+    id kek = %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+    
+    return kek;
+}
+
+%end
+
+
+%hook WAChatBar
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIButton* _sendButton = MSHookIvar<UIButton*>(self, "_sendButton");
+        UIButton* _attachMediaButton = MSHookIvar<UIButton*>(self, "_attachMediaButton");
+        UIButton* _cameraButton = MSHookIvar<UIButton*>(self, "_cameraButton");
+        UIButton* _pttButton = MSHookIvar<UIButton*>(self, "_pttButton");
+        
+        [_sendButton setTintColor:selectedTintColor()];
+        [_attachMediaButton setTintColor:selectedTintColor()];
+        [_cameraButton setTintColor:selectedTintColor()];
+        [_pttButton setTintColor:selectedTintColor()];
+    }
+    
+}
+
+%end
+
+%hook WAMessageFooterView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UILabel* _timestampLabel = MSHookIvar<UILabel*>(self, "_timestampLabel");
+        [_timestampLabel setTextColor:RED_COLOR];
+    }
+}
+
+%end
+
+%hook WAEventBubbleView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UILabel* labelEvent = MSHookIvar<UILabel*>(self, "_labelEvent");
+        [labelEvent setTextColor:RED_COLOR];
+    }
+}
+
+%end
+
+%hook WADateBubbleView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
+        [titleLabel setTextColor:RED_COLOR];
+    }
+    
+    
+}
+
+%end
+
+%hook WAChatButton
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setTintColor:selectedTintColor()];
+    }
+}
+
+%end
+
+%hook WAChatSessionCell
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UILabel* messageLabel = MSHookIvar<UILabel*>(self, "_messageLabel");
+        if (shouldColorDetailText()) {
+            //[messageLabel setTextColor:selectedTintColor()];
+        }
+        else {
+            //[messageLabel setTextColor:TEXT_COLOR];
+        }
+    }
+}
+
+%end
+
+%hook WAContactNameLabel
+
+- (id)textColor {
+    if (isEnabled) {
+        [self setBackgroundColor:[UIColor clearColor]];
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
+- (void)setTextColor:(id)fp8 {
+    if (isEnabled) {
+        %orig(TEXT_COLOR);
+        [self setBackgroundColor:[UIColor clearColor]];
+        return;
+    }
+    %orig;
+}
+
+%end
+
+%hook _WANoBlurNavigationBar
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIView* bgView = MSHookIvar<UIView*>(self, "_grayBackgroundView");
+        [bgView setBackgroundColor:NAV_COLOR];
+    }
+    
+}
+
+- (id)initWithFrame:(struct CGRect)arg1 {
+    id bar = %orig;
+    if (isEnabled) {
+        UIView* bgView = MSHookIvar<UIView*>(self, "_grayBackgroundView");
+        [bgView setBackgroundColor:NAV_COLOR];
+    }
+    return bar;
+}
+
+%end
+
+%end
+
+
+
+/*
+ d888888b d8b   db .d8888. d888888b  .d8b.   d888b  d8888b.  .d8b.  .88b  d88.
+   `88'   888o  88 88'  YP `~~88~~' d8' `8b 88' Y8b 88  `8D d8' `8b 88'YbdP`88
+    88    88V8o 88 `8bo.      88    88ooo88 88      88oobY' 88ooo88 88  88  88
+    88    88 V8o88   `Y8b.    88    88~~~88 88  ooo 88`8b   88~~~88 88  88  88
+   .88.   88  V888 db   8D    88    88   88 88. ~8~ 88 `88. 88   88 88  88  88
+ Y888888P VP   V8P `8888Y'    YP    YP   YP  Y888P  88   YD YP   YP YP  YP  YP
+*/
+
+@interface IGStringStyle : NSObject
+@property(retain, nonatomic) UIColor *defaultColor;
+@end
+
+%group InstagramApp
+
+%hook IGCommentThreadViewController
+
+- (void)viewWillLayoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        UIView* _textViewContainer = MSHookIvar<UIView*>(self, "_textViewContainer");
+        
+        for (UIImageView* kek in _textViewContainer.subviews) {
+            if ([kek respondsToSelector:@selector(setImage:)]) {
+                [kek setImage:nil];
+            }
+        }
+    }
+    
+}
+%end
+
+%hook IGSimpleButton
+
+- (void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        UIImageView* _backgroundImageView = MSHookIvar<UIImageView*>(self, "_backgroundImageView");
+        
+        [_backgroundImageView setAlpha:0.1];
+    }
+}
+
+%end
+
+
+%hook UITextFieldBorderView
+
+-(void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        [self setAlpha:0.05];
+    }
+}
+
+%end
+
+%hook IGNavSearchBar
+
+- (void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        UIImageView* _editingStateBackgroundView = MSHookIvar<UIImageView*>(self, "_editingStateBackgroundView");
+        
+        [_editingStateBackgroundView setAlpha:0.1];
+    }
+}
+
+%end
+
+%hook IGStyledString //Instagram Text Rendering
+- (void)appendString:(id)arg1 {
+    if (isEnabled) {
+        IGStringStyle* style = MSHookIvar<id>(self, "_style");
+        style.defaultColor = TEXT_COLOR;
+    }
+    
+    %orig;
+}
+
+%end
+
+%end
+
+/*
+ d888888b db   d8b   db d888888b d888888b d888888b d88888b d8888b.
+ `~~88~~' 88   I8I   88   `88'   `~~88~~' `~~88~~' 88'     88  `8D
+    88    88   I8I   88    88       88       88    88ooooo 88oobY'
+    88    Y8   I8I   88    88       88       88    88~~~~~ 88`8b
+    88    `8b d8'8b d8'   .88.      88       88    88.     88 `88.
+    YP     `8b8' `8d8'  Y888888P    YP       YP    Y88888P 88   YD
+ */
+
+%group TwitterApp
+
+%hook ABCustomHitTestView
+
+-(id)backgroundColor {
+    return RED_COLOR;
+}
+
+%end
+
+%hook TFNCustomHitTestView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+%hook TFNCellDrawingView
+
+- (void)setBackgroundColor:(id)arg1 {
+    if (isEnabled) {
+        arg1 = VIEW_COLOR;
+    }
+    %orig(arg1);
+}
+
+%end
+
+%hook T1TweetDetailsAttributedStringItem //1.4.3 fix
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+
+
+%hook UIColor //Twitter Colors
+
+//Cell
++ (id)tfn_cellSeparatorColor {
+    if (isEnabled) {
+        return NAV_COLOR;
+    }
+    return %orig;
+}
+
+//Text
++ (id)twitterColorTextUsername {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
++ (id)twitterColorTextFullName {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
++ (id)twitterColorText {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
++ (id)twitterColorTextLinkSubtle {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
++ (id)twitterColorTextLink {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
+
+
+%end
+
+%end
+
+
+/*
+ db   dD d888888b db   dD
+ 88 ,8P'   `88'   88 ,8P'
+ 88,8P      88    88,8P
+ 88`8b      88    88`8b
+ 88 `88.   .88.   88 `88.
+ YP   YD Y888888P YP   YD
+*/
+
+#import <QuartzCore/QuartzCore.h>
+
+%group KikApp
+
+%hook KikOutgoingContentMessageCell
+
+- (void)layoutCellSubviews {
+    %orig;
+    
+    UIButton* _bubbleButton = MSHookIvar<UIButton*>(self, "_bubbleButton");
+    [_bubbleButton setTag:VIEW_EXCLUDE_TAG];
+    _bubbleButton.layer.cornerRadius = 20;
+    _bubbleButton.layer.masksToBounds = YES;
+    
+    [_bubbleButton setBackgroundColor:[UIColor clearColor]]; //Set color, even if Kik won't allow it
+    
+    UIImageView* _bubbleMask = MSHookIvar<UIImageView*>(self, "_bubbleMask");
+    [_bubbleMask setHidden:YES];
+    
+    
+}
+
+%end
+
+%hook KikIncomingContentMessageCell
+
+- (void)layoutCellSubviews {
+    %orig;
+    
+    UIButton* _bubbleButton = MSHookIvar<UIButton*>(self, "_bubbleButton");
+    [_bubbleButton setTag:VIEW_EXCLUDE_TAG];
+    _bubbleButton.layer.cornerRadius = 20;
+    _bubbleButton.layer.masksToBounds = YES;
+    
+    [_bubbleButton setBackgroundColor:[UIColor clearColor]]; //Set color, even if Kik won't allow it
+    
+    
+    UIImageView* _bubbleMask = MSHookIvar<UIImageView*>(self, "_bubbleMask");
+    [_bubbleMask setHidden:YES];
+
+    
+}
+
+%end
+
+
+%hook KikTextMessageCell
+
+- (void)setupSubviews {
+    %orig;
+    
+    UIButton* _bubbleButton = MSHookIvar<UIButton*>(self, "_bubbleButton");
+    [_bubbleButton setTag:VIEW_EXCLUDE_TAG];
+    _bubbleButton.layer.cornerRadius = 20;
+    _bubbleButton.layer.masksToBounds = YES;
+    
+    
+    UIImageView* _bubbleMask = MSHookIvar<UIImageView*>(self, "_bubbleMask");
+    [_bubbleMask setHidden:YES];
+    //_bubbleMask.layer.cornerRadius = 12;
+    //_bubbleMask.layer.masksToBounds = YES;
+    
+}
+
+
+
+%end
+
+%hook HybridSmileyLabel
+
+- (id)textColor {
+    if (isEnabled) {
+        return [UIColor darkGrayColor];
+    }
+    return %orig;
+}
+
+
+%end
+
+%hook BlurryUIView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:NAV_COLOR];
+    }
+    
+}
+%end
+
+%hook BlurredRawProfilePictureImageView
+
+- (id)initWithFrame:(struct CGRect)arg1 {
+    id kek = %orig;
+    if (isEnabled) {
+        UIColor* _blurTintColor = MSHookIvar<UIColor*>(self, "_blurTintColor");
+        _blurTintColor = VIEW_COLOR;
+        [self setAlpha:0.2];
+    }
+    return kek;
+}
+
+%end
+
+%hook CardListTableViewCell
+
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIImageView* backgroundImage = MSHookIvar<UIImageView*>(self, "_imgBackground");
+        [backgroundImage removeFromSuperview];
+    }
+}
+
+%end
+
+%hook HPTextViewInternal
+
+- (id)updateTextForSmileys {
+    id kek = %orig;
+    if (isEnabled) {
+        [self setTextColor:TEXT_COLOR];
+    }
+    return kek;
+}
+
+-(void)setPlaceholder:(NSString *)placeholder {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+        [self setOpaque:YES];
+        [self setTextColor:TEXT_COLOR];
+    }
+}
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+        [self setOpaque:YES];
+        [self setTextColor:TEXT_COLOR];
+    }
+}
+
+-(void)setTextColor:(id)color {
+    if (isEnabled) {
+        %orig(TEXT_COLOR);
+        return;
+    }
+    %orig;
+}
+
+-(id)textColor {
+    if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
+
+- (void)drawRect:(CGRect)rect {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+        [self setOpaque:YES];
+        [self setTextColor:TEXT_COLOR];
+    }
+}
+
+
+%end
+
+%end
+
+/*
+ d888888b db   db d8888b. d88888b d88888b .88b  d88.  .d8b.
+ `~~88~~' 88   88 88  `8D 88'     88'     88'YbdP`88 d8' `8b
+    88    88ooo88 88oobY' 88ooooo 88ooooo 88  88  88 88ooo88
+    88    88~~~88 88`8b   88~~~~~ 88~~~~~ 88  88  88 88~~~88
+    88    88   88 88 `88. 88.     88.     88  88  88 88   88
+    YP    YP   YP 88   YD Y88888P Y88888P YP  YP  YP YP   YP
+*/
+
+%group ThreemaApp
+
+@interface ChatBar : UIImageView
++ (int)perceivedBrightness:(UIColor *)aColor;
++ (UIColor *)contrastBWColor:(UIColor *)aColor;
++ (UIImage *)_imageWithColor:(UIColor *)color;
+-(id)initWithFrame:(CGRect)arg1;
+@end
+
+%hook ChatBar
+%new
++ (int)perceivedBrightness:(UIColor *)aColor
+{
+	CGFloat r = 0, g = 0, b = 0, a = 1;
+	if ( [aColor getRed:&r green:&g blue:&b alpha:&a] ) {
+		r=255*r; g=255*g; b=255*b;
+		return (int)sqrt(r * r * .241 + g * g * .691 + b * b * .068);
+	} else if ([aColor getWhite:&r alpha:&a]) {
+		return (255*r);
+	}
+	return 255;
+}
+
+%new
++ (UIColor *)contrastBWColor:(UIColor *)aColor {
+	if ( [self perceivedBrightness:aColor] > 130 ) {
+		return [UIColor blackColor];
+	} else {
+		return [UIColor whiteColor];
+	}
+}
+
+%new
++ (UIImage *)_imageWithColor:(UIColor *)color {
+	CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+	UIGraphicsBeginImageContext(rect.size);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGContextSetFillColorWithColor(context, [color CGColor]);
+	CGContextFillRect(context, rect);
+	
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	return image;
+}
+
+-(id)initWithFrame:(CGRect)arg1 {
+	self = %orig;
+	if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
+		//NSLog(@"ChatBar init");
+		UIColor* barBgColor = NAV_COLOR; //Eclipse Theme Color
+		UIColor* barTopLineColor = [[self class] contrastBWColor:selectedTintColor()]; //Eclipse tint Color
+		[self setImage:[[self class] _imageWithColor:barBgColor]];
+		for(UIView* view in self.subviews){
+			if([view isKindOfClass:[UIImageView class]]){
+                [((UIImageView *)view) setImage:nil];
+            }
+		}
+		UIImageView* topLineView = [[UIImageView alloc] initWithImage:[[self class] _imageWithColor:barTopLineColor]];
+		[topLineView setTranslatesAutoresizingMaskIntoConstraints:NO];
+		[self addSubview:topLineView];
+		NSArray* constraintsDef = @[@{@"attribute": @(NSLayoutAttributeCenterX), @"multiplier": @1, @"constant": @0},
+                                    @{@"attribute": @(NSLayoutAttributeTop), @"multiplier": @1, @"constant": @0},
+                                    @{@"attribute": @(NSLayoutAttributeWidth), @"multiplier": @1, @"constant": @0},
+                                    @{@"attribute": @(NSLayoutAttributeHeight), @"multiplier": @0, @"constant": @1}];
+		for (NSDictionary* cDict in constraintsDef) {
+			NSLayoutConstraint *myConstraint = [NSLayoutConstraint constraintWithItem:topLineView
+                                                                            attribute:[cDict[@"attribute"] integerValue]
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self
+                                                                            attribute:[cDict[@"attribute"] integerValue]
+                                                  	 		               multiplier:[cDict[@"multiplier"] floatValue]
+                                                                             constant:[cDict[@"constant"] floatValue]];
+			myConstraint.priority = 700;
+			[self addConstraint:myConstraint];
+		}
+		[self setNeedsUpdateConstraints];
+		//NSLog(@"ChatBar init END");
+	}
+	return self;
+}
+
+%end
+
+%hook TTTAttributedLabel
+
+-(id)textColor {
+    if (isEnabled) {
+        return [UIColor darkGrayColor];
+    }
+    return %orig;
+}
+
+%end
+%end
+
+/*
+ d888888b d88888b db      d88888b  d888b  d8888b.  .d8b.  .88b  d88.
+ `~~88~~' 88'     88      88'     88' Y8b 88  `8D d8' `8b 88'YbdP`88
+    88    88ooooo 88      88ooooo 88      88oobY' 88ooo88 88  88  88
+    88    88~~~~~ 88      88~~~~~ 88  ooo 88`8b   88~~~88 88  88  88
+    88    88.     88booo. 88.     88. ~8~ 88 `88. 88   88 88  88  88
+    YP    Y88888P Y88888P Y88888P  Y888P  88   YD YP   YP YP  YP  YP
+*/
+
+%group TelegramApp
+
+%hook TGBackdropView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:NAV_COLOR];
+    }
+}
+
+%end
+
+%hook TGContactCellContents
+
+-(void)layoutSubviews {
+    %orig;
+    for (id meh in [self subviews]) {
+        if ([meh respondsToSelector:@selector(setTextColor:)]) {
+            [meh setTextColor:TEXT_COLOR];
+        }
+    }
+}
+
+%end
+
+%end
+
+/*
+ d888888b db   d8b   db d88888b d88888b d888888b d8888b.  .d88b.  d888888b
+ `~~88~~' 88   I8I   88 88'     88'     `~~88~~' 88  `8D .8P  Y8. `~~88~~'
+    88    88   I8I   88 88ooooo 88ooooo    88    88oooY' 88    88    88
+    88    Y8   I8I   88 88~~~~~ 88~~~~~    88    88~~~b. 88    88    88
+    88    `8b d8'8b d8' 88.     88.        88    88   8D `8b  d8'    88
+    YP     `8b8' `8d8'  Y88888P Y88888P    YP    Y8888P'  `Y88P'     YP
+*/
+
+%group TweetbotApp
+
+%hook PTHTweetbotStatusView
+
+-(void)viewDidLoad {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:TABLE_COLOR];
+    }
+}
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:TABLE_COLOR];
+    }
+}
+
+- (void)_updateColors {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:TABLE_COLOR];
+    }
+}
+
+%end
+
+%hook PTHStaticSectionCell
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+- (void)colorThemeDidChange {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+%hook PTHButton
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+- (void)colorThemeDidChange {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+%end
+
+/*
+ d888888b db    db .88b  d88. d8888b. db      d8888b.
+ `~~88~~' 88    88 88'YbdP`88 88  `8D 88      88  `8D
+    88    88    88 88  88  88 88oooY' 88      88oobY'
+    88    88    88 88  88  88 88~~~b. 88      88`8b
+    88    88b  d88 88  88  88 88   8D 88booo. 88 `88.
+    YP    ~Y8888P' YP  YP  YP Y8888P' Y88888P 88   YD
+*/
+
+%group TumblrApp
+
+%hook TMAttributedTextView
+
+- (void)setAttributedText:(id)arg1 frame:(struct __CTFrame *)arg2 {
+    NSAttributedString* _attributedText = MSHookIvar<NSAttributedString*>(self, "_attributedText");
+    
+
+    
+    %orig(_attributedText, arg2);
+}
+
+%end
+
+%end
+
+
+
+
+
+/*
+  .d8888. d8b   db  .d8b.  d8888b.  .o88b. db   db  .d8b.  d888888b
+  88'  YP 888o  88 d8' `8b 88  `8D d8P  Y8 88   88 d8' `8b `~~88~~'
+ ` 8bo.   88V8o 88 88ooo88 88oodD' 8P      88ooo88 88ooo88    88
+    `Y8b. 88 V8o88 88~~~88 88~~~   8b      88~~~88 88~~~88    88
+  db   8D 88  V888 88   88 88      Y8b  d8 88   88 88   88    88
+  `8888Y' VP   V8P YP   YP 88       `Y88P' YP   YP YP   YP    YP
+*/
+
+
+
+%group SnapchatApp
+
+%hook SCFeedTableViewCell
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UILabel* _mainLabel = MSHookIvar<UILabel*>(self, "_mainLabel");
+        [_mainLabel setBackgroundColor:VIEW_COLOR];
+    }
+}
+
+%end
+
+%hook AVCameraViewController
+
+- (void)viewWillAppear:(BOOL)arg1 {
+    %orig;
+    if (isEnabled) {
+        UIView* _flashView = MSHookIvar<UIView*>(self, "_flashView");
+        [_flashView setTag:VIEW_EXCLUDE_TAG];
+    }
+    
+}
+
+%end
+
+%hook StoriesCell
+
+- (id)initWithStyle:(int)arg1 reuseIdentifier:(id)arg2 {
+    id cell = %orig;
+    if (isEnabled) {
+        //id bestFriendsView = MSHookIvar<id>(self, "_bestFriendsView");
+        
+        //[bestFriendsView setBackgroundColor:TABLE_COLOR];
+        
+        //[self.contentView setBackgroundColor:TABLE_COLOR];
+    }
+    
+    
+    return cell;
+}
+
+%end
+
+
+%hook FeedTableViewCell
+
+- (void)setFrame:(struct CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        UIView* solidBackgroundView = MSHookIvar<UISlider*>(self, "_solidBackgroundView");
+        [solidBackgroundView setBackgroundColor:TABLE_COLOR];
+    }
+    
+}
+
+%end
+
+%hook UITableViewCellContentView
+
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:TABLE_COLOR];
+    }
+}
+
+%end
+
+
+%hook SCTopBorderedView
+
+- (void)setFrame:(struct CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+        //id bestFriendsView = MSHookIvar<id>(self, "_bestFriendsView");
+    }
+}
+
+%end
+
+%hook SCHeader
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:NAV_COLOR];
+        id _bottomBorderedView = MSHookIvar<id>(self, "_bottomBorderedView");
+        [_bottomBorderedView setBackgroundColor:NAV_COLOR];
+    }
+}
+
+%end
+
+%end
+
+/*
+ .d8888. d8b   db d8888b.  .o88b. db      d8888b.
+ 88'  YP 888o  88 88  `8D d8P  Y8 88      88  `8D
+ `8bo.   88V8o 88 88   88 8P      88      88   88
+   `Y8b. 88 V8o88 88   88 8b      88      88   88
+ db   8D 88  V888 88  .8D Y8b  d8 88booo. 88  .8D
+ `8888Y' VP   V8P Y8888D'  `Y88P' Y88888P Y8888D'
+ */
+
+%group SoundcloudApp
+
+%hook SCTrackActivityMiniView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setBackgroundColor:VIEW_COLOR];
+    }
+    
+}
+
+%end
+
+
+
+%end
+
+
+
+/*
+ d88888b  .d8b.   .o88b. d88888b d8888b. db   dD
+ 88'     d8' `8b d8P  Y8 88'     88  `8D 88 ,8P'
+ 88ooo   88ooo88 8P      88ooooo 88oooY' 88,8P
+ 88~~~   88~~~88 8b      88~~~~~ 88~~~b. 88`8b
+ 88      88   88 Y8b  d8 88.     88   8D 88 `88.
+ YP      YP   YP  `Y88P' Y88888P Y8888P' YP   YD
+*/
+
+
+%group FBMessenger
+
+%hook MNProfileImageView
+-(void)layoutSubviews {
+    %orig;
+    
+    if (isEnabled) {
+        NSMutableArray* _imageViews = MSHookIvar<NSMutableArray*>(self, "_imageViews");
+        
+        for (UIImageView* view in _imageViews) {
+            view.layer.cornerRadius = view.frame.size.width / 2;
+            view.clipsToBounds = YES;
+            view.layer.borderWidth = 1.0f;
+            view.layer.borderColor = selectedTintColor().CGColor;
+        }
+    }
+    
+}
+
+%end
+
+%hook MNBadgedProfileImageView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIImageView* _maskImageView = MSHookIvar<UIImageView*>(self, "_maskImageView");
+        [_maskImageView  setHidden:YES];
+        
+        UIImageView* _profileImageView = MSHookIvar<UIImageView*>(self, "_profileImageView");
+        
+        _profileImageView.layer.cornerRadius = _profileImageView.frame.size.width / 2;
+        _profileImageView.clipsToBounds = YES;
+        _profileImageView.layer.borderWidth = 1.0f;
+        _profileImageView.layer.borderColor = selectedTintColor().CGColor;
+    }
+}
+
+%end
+
+%hook MNGroupItemView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIImageView* _backgroundImageView = MSHookIvar<UIImageView*>(self, "_backgroundImageView");
+        _backgroundImageView.image = nil;
+        
+        UIImageView* _groupImageMaskView = MSHookIvar<UIImageView*>(self, "_groupImageMaskView");
+        _groupImageMaskView.image = nil;
+    }
+}
+
+
+%end
+
+%hook MNSettingsUserInfoCell
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIImageView* _messengerBadge = MSHookIvar<UIImageView*>(self, "_messengerBadge");
+        _messengerBadge.image = nil;
+        
+        UIImageView* _profilePhotoView = MSHookIvar<UIImageView*>(self, "_profilePhotoView");
+        _profilePhotoView.layer.cornerRadius = _profilePhotoView.frame.size.width / 2;
+        _profilePhotoView.clipsToBounds = YES;
+        _profilePhotoView.layer.borderWidth = 1.0f;
+        _profilePhotoView.layer.borderColor = selectedTintColor().CGColor;
+    }
+}
+
+%end
+
+%hook FBTextView
+
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    
+    [self setTextColor:TEXT_COLOR];
+}
+
+%end
+
+%hook MNPeopleCell
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        for (UIImageView* view in [[self contentView] subviews]) {
+            if ([view respondsToSelector:@selector(setImage:)]) {
+                
+                view.layer.cornerRadius = view.frame.size.width / 2;
+                view.clipsToBounds = YES;
+                view.layer.borderWidth = 1.0f;
+                view.layer.borderColor = selectedTintColor().CGColor;
+                
+            }
+        }
+    }
+    
+}
+
+%end
+
+%hook MNThreadCell
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        UIImageView* _presenceIndicator = MSHookIvar<UIImageView*>(self, "_presenceIndicator");
+        //_presenceIndicator.image = nil;
+        
+        _presenceIndicator.layer.cornerRadius = _presenceIndicator.frame.size.width / 2;
+        _presenceIndicator.clipsToBounds = YES;
+        _presenceIndicator.layer.borderWidth = 1.0f;
+        _presenceIndicator.layer.borderColor = [UIColor clearColor].CGColor;
+    }
+    
+}
+
+%end
+
+%end
+
+//Tinder
+
+%group TinderApp
+
+%hook TNDRChatViewController
+
+- (void)viewWillAppear:(BOOL)arg1 {
+    %orig;
+    
+     UIToolbar* _composeView = MSHookIvar<UIToolbar*>(self, "_composeView");
+    
+    for (UIImageView* image in [_composeView subviews]) {
+        if ([image respondsToSelector:@selector(setImage:)]) {
+            [image setAlpha:0.1];
+        }
+    }
+    
+}
+
+%end
+
+%hook TNDRChatBubbleCell
+
+- (void)setupBackgroundImageView {
+    %orig;
+    
+    UIImageView* _backgroundImageView = MSHookIvar<UIImageView*>(self, "_backgroundImageView");
+    
+    [_backgroundImageView setAlpha:0.2];
+    
+}
+
+%end
+
+%end
+
+//Cydia App
+
+%group CydiaApp
+
+static BOOL isPaidCydiaPackage;
+
+%hook Package
+
+- (bool) isCommercial {
+    return %orig;
+}
+
+%end
+
+%hook PackageCell
+
+- (void) setPackage:(id)package asSummary:(bool)summary {
+
+    isPaidCydiaPackage = (bool)[package isCommercial];
+    
+    %orig;
+}
+
+%end
+
+%hook NSString
+
+-(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
+    
+   // if (isPaidCydiaPackage) {
+     //   [selectedTintColor() set];
+   // }
+    //else {
+        [TEXT_COLOR set];
+    //}
+    
+    
+    return %orig;
+}
+%end
+
+%hook UISearchBarTextField
+
+-(UIColor*)backgroundColor {
+    if (isEnabled) {
+        return VIEW_COLOR;
+    }
+    return %orig;
+}
+
+%end
+
+%hook CyteViewController
+
+- (void) setPageColor:(UIColor *)color {
+    %orig([UIColor changeBrightness:VIEW_COLOR amount:1.4]);
+}
+
+%end
+
+
+
+%end
+
+
+
+ 
+/*
+ db    db d888888b  .d8b.  d8888b. d8888b.
+ 88    88   `88'   d8' `8b 88  `8D 88  `8D
+ 88    88    88    88ooo88 88oodD' 88oodD'
+ 88    88    88    88~~~88 88~~~   88~~~
+ 88b  d88   .88.   88   88 88      88
+ ~Y8888P' Y888888P YP   YP 88      88
+ */
+
+#define idIsEqual(id) [[self displayIdentifier] isEqualToString:id]
+
+static BOOL UniformityInstalled() {
+    return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Uniformity.dylib"];
+}
+
+@interface UIApplication(Eclipse)
+-(id)displayIdentifier;
+-(void)checkRunningApp;
+    @end
+
+%group UIApp
+
+%hook UIApplication
+
+%new
+-(void)checkRunningApp {
+    
+    //Third Party Application
+    if (idIsEqual(@"us.mxms.relay")) {
+        //%init(RelayApp);
+    }
+    if (idIsEqual(@"com.vine.iphone")) {
+        //VineApp
+    }
+    if (idIsEqual(@"com.tumblr.tumblr")) {
+        %init(TumblrApp);
+    }
+    if (idIsEqual(@"com.tapbots.Tweetbot3")) {
+        %init(TweetbotApp);
+    }
+    if (idIsEqual(@"ph.telegra.Telegraph")) {
+        %init(TelegramApp);
+    }
+    if (idIsEqual(@"com.kik.chat")) {
+        %init(KikApp);
+    }
+    if (idIsEqual(@"com.atebits.Tweetie2")) {
+        %init(TwitterApp);
+    }
+    if (idIsEqual(@"com.burbn.instagram")) {
+        %init(InstagramApp);
+    }
+    if (idIsEqual(@"net.whatsapp.WhatsApp")) {
+        %init(WhatsappApp);
+    }
+    //Added 6/4/14
+    if (idIsEqual(@"com.toyopagroup.picaboo")) {
+        %init(SnapchatApp);
+    }
+    if (idIsEqual(@"com.soundcloud.TouchApp")) {
+        %init(SoundcloudApp);
+    }
+    //Added 9/19/14
+    if (idIsEqual(@"com.facebook.Messenger")) {
+        %init(FBMessenger);
+    }
+    //Added 9/28
+    if (idIsEqual(@"ch.threema.iapp")) {
+        %init(ThreemaApp);
+    }
+    //Added 10/1
+    if (idIsEqual(@"com.cardify.tinder")) {
+        %init(TinderApp);
+    }
+    //Added 2/4/15
+    if (idIsEqual(@"com.facebook.Facebook")) {
+        isEnabled = NO;
+    }
+    
+    
+    //Stock Applications
+    
+    if (idIsEqual(@"com.apple.mobilephone")) {
+        %init(PhoneApp);
+        
+        //dlopen("/Library/MobileSubstrate/DynamicLibraries/SleekPhone.dylib", RTLD_NOW);
+    }
+    if (idIsEqual(@"com.apple.mobilemail")) {
+        %init(MailApp);
+        shouldOverrideStatusBarStyle = YES;
+    }
+    if (idIsEqual(@"com.apple.mobilesafari")) {
+        %init(SafariApp);
+        shouldOverrideStatusBarStyle = YES;
+    }
+    if (idIsEqual(@"com.apple.Passbook")) {
+        %init(PassbookApp);
+    }
+    if (idIsEqual(@"com.apple.reminders")) {
+        %init(RemindersApp);
+    }
+    if (idIsEqual(@"com.apple.Music")) {
+        %init(MusicApp);
+    }
+    if (idIsEqual(@"com.apple.mobilenotes")) {
+        //isEnabled = NO;
+        %init(NotesApp);
+    }
+    if (idIsEqual(@"com.apple.AppStore")) {
+        %init(AppstoreApp);
+    }
+    if (idIsEqual(@"com.apple.mobilecal")) {
+        %init(CalendarApp);
+        %init(CalendarFix);
+    }
+    if (idIsEqual(@"com.apple.MobileAddressBook")) {
+        %init(ContactsApp);
+    }
+    if (idIsEqual(@"com.apple.MobileStore")) {
+        %init(MobileStoreApp);
+    }
+    if (idIsEqual(@"com.apple.calculator")) {
+        isEnabled = NO;
+    }
+    if (idIsEqual(@"com.saurik.Cydia")) {
+        %init(CydiaApp);
+    }
+    
+    
+}
+
+-(id)init {
+    id hi = %orig;
+    //Check if Application is on the blacklist
+    BOOL isBlackListed = [[prefs objectForKey:[@"BlackListed-" stringByAppendingString:[self displayIdentifier]]] boolValue];
+    
+    BOOL shouldAutoReplaceColors = [[prefs objectForKey:[@"AutoColorReplacement-" stringByAppendingString:[self displayIdentifier]]] boolValue];
+    
+    
+    if ((isTweakEnabled() && isBlackListed)) {
+        isEnabled = NO; //On the blacklist, do not darken
+    }
+    if (isTweakEnabled() && !isBlackListed) {
+        isEnabled = isTweakEnabled(); //Darken
+    }
+    
+    if (idIsEqual(@"com.apple.springboard")) {
+        shouldOverrideStatusBarStyle = NO;
+        isEnabled = NO;
+    }
+    //If Tweak enabled:
+    if (isEnabled) {
+        
+        %init(_ungrouped);
+        [self checkRunningApp];
+        darkenUIElements();
+        
+        if (shouldAutoReplaceColors && !idIsEqual(@"com.apple.Preferences")) {
+            
+            %init(AutoReplaceColor);
+        }
+        
+        if (UniformityInstalled()) {
+            dlopen("/Library/MobileSubstrate/DynamicLibraries/Uniformity.dylib", RTLD_NOW);
+        }
+        
+    }
+    
+    
+    return hi;
+}
+
+%end
+%end
+
+
+
+
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
+	// register to receive changed notifications
+	registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
+    registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
+    registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
+    %init(UIApp);
+	[pool release];
+}
+
+

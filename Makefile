@@ -1,25 +1,22 @@
 export THEOS=/opt/theos
 
-SDKVERSION = 11.2
-
 GO_EASY_ON_ME = 1
-THEOS_DEVICE_IP = 192.168.1.126
-
-#THEOS_DEVICE_PORT=2222
-
-ARCHS = arm64
+#THEOS_DEVICE_IP = 192.168.0.2
 
 TWEAK_NAME = Eclipse
-Eclipse_LDFLAGS += -lCSColorPicker
-# Eclipse_CFLAGS = -fobjc-arc
-Eclipse_FILES = Tweak.xmi Utils/UIColor+Eclipse.m Utils/UIImage+Eclipse.m Utils/WKWebView+Eclipse.m
-Eclipse_FRAMEWORKS = UIKit CoreGraphics CoreFoundation CoreText QuartzCore WebKit
-Eclipse_PRIVATE_FRAMEWORKS = BackBoardServices WiFiKitUI
-# Eclipse_LIBRARIES = colorpicker
+Eclipse_FILES = Tweak.xm UIColor+Eclipse.m
+Eclipse_FRAMEWORKS = UIKit CoreGraphics CoreFoundation CoreText QuartzCore
+Eclipse_PRIVATE_FRAMEWORKS = BackBoardServices
+Eclipse_LIBRARIES = colorpicker
 
 include $(THEOS)/makefiles/common.mk
 
-SUBPROJECTS = eclipsesb eclipse_settings eclipse_sharesheets eclipse_aaui #eclipseactivator eclipseflipswitch
+SUBPROJECTS = eclipse_settings eclipseactivator eclipseflipswitch eclipsesb
+
+#export ARCHS = armv7 arm64
+
+TARGET_CXX = xcrun -sdk iphoneos clang++
+TARGET_LD = xcrun -sdk iphoneos clang++
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk

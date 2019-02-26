@@ -18,24 +18,42 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 		[self.contentView addSubview:containerView];
 
 		UIImageView *imageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"eclipse_header" inBundle:[NSBundle bundleForClass:self.class]]] autorelease];
-		
+		[containerView addSubview:imageView];
 
         
 		UILabel *typeLabel = [[[UILabel alloc] init] autorelease];
-        typeLabel.backgroundColor = [UIColor clearColor];
-        typeLabel.font = [UIFont systemFontOfSize:qHeaderCellFontSize];
         
-        typeLabel.text = @"Eclipse";
-       
+        //Start DRM
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/org.thebigboss.eclipse2.list"]) {
+            typeLabel.text = @"Eclipse";
+        }
+        else {
+            typeLabel.text = @"Pirated";
+        }
+        
+        //End DRM
 		
+		typeLabel.backgroundColor = [UIColor clearColor];
+		typeLabel.font = [UIFont systemFontOfSize:qHeaderCellFontSize];
+		[containerView addSubview:typeLabel];
+
 		UILabel *statusLabel = [[[UILabel alloc] init] autorelease];
         
-        statusLabel.text = @" Dark Mode";
-       
+        //Start DRM
         
+        if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/org.thebigboss.eclipse2.list"]) {
+            statusLabel.text = @" 2";
+        }
+        else {
+            statusLabel.text = @" :(";
+        }
+        
+        //End DRM
+		
 		statusLabel.backgroundColor = [UIColor clearColor];
 		statusLabel.font = [UIFont boldSystemFontOfSize:qHeaderCellFontSize];
-		
+		[containerView addSubview:statusLabel];
 
 		typeLabel.frame = CGRectMake(imageView.image.size.width + 10.f, -1.f, [typeLabel.text sizeWithFont:typeLabel.font].width, imageView.image.size.height);
         
@@ -47,62 +65,9 @@ static CGFloat const qHeaderCellFontSize = 30.f;
         
 		imageView.center = CGPointMake(imageView.center.x, containerView.frame.size.height / 3.f);
         
-        
-        
-        //BOOL listFileExists = YES;
-        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse12.list"];
-
-        
-        //if ([result isEqualToString:@"Not Licensed"] || !listFileExists) {
-        if (!listFileExists) {
-
-            /*
-            UIWebView *webview = [[UIWebView alloc]initWithFrame:CGRectMake(self.contentView.frame.size.width / 8, 0, 330, 65)];
-            
-            webview.delegate = self;
-            
-            //webview.center = self.contentView.center;
-            
-            webview.scrollView.scrollEnabled = NO;
-            
-            NSString *url = @"http://gmoran.me/repo/depictions/EclipseAd.html";
-            NSURL *nsurl = [NSURL URLWithString:url];
-            NSURLRequest *nsrequest = [NSURLRequest requestWithURL:nsurl];
-            [webview loadRequest:nsrequest];
-            
-            [self.contentView addSubview:webview];
-            
-            [webview release];
-             */
-            
-            typeLabel.text = @"Pirated";
-            statusLabel.text = @":(";
-
-
-            [containerView addSubview:imageView];
-            [containerView addSubview:typeLabel];
-            [containerView addSubview:statusLabel];
-            
-        }
-        else {
-            
-            [containerView addSubview:imageView];
-            [containerView addSubview:typeLabel];
-            [containerView addSubview:statusLabel];
-            
-        }
-        
 	}
 
 	return self;
-}
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        [[UIApplication sharedApplication] openURL:request.URL];
-        return false;
-    }
-    return true;
 }
 
 @end

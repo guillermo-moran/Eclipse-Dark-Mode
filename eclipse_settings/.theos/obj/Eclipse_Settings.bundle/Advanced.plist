@@ -274,6 +274,20 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>darkenWallpapers</string>
+			<key>label</key>
+			<string>Dim Wallpapers</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.wallpaper-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
 			<integer>-2</integer>

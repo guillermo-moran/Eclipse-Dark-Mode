@@ -1,5 +1,5 @@
 #import <Preferences/PSTableCell.h>
 
-@interface ESHeaderCell : PSTableCell <UIWebViewDelegate>
+@interface ESHeaderCell : PSTableCell
 
 @end

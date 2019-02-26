@@ -1,97 +1,15 @@
-Changes: Eclipse 6.0.1
+Changes: Eclipse 2.4
 
-- iOS 12 Support
-- Dark Websites Support
-- Fix Share Sheets
-- Fix wifi icons
-
-Changes: 5.1.7
-
-- Share Sheet fix
-- Two Factor Fix
-- Wifi icon fix
-- Compiled with iOS 11 SDK
-
-Changes: Eclipse 5.0.8-5
-
-- Fixed action sheets in WhatsApp
-- Fixed white "plugins" bar in Messages apps
-- Fixed Collections headers in Photos app
-
-Changes: Eclipse 5.0.8-4
-
-- Fixed an issue where UIButtons with images as backgrounds would not darken
-- Fixed an issue where the contact page in Messages would be clear
-- Fixed an issue in Messages where link text would be white
-- Fixed an issue where the delete button in the phone app would blend with the background
-- Improved support for Twitter app
-
-
-Changes: Eclipse 5.0.4
-
-- Support for custom colors
-
-Changes: Eclipse 5.0.3
-
-- Twitter app fixes
-- Instagram app fixes
-
-
-Changes: Eclipse 5.0.1
-
-- Updated to support iOS 11
-
-Changes: Eclipse 4.1
-
-- Fixed Music App
-- Improved App Store App
-- Fixes for Whatsapp
-- API Improvements
-- Preparations for iOS 11
-
-Changes: Eclipse 4.0.4
-
-- Fixed crash in Music app
-- Fixed possible messages crash
-- Improved FB Messenger Support
-- Improved Snapchat support
-- Improved Kik support
-- Fixed small bugs
-
-Changes: Eclipse 4.0.3
-
-- Bug fixes for Action Sheets
-- Fixed text input cursor across all apps
-- Removed annoying "Closing apps" alert
-
-Changes: Eclipse 4.0.2
-
-- Fixes for permissions
-
-Changes: Eclipse 4.0
-
-- Initial iOS 10 Support
-
-Changes: Eclipse 3.0.1
-
-- Updated to support the latest snapchat release
-- Added a quick support feature with FAQ (in settings)
-- Fixes for Whatsapp
-- Application loading show be faster now.
-
-- Currently looking into issues with Google Docs, Notes, and Music App. :)
-
-Changes: Eclipse 3.0
-
-- Added iOS 9 support
-
-Changes: Eclipse 2.4.1
-
-- Support for last Snapchat and Whatsapp releases
+- Fixed a bug where UIAlerts would not color properly in some cases
+- Updated for latest Snapchat and WhatsApp releases
 
 Changes: Eclipse 2.3-5
 
 - Fix giant spinner in status bar
+
+PSA: I apologize for the lack of updates. I’ve been dealing with personal and family issues, as well as working to transfer to a new university (I was accepted!) and moving into my new apartment. Therefore, I have not had the time to correctly update Eclipse (or release any new tweaks, for that matter). I promise that I will be back to development starting September, and should have Eclipse fully updated by mid-September. As always, thank you for your continued support (or hatred). 
+
+With much love, @fr0st
 
 Changes: Eclipse 2.3-4
 
@@ -103,7 +21,7 @@ Changes: Eclipse 2.3-4
 Changes: Eclipse 2.3-3
 
 - Cydia Support
-- UITableView bug fixes
+- UITableView bug fixes 
 
 Coming Soon: Support for iOS 8.4 Music App
 
@@ -171,6 +89,7 @@ Changes: Eclipse 2.1
 - Improvements for auto color replacement
 - Improvements for UIAlerts and Action Sheets
 
+
 Changes: Eclipse 2.0.1
 
 - Safari lag fix
@@ -178,11 +97,6 @@ Changes: Eclipse 2.0.1
 Changes: Eclipse 2.0
 
 - iOS 8 Support
-
-Changes: Eclipse 1.4.6-4
-
-- Updated to support latest Instagram, WhatsApp
-- Fixed Viber crashing
 
 Changes: Eclipse 1.4.5-3
 
@@ -245,7 +159,7 @@ Changes: Eclipse 1.3-4 (Unreleased)
 
 - Fix TextView coloring bugs
 - UIAlertView improvements
-- Added option to disable Eclipse inside SpringBoard
+- Added option to disable Eclipse inside SpringBoard 
 - Reduced the amount of complaints/bug reports in my inbox
 
 Changes: Eclipse 1.3-3
@@ -259,7 +173,7 @@ Changes: Eclipse 1.3-3
 Changes: Eclipse 1.3-2
 
 - Fixed text input on Safari
-- Fixed hex colors safemode
+- Fixed hex colors safemode 
 
 Changes: Eclipse 1.3
 
@@ -357,7 +271,7 @@ Changes: Eclipse (1.1.5-2)
 - Added option to replace startup screens
 - Fixed conflicts with GBA4iOS, possibly other apps
 - Compatible with Twitter 1.4.3
-- Fixed a text field issue in Messages/BiteSMS
+- Fixed a text field issue in Messages/BiteSMS 
 - Fixed Safari reload and reader buttons
 
 Changes: Eclipse (1.1.5)
@@ -446,3 +360,4 @@ Red = 7
 Yellow = 8
 
 key = selectedTint
+ 

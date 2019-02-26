@@ -1,0 +1,10 @@
+Package: org.thebigboss.eclipse2
+Name: Eclipse 2 (Beta)
+Depends: mobilesubstrate, preferenceloader
+Architecture: iphoneos-arm
+Description: System-wide Nightmode + More
+Maintainer: Guillermo Morán (fr0st)
+Author: Guillermo Morán (fr0st)
+Section: Tweaks
+Version: 2.2.2b-133
+Installed-Size: 2064

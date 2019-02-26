@@ -10,7 +10,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Copyright © 2015 Guillermo Morán</string>
+			<string>Copyright © 2014 Guillermo Morán</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -64,17 +64,13 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.gmoran.eclipse</string>
-			<key>key</key>
-			<string>cellSeparatorsEnabled</string>
+			<string>PSButtonCell</string>
+			<key>alignment</key>
+			<string>1</string>
+			<key>action</key>
+			<string>quitApps</string>
 			<key>label</key>
-			<string>Show Table Separators</string>
-			<key>PostNotification</key>
-			<string>com.gmoran.eclipse.prefs-changed</string>
+			<string>Quit All Apps</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -124,13 +120,13 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Enabled Applications</string>
+			<string>Blacklisted Applications</string>
 			<key>isController</key>
 			<true/>
 			<key>bundle</key>
 			<string>AppList</string>
 			<key>ALNavigationTitle</key>
-			<string>Enabled Applications</string>
+			<string>Blacklisted Apps</string>
 			<key>ALSingleEnabledMode</key>
 			<false/>
 			<key>ALChangeNotification</key>
@@ -140,7 +136,7 @@
 			<key>ALSettingsPath</key>
 			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
 			<key>ALSettingsKeyPrefix</key>
-			<string>EnabledApps-</string>
+			<string>BlackListed-</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -179,18 +175,6 @@
 			<string>ESCreditsPanel</string>
 			<key>label</key>
 			<string>Credits</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>action</key>
-			<string>faq</string>
-			<key>label</key>
-			<string>Quick Support</string>
 		</dict>
 		<dict>
 			<key>cell</key>
