@@ -40,15 +40,15 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Smart Invert &amp; Packix Hosting</string>
+			<string>Threema Support</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
 			<key>action</key>
-			<string>andywiik</string>
+			<string>beatjunky</string>
 			<key>label</key>
-			<string>@andywiik</string>
+			<string>@beatjunky99</string>
 			<key>icon</key>
 			<string>twitter.png</string>
 		</dict>
@@ -56,55 +56,33 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Color Picker &amp; Bug Fixes</string>
+			<string>Libcolorpicker</string>
 		</dict>
 		<dict>
-			<key>icon</key>
-			<string>twitter.png</string>
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
 			<key>action</key>
-			<string>creaturesurvive</string>
+			<string>pixelfiredev</string>
 			<key>label</key>
-			<string>@CreatureSurvive</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>WhatsApp &amp; Music Fixes</string>
-		</dict>
-		<dict>
+			<string>PixelFireDev</string>
 			<key>icon</key>
-			<string>twitter.png</string>
+			<string>pixelfiredev.png</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
 			<key>action</key>
-			<string>dpkg_</string>
+			<string>libcolorpicker</string>
 			<key>label</key>
-			<string>@dpkg_</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Share Sheet Fix</string>
-		</dict>
-		<dict>
+			<string>Libcolorpicker</string>
 			<key>icon</key>
-			<string>twitter.png</string>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>action</key>
-			<string>laughingquoll</string>
-			<key>label</key>
-			<string>@LaughingQuoll</string>
+			<string>pixelfiredev.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Eclipse X by Guillermo Morán (@fr0st) © 2018</string>
+			<string>Eclipse 3 by Guillermo Morán (@fr0st) © 2015</string>
 		</dict>
 	</array>
 	<key>title</key>

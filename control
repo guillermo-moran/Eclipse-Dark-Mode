@@ -1,10 +1,10 @@
-Package: me.gmoran.eclipse12
-Name: Eclipse 12 (iOS 12)
-Depends: mobilesubstrate, preferenceloader, applist, firmware (>= 12.0), com.creaturesurvive.libcscolorpicker
-Version: 6.0.2
+Package: org.thebigboss.eclipse3
+Name: Eclipse 3
+Depends: mobilesubstrate, preferenceloader, org.thebigboss.libcolorpicker
+Version: 3.0b
 Architecture: iphoneos-arm
-Description: Customizable Dark Mode iOS 12!
-Depiction: http://gmoran.me/eclipse_12_repo.html
+Description: System-wide Nightmode + More
+Depiction: http://gmoran.me/repo/depictions/EclipseBeta.html
 Maintainer: Guillermo Morán (fr0st)
 Author: Guillermo Morán (fr0st)
 Section: Tweaks

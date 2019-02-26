@@ -7,43 +7,73 @@
  | (      | |      | |         | |   | (            ) || (
  | (____/\| (____/\| (____/\___) (___| )      /\____) || (____/\
  (_______/(_______/(_______/\_______/|/       \_______)(_______/
-
+ 
  NIGHT MODE FOR IOS - SpringBoard Hook
  COPYRIGHT © 2014 GUILLERMO MORAN
-
+ 
  */
-#include "../Utils/Interfaces.h"
-#include "../Utils/UIColor+Eclipse.h"
-
+#include "../Interfaces.h"
+#include "../UIColor+Eclipse.h"
 #import <objc/runtime.h>
 
 #include <notify.h>
 
-#define VIEW_COLOR                      [UIColor eclipseSelectedViewColor]
-#define NAV_COLOR                       [UIColor eclipseSelectedNavColor]
-#define TEXT_COLOR                      [UIColor eclipseSelectedTextColor]
-#define selectedTintColor()             [UIColor eclipseSelectedTintColor]
-#define selectedStatusbarTintColor()    [UIColor eclipseSelectedStatusbarTintColor]
+#define VIEW_COLOR [UIColor eclipseSelectedViewColor]
+#define NAV_COLOR  [UIColor eclipseSelectedNavColor]
+#define TEXT_COLOR [UIColor eclipseSelectedTextColor]
+#define selectedTintColor() [UIColor eclipseSelectedTintColor]
+#define selectedStatusbarTintColor() [UIColor eclipseSelectedStatusbarTintColor]
 
 static NSDictionary *prefs = nil;
 
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-
-    if (prefs) {
-        prefs = nil;
-        [prefs release];
-
+    
+    // reload prefs
+    [prefs release];
+    
+    //Delete old prefs file
+    
+    if ((prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH]) == nil) {
+        
+        NSLog(@"CREATING PREFERENCE FILE");
+        
+        prefs = @{@"enabled": @NO,
+                  @"themeNPView": @NO,
+                  @"colorDetailText": @YES,
+                  @"translucentNavbars": @NO,
+                  @"replaceSplashScreens": @NO,
+                  @"disableInSB": @NO,
+                  
+                  //Selections
+                  @"selectedTint": @0,
+                  @"selectedTheme": @0,
+                  @"selectedNavColor": @0,
+                  
+                  @"selectedKeyboardColor": @0,
+                  @"selectedSplashScreenColor": @0,
+                  @"selectedDockColor": @0,
+                  @"selectedCCColor": @0,
+                  
+                  //Colors
+                  @"customColorsEnabled": @NO,
+                  @"customNavBarHex":@"",
+                  @"customThemeHex":@"",
+                  @"customTintHex":@"",
+                  @"customStatusbarHex":@"",
+                  @"customTextHex":@"",
+                  
+                  
+                  @"darkenWallpapers": @NO};
+        
+        [prefs writeToFile:PREFS_FILE_PATH atomically:YES];
+        prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
     }
-
-    prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
-
 }
 
 //Preferences
 
 static BOOL isTweakEnabled(void) {
     return (prefs) ? [prefs[@"enabled"] boolValue] : NO;
-    //return NO;
 }
 
 static BOOL replaceSplashScreens(void) {
@@ -60,28 +90,28 @@ static int selectedDockColor(void) {
     return selectedTheme;
 }
 
-static int selectedCCColor() {
+static int selectedCCColor(void) {
     int selectedTheme = [[prefs objectForKey:@"selectedCCColor"] intValue];
     return selectedTheme;
 }
 
-static BOOL disableInSB() {
+static BOOL disableInSB(void) {
     return (prefs) ? [prefs[@"disableInSB"] boolValue] : NO;
-    //return YES;
 }
 
-static BOOL colorSBStatusBar() {
+static BOOL colorSBStatusBar(void) {
     return (prefs) ? [prefs[@"colorSBStatusBar"] boolValue] : NO;
 }
 
 
-static BOOL darkenWallpapers() {
+
+static BOOL darkenWallpapers(void) {
     return (prefs) ? [prefs[@"darkenWallpapers"] boolValue] : NO;
 }
 
-static UIColor* dockColor() {
+static UIColor* dockColor(void) {
     int number = selectedDockColor();
-
+    
     /*
      if (customColorEnabled()) {
      if (hexNavColor()) {
@@ -89,11 +119,11 @@ static UIColor* dockColor() {
      }
      }
      */
-
+    
     if (number == -2) {
         return nil;
     }
-
+    
     else if (number == -1) {
         return MIDNIGHT_VIEW_COLOR;
     }
@@ -148,7 +178,7 @@ static UIColor* dockColor() {
     else if (number == 16) {
         return AMBER_VIEW_COLOR;
     }
-
+    
     else {
         return nil;
     }
@@ -156,7 +186,7 @@ static UIColor* dockColor() {
 
 static UIColor* controlCenterColor(void) {
     int number = selectedCCColor();
-
+    
     /*
      if (customColorEnabled()) {
      if (hexNavColor()) {
@@ -164,11 +194,11 @@ static UIColor* controlCenterColor(void) {
      }
      }
      */
-
+    
     if (number == -2) {
         return nil;
     }
-
+    
     else if (number == -1) {
         return MIDNIGHT_VIEW_COLOR;
     }
@@ -223,7 +253,7 @@ static UIColor* controlCenterColor(void) {
     else if (number == 16) {
         return AMBER_VIEW_COLOR;
     }
-
+    
     else {
         return nil;
     }
@@ -231,7 +261,7 @@ static UIColor* controlCenterColor(void) {
 
 static UIColor* splashScreenColor(void) {
     int number = selectedSplashScreenColor();
-
+    
     /*
      if (customColorEnabled()) {
      if (hexNavColor()) {
@@ -239,11 +269,11 @@ static UIColor* splashScreenColor(void) {
      }
      }
      */
-
+    
     if (number == -2) {
         return [UIColor eclipseSelectedViewColor];
     }
-
+    
     else if (number == -1) {
         return MIDNIGHT_VIEW_COLOR;
     }
@@ -298,7 +328,7 @@ static UIColor* splashScreenColor(void) {
     else if (number == 16) {
         return AMBER_VIEW_COLOR;
     }
-
+    
     else {
         return [UIColor eclipseSelectedViewColor];
     }
@@ -313,8 +343,8 @@ static UIColor* splashScreenColor(void) {
  Y8   I8I   88 88~~~88 88      88
  `8b d8'8b d8' 88   88 88booo. 88booo.
  `8b8' `8d8'  YP   YP Y88888P Y88888P
-
-
+ 
+ 
  d8888b.  .d8b.  d8888b. d88888b d8888b.
  88  `8D d8' `8b 88  `8D 88'     88  `8D
  88oodD' 88ooo88 88oodD' 88ooooo 88oobY'
@@ -330,69 +360,46 @@ static UIColor* splashScreenColor(void) {
 %new
 -(UIImage *)colorizeImage:(UIImage *)image withColor:(UIColor *)color {
     UIGraphicsBeginImageContext(image.size);
-
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGRect area = CGRectMake(0, 0, image.size.width, image.size.height);
-
+    
     CGContextScaleCTM(context, 1, -1);
     CGContextTranslateCTM(context, 0, -area.size.height);
-
+    
     CGContextSaveGState(context);
     CGContextClipToMask(context, area, image.CGImage);
-
+    
     [color set];
     CGContextFillRect(context, area);
-
+    
     CGContextRestoreGState(context);
-
+    
     CGContextSetBlendMode(context, kCGBlendModeMultiply);
-
+    
     CGContextDrawImage(context, area, image.CGImage);
-
+    
     UIImage *colorizedImage = UIGraphicsGetImageFromCurrentImageContext();
-
+    
     UIGraphicsEndImageContext();
-
+    
     return colorizedImage;
 }
 
 -(id)initWithFrame:(CGRect)arg1 wallpaperImage:(id)arg2 treatWallpaper:(BOOL)arg3 variant:(long long)arg4 {
-
-
+    
+    
     if (darkenWallpapers() && !disableInSB() && isTweakEnabled()) {
-
+        
         return %orig(arg1, [self colorizeImage:arg2 withColor:[UIColor colorWithWhite:0 alpha:0.5]], arg3, arg4);
     }
     else {
         return %orig;
     }
-
+    
 }
 
 %end
-
-// APRIL FOOLS
-/*
-@interface SBIconImageView : UIView {}
-@end
-
-
-%hook SBIconImageView
-
--(void)layoutSubviews {
-    %orig;
-
-    int r = arc4random_uniform(4);
-    if (r == 1) {
-        CGFloat radians = atan2f(self.transform.b, self.transform.a);
-        CGFloat degrees = radians * (180 / M_PI);
-        CGAffineTransform transform = CGAffineTransformMakeRotation((90 + degrees) * M_PI/180);
-        self.transform = transform;
-    }
-}
-
-%end
-*/
 
 /*
  d8888b.  .d88b.   .o88b. db   dD
@@ -403,21 +410,19 @@ static UIColor* splashScreenColor(void) {
  Y8888D'  `Y88P'   `Y88P' YP   YD
  */
 
-/*
 %hook SBDockIconListView
 
 -(id)initWithModel:(id)arg1 orientation:(int)arg2 viewMap:(id)arg3 {
     id kek = %orig;
-
+    
     if (isTweakEnabled() && !disableInSB() && (selectedDockColor() > -2)) {
         [self setBackgroundColor:[dockColor() colorWithAlphaComponent:0.5f]];
     }
-
+    
     return kek;
 }
 
 %end
- */
 
 /*
  .o88b.  .o88b.
@@ -428,16 +433,16 @@ static UIColor* splashScreenColor(void) {
  `Y88P'  `Y88P'
  */
 
-// %hook SBControlCenterContentContainerView
-//
-// -(void)layoutSubviews {
-//     %orig;
-//     if (isTweakEnabled() && !disableInSB() && (selectedCCColor() > -2)) {
-//         [self setBackgroundColor:[controlCenterColor() colorWithAlphaComponent:1.0f]];
-//     }
-// }
-//
-// %end
+%hook SBControlCenterContentContainerView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isTweakEnabled() && !disableInSB() && (selectedCCColor() > -2)) {
+        [self setBackgroundColor:[controlCenterColor() colorWithAlphaComponent:1.0f]];
+    }
+}
+
+%end
 
 /*
  .d8888. d888888b  .d8b.  d888888b db    db .d8888. d8888b.  .d8b.  d8888b.
@@ -447,19 +452,6 @@ static UIColor* splashScreenColor(void) {
  db   8D    88    88   88    88    88b  d88 db   8D 88   8D 88   88 88 `88.
  `8888Y'    YP    YP   YP    YP    ~Y8888P' `8888Y' Y8888P' YP   YP 88   YD
  */
- @interface _UIStatusBar : UIView
- @property (nonatomic, retain) UIColor *foregroundColor;
- @end
- %hook _UIStatusBar
-
- -(void)layoutSubviews {
-     %orig;
-     if (isTweakEnabled() && !disableInSB() && colorSBStatusBar()) {
-         self.foregroundColor = selectedStatusbarTintColor();
-         //self.foregroundColor = selectedStatusbarTintColor();
-     }
- }
- %end
 
 %hook UIStatusBar
 
@@ -504,13 +496,13 @@ static UIColor* splashScreenColor(void) {
 
 -(void)setTextColor:(UIColor*)color {
     if (!disableInSB() && isTweakEnabled()) {
-
+        
         if (([self tag] != VIEW_EXCLUDE_TAG) && !([[self textColor] isEqual:[UIColor clearColor]])) {
-
+            
             %orig(TEXT_COLOR); //Fix Later
             return;
         }
-
+        
     }
     %orig;
 }
@@ -540,43 +532,41 @@ static UIColor* splashScreenColor(void) {
 
 -(id)colorTint {
     UIColor* color = %orig;
-
+    
     id _backdrop = MSHookIvar<id>(self, "_backdrop");
-
+    
     //if ([[_backdrop superview] isKindOfClass:[UIActionSheet class]] && [self style] != 2060) {
-
-
+    
+    
     /* ==== INFORMATION ====
-
+     
      _UIBackdropViewSettingsAdaptiveLight = 2060 || iOS 7 Control Center
-
+     
      _UIBackdropViewSettingsUltraLight = 2010 || App Store, iTunes, Action Sheets, and Share Sheets
-
+     
      _UIBackdropViewSettingsLight = 0, 1000, 1003, 2020, 10090, 10100 || Dock, Spotlight, Folders
-
+     
      */
-
-
-
+    
+    
+    
     if (!disableInSB() && isTweakEnabled() && [self class] == %c(_UIBackdropViewSettingsUltraLight)) {
-
+        
         color = [NAV_COLOR colorWithAlphaComponent:0.9];
         [_backdrop setAlpha:0.9];
     }
-
+    
     /*
     if (!disableInSB() && darkenKeyboard() && [_backdrop isKindOfClass:objc_getClass("UIKBBackdropView")]) {
         color = [keyboardColor() colorWithAlphaComponent:0.9];
         [_backdrop setAlpha:0.9];
     }
     */
-
+    
     return color;
 }
 
 %end
-
-%group EclipseAlerts //Eclipse Alert Group (Noctis Support)
 
 %hook _UIAlertControllerBlendingSeparatorView
 
@@ -589,109 +579,29 @@ static UIColor* splashScreenColor(void) {
 
 %end
 
-//Action Sheets
-
-//Action Sheets
-@interface _UIActivityGroupActivityCellTitleLabel : UILabel
-@end
-
-%hook _UIActivityGroupActivityCellTitleLabel
-
--(void)layoutSubviews {
-    %orig;
-
-    if (!disableInSB() && isTweakEnabled()) {
-        self.textColor = selectedTintColor();
-    }
-}
-
-%end
-
-@interface UIActionSheetiOSDismissActionView : UIView
-@end
-
-%hook UIActionSheetiOSDismissActionView
--(void)layoutSubviews {
-    %orig;
-
-    if (!disableInSB() && isTweakEnabled()) {
-
-        UIButton *button = MSHookIvar<UIButton *>(self, "_dismissButton");
-        button.tintColor = selectedTintColor();
-    }
-}
-%end
-
-@interface _UIInterfaceActionGroupHeaderScrollView  : UIView
-@end
-
-%hook _UIInterfaceActionGroupHeaderScrollView
--(void)layoutSubviews {
-    %orig;
-
-    if (!disableInSB() && isTweakEnabled()) {
-        UIView *contentView = MSHookIvar<UIView *>(self, "_contentView");
-
-        for (UILabel *subview in contentView.subviews) {
-            if ([subview isKindOfClass:[UILabel class]]) {
-                subview.textColor = selectedTintColor();
-            }
-        }
-    }
-}
-%end
-
-/*
-@interface _UIInterfaceActionCustomViewRepresentationView  : UIView
-@end
-
-%hook _UIInterfaceActionCustomViewRepresentationView
-
--(void)layoutSubviews {
-    %orig;
-    if (!disableInSB() && isTweakEnabled()) {
-        UIView *actionView = MSHookIvar<UIView *>(self, "_actionContentView");
-        UILabel *label = MSHookIvar<UILabel *>(actionView, "_label");
-        label.tintColor = selectedTintColor();
-    }
-}
-
--(void)setHighlighted:(BOOL)arg1{
-    %orig;
-    if (!disableInSB() && isTweakEnabled()) {
-
-        UIView *actionView = MSHookIvar<UIView *>(self, "_actionContentView");
-        UILabel *label = MSHookIvar<UILabel *>(actionView, "_label");
-        label.tintColor = selectedTintColor();
-    }
-}
-
-%end
-*/
-
-//Alerts
-
 %hook _UIAlertControllerView
 
 - (void)layoutSubviews {
-
+    
     %orig;
     if (!disableInSB() && isTweakEnabled()) {
-
+        
         for (UIView* view in [self subviews]) {
             view.tag = VIEW_EXCLUDE_TAG;
         }
-
-
+        
+        UIView* _roundedCornersView = MSHookIvar<id>(self, "_roundedCornersView");
+        _roundedCornersView.backgroundColor = NAV_COLOR;
+        
         UILabel* _titleLabel = MSHookIvar<id>(self, "_titleLabel");
         [_titleLabel setTextColor:selectedTintColor()];
-
+        
         UILabel* _detailMessageLabel = MSHookIvar<id>(self, "_detailMessageLabel");
         [_detailMessageLabel setTextColor:TEXT_COLOR];
-
+        
         UILabel* _messageLabel = MSHookIvar<id>(self, "_messageLabel");
         [_messageLabel setTextColor:TEXT_COLOR];
-
+        
     }
 }
 
@@ -723,18 +633,10 @@ static UIColor* splashScreenColor(void) {
 
 - (void)layoutSubviews {
     %orig;
-    if (!disableInSB() && isTweakEnabled()) {
-        [self setBackgroundColor:NAV_COLOR];
-
-        UILabel* _label = MSHookIvar<id>(self, "_label");
-        [_label setTextColor:selectedTintColor()];
-    }
 }
 
 
 %end
-
-%end //End Group
 
 
 //Splash Screen
@@ -748,13 +650,13 @@ static UIColor* splashScreenColor(void) {
     CGRect rect = [[UIScreen mainScreen] bounds];
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-
+    
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, rect);
-
+    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-
+    
     return image;
 }
 
@@ -770,33 +672,28 @@ static UIColor* splashScreenColor(void) {
 
 
 
-+(id)zoomViewForDeviceApplicationSceneHandle:(id)arg1 displayConfiguration:(id)arg2 interfaceOrientation:(long long)arg3 snapshot:(id)arg4 snapshotSize:(CGSize)arg5 statusBarDescriptor:(id)arg6 decodeImage:(BOOL)arg7 {
-
++ (id)zoomViewForApplication:(id)application screen:(id)screen interfaceOrientation:(int)orientation snapshot:(id)snapshot snapshotSize:(CGSize)size statusBarDescriptor:(id)descriptor decodeImage:(BOOL)image {
+    
     id view = %orig;
-
+    
     if (isTweakEnabled() && replaceSplashScreens()) {
         UIView* newView = [[UIView alloc] init];
-        newView.backgroundColor = splashScreenColor();
+        newView.backgroundColor = VIEW_COLOR;
         newView.frame = [view frame];
         return newView;
     }
     return view;
-
+    
 }
 
-
+ 
 
 
 %end
 
-%hook SpringBoard
 
--(void)applicationDidFinishLaunching:(BOOL)maybe {
-    %orig;
 
-}
 
-%end
 //DRM
 
 //#import "NSString+Fr0st.h"
@@ -813,34 +710,34 @@ OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
 }
 
 -(void)applicationDidFinishLaunching:(BOOL)beh {
-
+    
     %orig;
-
+    
     if (IS_BETA_BUILD) {
-
-
+        
+        
         CFStringRef UDNumber = MGCopyAnswer(CFSTR("UniqueDeviceID"));
         NSString* UDID = (NSString*)UDNumber;
         //NSString* UDID = @"kek";
-
+        
         NSString *url =[NSString stringWithFormat:@"http://gmoran.me/api/check.php?UDID=%@", UDID];
-
+        
         NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-
+        
         //NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",[NSString obfuscate:url withKey:UDID],UDID]]];
         [req setHTTPMethod:@"GET"];
-
+        
         NSHTTPURLResponse* urlResponse = nil;
-
+        
         NSData *responseData = [NSURLConnection sendSynchronousRequest:req returningResponse:&urlResponse error:nil];
-
+        
         NSString *result = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         CFRelease(UDNumber);
-
+        
         if ([result isEqualToString:@"Not Licensed"]) {
-
+            
             if (IS_BETA_BUILD) {
-
+                
                 UIAlertView *alert = [[UIAlertView alloc]
                                       initWithTitle:@"Eclipse 3 Beta"
                                       message:@"Beta access is restricted to customers"
@@ -849,48 +746,25 @@ OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
                                       otherButtonTitles:nil];
                 [alert show];
                 [alert release];
-
+                
                 [NSTimer scheduledTimerWithTimeInterval:5.0
                                                  target:self
                                                selector:@selector(safeMode)
                                                userInfo:nil
                                                 repeats:NO];
-
+                
             }
-
+            
         }
     }
-
+    
 }
 
 %end
 
 */
 
-static BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/NoctisXI.dylib"];
 
-%ctor {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-
-    prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
-                // register to receive changed notifications
-    registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
-                //registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
-                //registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
-                //%init(UIApp);
-
-    %init(_ungrouped);
-
-    if (!noctisInstalled) {
-        %init(EclipseAlerts); //Noctis Support
-    }
-
-    [pool release];
-}
-
-
-/*
 %ctor {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
@@ -899,13 +773,5 @@ static BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@
     //registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
     //registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
     //%init(UIApp);
-
-    %init(_ungrouped);
-
-    if (!noctisInstalled) {
-        %init(EclipseAlerts); //Noctis Support
-    }
-
     [pool release];
 }
-*/
