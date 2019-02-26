@@ -662,6 +662,7 @@ static void initializeApplications() {
     BOOL applicationIsEnabledInSettings = [[prefs objectForKey:[@"EnabledApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
     BOOL shouldAutoReplaceColors = NO;
 
+
     isEnabled = applicationIsEnabledInSettings && isTweakEnabled();
 
     //isEnabled = false;
@@ -669,9 +670,9 @@ static void initializeApplications() {
     checkAppBlackList();
 
 
-    if (idIsEqual(@"com.apple.springboard")) {
-        isEnabled = NO;
-    }
+    // if (idIsEqual(@"com.apple.springboard")) {
+    //     isEnabled = NO;
+    // }
 
     //If Tweak enabled:
     if (isEnabled) {
@@ -680,9 +681,9 @@ static void initializeApplications() {
         %init(_ungrouped);
 
 
-        if (!idIsEqual(@"com.apple.mobilesafari")) {
+        // if (!idIsEqual(@"com.apple.mobilesafari")) {
             %init(SystemUIColors);
-        }
+        // }
 
         //Fix clock app crashing
         isClockApp = idIsEqual(@"com.apple.mobiletimer");
@@ -730,7 +731,7 @@ static void initializeApplications() {
                 prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
                 registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
             }
-            if (isApplication && !isSpringBoard) {
+            if (isApplication) {
             //if (true) {
                 // IS APPLICATION
 

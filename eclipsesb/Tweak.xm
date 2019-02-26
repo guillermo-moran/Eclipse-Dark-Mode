@@ -60,26 +60,26 @@ static int selectedDockColor(void) {
     return selectedTheme;
 }
 
-static int selectedCCColor(void) {
+static int selectedCCColor() {
     int selectedTheme = [[prefs objectForKey:@"selectedCCColor"] intValue];
     return selectedTheme;
 }
 
-static BOOL disableInSB(void) {
+static BOOL disableInSB() {
     return (prefs) ? [prefs[@"disableInSB"] boolValue] : NO;
     //return YES;
 }
 
-static BOOL colorSBStatusBar(void) {
+static BOOL colorSBStatusBar() {
     return (prefs) ? [prefs[@"colorSBStatusBar"] boolValue] : NO;
 }
 
 
-static BOOL darkenWallpapers(void) {
+static BOOL darkenWallpapers() {
     return (prefs) ? [prefs[@"darkenWallpapers"] boolValue] : NO;
 }
 
-static UIColor* dockColor(void) {
+static UIColor* dockColor() {
     int number = selectedDockColor();
 
     /*
@@ -428,16 +428,16 @@ static UIColor* splashScreenColor(void) {
  `Y88P'  `Y88P'
  */
 
-%hook SBControlCenterContentContainerView
-
--(void)layoutSubviews {
-    %orig;
-    if (isTweakEnabled() && !disableInSB() && (selectedCCColor() > -2)) {
-        [self setBackgroundColor:[controlCenterColor() colorWithAlphaComponent:1.0f]];
-    }
-}
-
-%end
+// %hook SBControlCenterContentContainerView
+//
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isTweakEnabled() && !disableInSB() && (selectedCCColor() > -2)) {
+//         [self setBackgroundColor:[controlCenterColor() colorWithAlphaComponent:1.0f]];
+//     }
+// }
+//
+// %end
 
 /*
  .d8888. d888888b  .d8b.  d888888b db    db .d8888. d8888b.  .d8b.  d8888b.

@@ -30,7 +30,7 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 		
 		UILabel *statusLabel = [[[UILabel alloc] init] autorelease];
         
-        statusLabel.text = @"X";
+        statusLabel.text = @" Dark Mode";
        
         
 		statusLabel.backgroundColor = [UIColor clearColor];
@@ -50,7 +50,7 @@ static CGFloat const qHeaderCellFontSize = 30.f;
         
         
         //BOOL listFileExists = YES;
-        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipsex.list"];
+        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse12.list"];
 
         
         //if ([result isEqualToString:@"Not Licensed"] || !listFileExists) {

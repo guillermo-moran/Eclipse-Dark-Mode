@@ -1,6 +1,9 @@
-Changes: 5.1.8
+Changes: Eclipse 6.0.1
 
-- Actually fix the wifi icons
+- iOS 12 Support
+- Dark Websites Support
+- Fix Share Sheets
+- Fix wifi icons
 
 Changes: 5.1.7
 

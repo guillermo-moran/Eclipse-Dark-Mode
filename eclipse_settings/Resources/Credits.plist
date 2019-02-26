@@ -87,6 +87,22 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Share Sheet Fix</string>
+		</dict>
+		<dict>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>action</key>
+			<string>laughingquoll</string>
+			<key>label</key>
+			<string>@LaughingQuoll</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>footerText</key>
 			<string>Eclipse X by Guillermo Morán (@fr0st) © 2018</string>
 		</dict>

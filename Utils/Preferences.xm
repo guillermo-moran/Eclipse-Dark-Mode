@@ -46,6 +46,7 @@ static BOOL      _customThemeColorsEnabled;
 static BOOL      _customTintColorsEnabled;
 static BOOL      _customStatusbarColorsEnabled;
 static BOOL      _customTextColorsEnabled;
+static BOOL      _darkWebEnabled;
 
 static int       _selectedTheme;
 static int       _selectedNavColor;
@@ -74,37 +75,47 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
     if (!IS_BETA_BUILD) {
 
+        //boolean values
+
+        if (prefs != nil) {
+            prefs = nil;
+            [prefs release];
+
+        }
+
         prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
         //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
 
-        //boolean values
-
         NSNumber *n = (NSNumber *)[prefs objectForKey:@"enabled"];
-        _isTweakEnabled = (n)? [n boolValue]:YES;
+        _isTweakEnabled = (n)? [n boolValue]:NO;
 
         n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
-        _colorDetailText = (n)? [n boolValue]:YES;
+        _colorDetailText = (n)? [n boolValue]:NO;
 
-        n = (NSNumber *)[prefs objectForKey:@"translucentNavbars"];
-        _translucentNavbars = (n)? [n boolValue]:YES;
+        //n = (NSNumber *)[prefs objectForKey:@"translucentNavbars"];
+        //_translucentNavbars = (n)? [n boolValue]:NO;
+        _translucentNavbars = NO;
 
 
 
         n = (NSNumber *)[prefs objectForKey:@"cellSeparatorsEnabled"];
-        _cellSeparatorsEnabled = (n)? [n boolValue]:YES;
+        _cellSeparatorsEnabled = (n)? [n boolValue]:NO;
 
         n = (NSNumber *)[prefs objectForKey:@"darkenKeyboard"];
-        _darkenKeyboard = (n)? [n boolValue]:YES;
+        _darkenKeyboard = (n)? [n boolValue]:NO;
 
         n = (NSNumber *)[prefs objectForKey:@"tintSMSBubbles"];
-        _tintSMSBubbles = (n)? [n boolValue]:YES;
+        _tintSMSBubbles = (n)? [n boolValue]:NO;
 
-        n = (NSNumber *)[prefs objectForKey:@"tintMessageBubbles"];
-        _tintMessageBubbles = (n)? [n boolValue]:YES;
+        //_tintSMSBubbles = YES;
+
+       n = (NSNumber *)[prefs objectForKey:@"tintMessageBubbles"];
+       _tintMessageBubbles = (n)? [n boolValue]:NO;
+
+        //_tintMessageBubbles = YES;
 
         n = (NSNumber *)[prefs objectForKey:@"reverseModeEnabled"];
-        _reverseModeEnabled = (n)? [n boolValue]:YES;
-
+        _reverseModeEnabled = (n)? [n boolValue]:NO;
 
         _selectedTheme = [(NSNumber*)[prefs objectForKey:@"selectedTheme"] intValue];
         _selectedNavColor = [(NSNumber*)[prefs objectForKey:@"selectedNavColor"] intValue];
@@ -112,60 +123,41 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
         _statusbarTint = [(NSNumber*)[prefs objectForKey:@"statusbarTint"] intValue];
         _selectedTint = [(NSNumber*)[prefs objectForKey:@"selectedTint"] intValue];
 
+
+        /* Custom Colors */
+
+        n = (NSNumber *)[prefs objectForKey:@"customNavColorsEnabled"];
+        _customNavColorsEnabled = (n)? [n boolValue]:NO;
+
+        n = (NSNumber *)[prefs objectForKey:@"customThemeColorsEnabled"];
+        _customThemeColorsEnabled = (n)? [n boolValue]:NO;
+
+        n = (NSNumber *)[prefs objectForKey:@"customTintColorsEnabled"];
+        _customTintColorsEnabled = (n)? [n boolValue]:NO;
+
+        n = (NSNumber *)[prefs objectForKey:@"customStatusbarColorsEnabled"];
+        _customStatusbarColorsEnabled = (n)? [n boolValue]:NO;
+
+        n = (NSNumber *)[prefs objectForKey:@"customTextColorsEnabled"];
+        _customTextColorsEnabled = (n)? [n boolValue]:NO;
+        //_customColorsEnabled = NO;
+
         _customNavBarHex = (NSString*)[prefs objectForKey:@"customNavBarHex"];
         _customThemeHex = (NSString*)[prefs objectForKey:@"customThemeHex"];
         _customTintHex = (NSString*)[prefs objectForKey:@"customTintHex"];
         _customStatusbarHex = (NSString*)[prefs objectForKey:@"customStatusbarHex"];
         _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
 
+
     }
 
     else {
 
         NSDate * currentDate = [NSDate date];
-        NSDate * otherDate = [[NSDate alloc] initWithString:@"2099-03-29 12:00:00 +0600"];
+        NSDate * otherDate = [[NSDate alloc] initWithString:@"2999-02-27 12:00:00 +0600"];
         NSComparisonResult result = [currentDate compare:otherDate];
 
         if (result == NSOrderedAscending) { //Before Expiry
-
-            //prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
-
-            //CFPreferencesAppSynchronize(CFSTR("com.gmoran.eclipse"));
-            //_isTweakEnabled = !CFPreferencesCopyAppValue(CFSTR("enabled"), CFSTR("com.gmoran.eclipse")) ? YES : [(id)CFBridgingRelease(CFPreferencesCopyAppValue(CFSTR("enabled"), CFSTR("com.gmoran.eclipse"))) boolValue];
-
-            //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
-
-
-            //NSNumber *n = (NSNumber *)[prefs objectForKey:@"enabled"];
-            //_isTweakEnabled = (n)? [n boolValue]:YES;
-
-
-            /*
-            _isTweakEnabled = YES;
-            _colorDetailText = YES;
-            _translucentNavbars = NO;
-            _customColorsEnabled = NO;
-            _cellSeparatorsEnabled = NO;
-            _darkenKeyboard = YES;
-            _tintSMSBubbles = NO;
-            _tintMessageBubbles = NO;
-            _reverseModeEnabled = YES;
-            _selectedTheme = 2;
-            _selectedNavColor = 2;
-            _selectedKeyboardColor = 2;
-            _statusbarTint = 0;
-            _selectedTint = 7;
-            */
-
-
-
-            //boolean values
-
-            if (prefs != nil) {
-                prefs = nil;
-                [prefs release];
-
-            }
 
             prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
             //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
@@ -224,48 +216,17 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
             n = (NSNumber *)[prefs objectForKey:@"customTextColorsEnabled"];
             _customTextColorsEnabled = (n)? [n boolValue]:NO;
-            //_customColorsEnabled = NO;
+
+            n = (NSNumber *)[prefs objectForKey:@"darkWebEnabled"];
+            _darkWebEnabled = (n)? [n boolValue]:NO;
 
             _customNavBarHex = (NSString*)[prefs objectForKey:@"customNavBarHex"];
             _customThemeHex = (NSString*)[prefs objectForKey:@"customThemeHex"];
             _customTintHex = (NSString*)[prefs objectForKey:@"customTintHex"];
             _customStatusbarHex = (NSString*)[prefs objectForKey:@"customStatusbarHex"];
             _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
-
-
         }
-
-        else {
-
-            _isTweakEnabled = NO;
-            _colorDetailText = NO;
-            _translucentNavbars = NO;
-            _cellSeparatorsEnabled = NO;
-            _darkenKeyboard = NO;
-            _tintSMSBubbles = NO;
-            _tintMessageBubbles = NO;
-            _reverseModeEnabled = NO;
-            _selectedTheme = 0;
-            _selectedNavColor = 0;
-            _selectedKeyboardColor = 0;
-            _statusbarTint = 0;
-            _selectedTint = 0;
-        }
-
-
-
-        /*
-        _customNavBarHex = (NSString*)[prefs objectForKey:@"customNavBarHex"];
-        _customThemeHex = (NSString*)[prefs objectForKey:@"customThemeHex"];
-        _customTintHex = (NSString*)[prefs objectForKey:@"customTintHex"];
-        _customStatusbarHex = (NSString*)[prefs objectForKey:@"customStatusbarHex"];
-        _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
-         */
-
     }
-
-
-
 }
 
 static BOOL isBetterSettingsInstalled() {
@@ -285,9 +246,6 @@ static BOOL shouldColorDetailText(void) {
 static BOOL translucentNavbarEnabled(void) {
     return _translucentNavbars;
 }
-
-
-
 
 static BOOL cellSeparatorsEnabled(void) {
     return _cellSeparatorsEnabled;
@@ -331,11 +289,14 @@ static BOOL isMessageCustomiserInstalled() {
 
 }
 
-//Experimental Features
 static BOOL darkenKeyboard(void) {
     return _darkenKeyboard;
 }
 
+//Experimental Features
+static bool darkWebEnabled(void) {
+    return _darkWebEnabled;
+}
 
 static BOOL isEnabled = isTweakEnabled();
 

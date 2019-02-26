@@ -11,7 +11,7 @@
 
 -(void)layoutSubviews {
     %orig;
-    if (isEnabled) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
         [self setBackgroundColor:NAV_COLOR];
         [self setHidden: NO];
         if (selectedNavColor() == -1) {
@@ -27,7 +27,7 @@
 
 -(void)layoutSubviews {
     %orig;
-    if (isEnabled) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
 
         @try {
             [self setBarTintColor:NAV_COLOR];
@@ -49,7 +49,7 @@
 
 -(void)drawRect:(CGRect)arg1 {
     %orig;
-    if (isEnabled) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
 
         @try {
             [self setBarTintColor:NAV_COLOR];
@@ -66,7 +66,7 @@
 
 -(void)setBounds:(CGRect)arg1 {
     %orig;
-    if (isEnabled) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
 
         @try {
             [self setBarTintColor:NAV_COLOR];
@@ -82,7 +82,7 @@
 }
 
 -(void)setBarTintColor:(UIColor*)color {
-    if (isEnabled) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
         color = NAV_COLOR;
         if (translucentNavbarEnabled()) {
             [self setAlpha:0.9];

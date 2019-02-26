@@ -32,6 +32,16 @@
     }
 }
 
+- (void)laughingquoll {
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=laughingquoll"]]) {
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=laughingquoll"]];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/laughingquoll"]];
+    }
+}
+
 - (void)fr0st {
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=fr0st"]]) {

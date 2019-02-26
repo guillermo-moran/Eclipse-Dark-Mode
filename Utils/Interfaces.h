@@ -24,8 +24,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-//Kek
-
 #define IsiPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
 #define IS_BETA_BUILD YES

@@ -10,7 +10,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>© 2018 Guillermo Morán</string>
+			<string>© 2019 Guillermo Morán</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -200,6 +200,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Eclipse</string>
+	<string>Eclipse Dark Mode</string>
 </dict>
 </plist>
