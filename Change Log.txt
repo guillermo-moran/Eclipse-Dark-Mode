@@ -1,3 +1,14 @@
+Changes: 5.1.8
+
+- Actually fix the wifi icons
+
+Changes: 5.1.7
+
+- Share Sheet fix
+- Two Factor Fix
+- Wifi icon fix
+- Compiled with iOS 11 SDK
+
 Changes: Eclipse 5.0.8-5
 
 - Fixed action sheets in WhatsApp

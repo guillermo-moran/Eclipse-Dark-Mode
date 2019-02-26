@@ -7,6 +7,24 @@
     YP    YP    YP    YP    YP      Y888888P Y88888P Y88888P Y8888D'
 */
 
+@interface _UITextFieldContentView
+
+@property (nonatomic, copy, readwrite) UIColor* backgroundColor;
+
+@end
+
+%hook _UITextFieldContentView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+}
+
+
+%end
+
 %hook _MFSearchAtomTextView
 
 -(void)layoutSubviews {
