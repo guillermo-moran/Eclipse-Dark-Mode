@@ -10,3 +10,11 @@
 }
 
 %end
+
+%hook PXRoundedCornerOverlayView
+
+- (id)overlayColor {
+	return VIEW_COLOR;
+}
+
+%end

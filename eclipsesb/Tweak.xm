@@ -46,6 +46,11 @@ static BOOL isTweakEnabled(void) {
     //return NO;
 }
 
+static BOOL alertsEnabled(void) {
+    return (prefs) ? [prefs[@"alertsEnabled"] boolValue] : NO;
+    //return NO;
+}
+
 static BOOL replaceSplashScreens(void) {
     return (prefs) ? [prefs[@"replaceSplashScreens"] boolValue] : NO;
 }
@@ -882,7 +887,7 @@ static BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@
 
     %init(_ungrouped);
 
-    if (!noctisInstalled) {
+    if (alertsEnabled()) {
         %init(EclipseAlerts); //Noctis Support
     }
 

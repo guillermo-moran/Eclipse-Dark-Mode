@@ -39,6 +39,11 @@ static BOOL isTweakEnabled() {
     //return NO;
 }
 
+static BOOL alertsEnabled() {
+    return (prefs) ? [prefs[@"alertsEnabled"] boolValue] : NO;
+    //return NO;
+}
+
 static BOOL disableInSB() {
     return (prefs) ? [prefs[@"disableInSB"] boolValue] : NO;
     //return YES;
@@ -74,13 +79,13 @@ static BOOL disableInSB() {
 %hook UILabel
 -(void)layoutSubviews {
     %orig;
-    if(isTweakEnabled() && !disableInSB()){
+    if(isTweakEnabled() && !disableInSB() && alertsEnabled()){
         [self setTextColor: TEXT_COLOR];
     }
 }
 
 -(void)setTextColor:(UIColor *)arg1 {
-    if (isTweakEnabled() && !disableInSB()) {
+    if (isTweakEnabled() && !disableInSB() && alertsEnabled()) {
         arg1 = TEXT_COLOR;
     }
     %orig(arg1);

@@ -173,31 +173,31 @@
 
         UILabel* _messageLabel = MSHookIvar<id>(self, "_messageLabel");
         [_messageLabel setTextColor:TEXT_COLOR];
-
     }
      return kek;
 }
 
 %end
 
-%hook ServiceTouchIDAlertHeaderView
+// %hook ServiceTouchIDAlertHeaderViewE
+//
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//
+//         for (UILabel* label in [self subviews]) {
+//             if ([label respondsToSelector:@selector(setTextColor:)]) {
+//                 [label setTextColor:TEXT_COLOR];
+//             }
+//         }
+//
+//         [self setBackgroundColor:NAV_COLOR];
+//     }
+// }
+//
+// %end
 
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-
-        for (UILabel* label in [self subviews]) {
-            if ([label respondsToSelector:@selector(setTextColor:)]) {
-                [label setTextColor:TEXT_COLOR];
-            }
-        }
-
-        [self setBackgroundColor:NAV_COLOR];
-    }
-}
-
-%end
-
+// Alert Content View
 %hook _UIAlertControllerShadowedScrollView
 
 -(void)layoutSubviews {
@@ -209,16 +209,16 @@
 
 %end
 
-%hook _UIAlertControllerCollectionViewCell
-
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-        [self setBackgroundColor:NAV_COLOR];
-    }
-}
-
-%end
+// %hook _UIAlertControllerCollectionViewCell
+//
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         [self setBackgroundColor:NAV_COLOR];
+//     }
+// }
+//
+// %end
 
 %hook _UIAlertControllerBlendingSeparatorView
 
@@ -231,6 +231,7 @@
 
 %end
 
+//Alert Buttons
 %hook _UIAlertControllerActionView
 
 - (void)layoutSubviews {
@@ -246,7 +247,7 @@
 -(id)tintColor {
     if (isEnabled) {
         return selectedTintColor();
-        
+
     }
     return %orig;
 }

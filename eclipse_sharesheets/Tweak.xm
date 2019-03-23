@@ -18,6 +18,7 @@
 
 #define NAV_COLOR                       [UIColor eclipseSelectedNavColor]
 #define TEXT_COLOR                      [UIColor eclipseSelectedTextColor]
+#define VIEW_COLOR                      [UIColor eclipseSelectedViewColor]
 
 static NSDictionary *prefs = nil;
 
@@ -38,17 +39,22 @@ static BOOL isTweakEnabled() {
     //return NO;
 }
 
+static BOOL colorShareSheetsEnabled() {
+    return (prefs) ? [prefs[@"colorShareSheets"] boolValue] : NO;
+    //return NO;
+}
+
 %hook UILabel
 
 -(void)layoutSubviews {
 	%orig;
-	if(isTweakEnabled()){
+	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		[self setTextColor:TEXT_COLOR];
 	}
 }
 
 -(void)setTextColor:(UIColor *)arg1 {
-	if(isTweakEnabled()){
+	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		arg1 = TEXT_COLOR;
 	}
 	%orig(arg1);
@@ -59,13 +65,13 @@ static BOOL isTweakEnabled() {
 
 -(void)layoutSubviews {
 	%orig;
-	if(isTweakEnabled()){
+	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		[self setTextColor:TEXT_COLOR];
 	}
 }
 
 -(void)setTextColor:(UIColor *)arg1 {
-	if(isTweakEnabled()){
+	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		arg1 = TEXT_COLOR;
 	}
 	%orig(arg1);
@@ -76,13 +82,14 @@ static BOOL isTweakEnabled() {
 
 -(void)layoutSubviews {
 	%orig;
-	if (isTweakEnabled()) {
+	if (isTweakEnabled() && colorShareSheetsEnabled()) {
 		[self setHidden: true];
+        [[self superview] setBackgroundColor:VIEW_COLOR];
 	}
 }
 
 -(void)setHidden:(BOOL)arg1 {
-	if (isTweakEnabled()) {
+	if (isTweakEnabled() && colorShareSheetsEnabled()) {
 		arg1 = true;
 	}
 	%orig(arg1);
@@ -93,13 +100,13 @@ static BOOL isTweakEnabled() {
 
 -(void)layoutSubviews {
 	%orig;
-	if (isTweakEnabled()) {
+	if (isTweakEnabled() && colorShareSheetsEnabled()) {
 		[self setHidden: true];
 	}
 }
 
 -(void)setHidden:(BOOL)arg1 {
-	if (isTweakEnabled()) {
+	if (isTweakEnabled() && colorShareSheetsEnabled()) {
 		arg1 = true;
 	}
 	%orig(arg1);

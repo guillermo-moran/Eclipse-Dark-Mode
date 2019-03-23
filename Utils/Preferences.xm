@@ -47,6 +47,7 @@ static BOOL      _customTintColorsEnabled;
 static BOOL      _customStatusbarColorsEnabled;
 static BOOL      _customTextColorsEnabled;
 static BOOL      _darkWebEnabled;
+static BOOL      _alertsEnabled;
 
 static int       _selectedTheme;
 static int       _selectedNavColor;
@@ -172,7 +173,8 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             //_translucentNavbars = (n)? [n boolValue]:NO;
             _translucentNavbars = NO;
 
-
+            n = (NSNumber *)[prefs objectForKey:@"alertsEnabled"];
+            _alertsEnabled = (n)? [n boolValue]:NO;
 
             n = (NSNumber *)[prefs objectForKey:@"cellSeparatorsEnabled"];
             _cellSeparatorsEnabled = (n)? [n boolValue]:NO;
@@ -185,8 +187,8 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
             //_tintSMSBubbles = YES;
 
-           n = (NSNumber *)[prefs objectForKey:@"tintMessageBubbles"];
-           _tintMessageBubbles = (n)? [n boolValue]:NO;
+            n = (NSNumber *)[prefs objectForKey:@"tintMessageBubbles"];
+            _tintMessageBubbles = (n)? [n boolValue]:NO;
 
             //_tintMessageBubbles = YES;
 
@@ -236,6 +238,11 @@ static BOOL isBetterSettingsInstalled() {
 
 static BOOL isTweakEnabled(void) {
     return _isTweakEnabled;
+
+}
+
+static BOOL alertsEnabled(void) {
+    return _alertsEnabled;
 
 }
 
@@ -892,7 +899,7 @@ static void setTintColors() {
     [[UIButton appearance] setTintColor:selectedTintColor()];
      */
 
-    //[[UIButton appearance] setTintColor:selectedTintColor()];
+    [[UIButton appearance] setTintColor:selectedTintColor()];
 
 }
 

@@ -11,6 +11,38 @@
 			<string>System Interface</string>
 		</dict>
 		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>colorShareSheets</string>
+			<key>label</key>
+			<string>Theme Share Sheets</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>alertsEnabled</string>
+			<key>label</key>
+			<string>Theme Alerts</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -236,7 +268,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>

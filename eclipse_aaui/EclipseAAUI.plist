@@ -2,7 +2,8 @@
 	Filter = {
 		Bundles = (
 			"com.apple.AuthKitUI.AKSecondFactorAlert",
-			"com.apple.AuthKitUI.AKLocationSignInAlert"
+			"com.apple.AuthKitUI.AKLocationSignInAlert",
+			"com.apple.CoreAuthUI",
 		);
 	};
 }

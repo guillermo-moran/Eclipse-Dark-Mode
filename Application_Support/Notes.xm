@@ -12,35 +12,70 @@
 
 %group NotesApp
 
-/*
-%hook UIColor
-//such hacky
+// /*
+// %hook UIColor
+// //such hacky
+//
+// +(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+//
+//     id color = %orig;
+//
+//     if (isEnabled) {
+//         if (arg1 < .5) {
+//             return TEXT_COLOR;
+//         }
+//     }
+//     return %orig;
+// }
+// %end
 
-+(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
 
-    id color = %orig;
+//
 
+%hook ICNoteEditorToolbarPlusView
+
+-(id)plainView {
+    id view = %orig;
     if (isEnabled) {
-        if (arg1 < .5) {
-            return TEXT_COLOR;
-        }
+        [view setBackgroundColor: VIEW_COLOR];
     }
-    return %orig;
+    return view;
 }
+
+-(id)plusView {
+    id view = %orig;
+    if (isEnabled) {
+        [view setBackgroundColor: TEXT_COLOR];
+    }
+    return view;
+}
+
 %end
 
-*/
-// 
-// %hook _UITextContainerView
-//
-// -(void)layoutSubviews {
-//     %orig;
-//     if (isEnabled) {
-//         applyInvertFilter((UIView*)self);
-//     }
-// }
-//
-// %end
+%hook _UIBarBackground
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setAlpha:0];
+    }
+}
+
+%end
+
+%hook _UITextContainerView
+
+static BOOL hasInvertedTextContainer = false;
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled && !hasInvertedTextContainer) {
+        applyInvertFilter((UIView*)self);
+        hasInvertedTextContainer = true;
+    }
+}
+
+%end
 
 %hook _UINavigationBarBackground
 

@@ -30,23 +30,14 @@
 %subclass CKUIThemeEclipse : CKUIThemeDark
 
 -(id)conversationListBackgroundColor {
-    //if (isEnabled) {
         return VIEW_COLOR;
-    //}
-    //return %orig;
 }
 -(id)conversationListCellColor {
-    //if (isEnabled) {
         return TABLE_COLOR;
-    //}
-    //return %orig;
 }
 
 -(id)transcriptBackgroundColor {
-    //if (isEnabled) {
         return VIEW_COLOR;
-    //}
-    //return %orig;
 }
 
 -(id)blue_balloonColors {

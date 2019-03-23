@@ -38,3 +38,13 @@
     return color;
 }
 %end
+
+%hook UIStatusBarNewUIStyleAttributes
+- (id)initWithRequest:(id)arg1 backgroundColor:(id)arg2 foregroundColor:(id)arg3 hasBusyBackground:(bool)arg4 {
+    if (isEnabled) {
+        arg2 = VIEW_COLOR;
+        arg3 = selectedStatusbarTintColor();
+    }
+    return %orig(arg1, arg2, arg3, arg4);
+}
+%end

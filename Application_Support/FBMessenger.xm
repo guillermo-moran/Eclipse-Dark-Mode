@@ -10,21 +10,44 @@
 
 %group FBMessenger
 
+%hook UIButton
 
-// %hook FBRichTextComponentView
-//
-// -(id)init {
-// 	id x = %orig;
-// 	if (isEnabled) {
-// 		applyInvertFilter((UIView*)self);
-// 	}
-// 	return x;
-// }
-//
-// %end
+-(id)init {
+	id x = %orig;
+	if (isEnabled) {
+		applyInvertFilter((UIView*)self);
+	}
+	return x;
+}
+
+%end
+
+%hook FBRichTextComponentView
+
+-(id)init {
+	id x = %orig;
+	if (isEnabled) {
+		[self setColor: TEXT_COLOR];
+	}
+	return x;
+}
+
+%end
 
 
 %hook FBRichTextView
+
+-(id)init {
+	id x = %orig;
+	if (isEnabled) {
+		applyInvertFilter((UIView*)self);
+	}
+	return x;
+}
+
+%end
+
+%hook MIGHighlightingAlphaControl
 
 -(id)init {
 	id x = %orig;
@@ -84,6 +107,24 @@
 	}
 }
 
+%end
+
+%hook PABlurView
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+		[self setTintColor: NAV_COLOR];
+	}
+}
+%end
+
+%hook FBRoundedCornerView
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+		[self setHidden: true];
+	}
+}
 %end
 
 %hook MNProfileImageView

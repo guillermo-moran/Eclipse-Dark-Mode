@@ -88,7 +88,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Share Sheet Fix</string>
+			<string>Share Sheets &amp; 2FA Alerts</string>
 		</dict>
 		<dict>
 			<key>icon</key>
@@ -99,6 +99,22 @@
 			<string>laughingquoll</string>
 			<key>label</key>
 			<string>@LaughingQuoll</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Misc. Contributions</string>
+		</dict>
+		<dict>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>action</key>
+			<string>icrazeios</string>
+			<key>label</key>
+			<string>@iCrazeiOS</string>
 		</dict>
 		<dict>
 			<key>cell</key>

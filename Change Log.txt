@@ -1,3 +1,25 @@
+Changes 6.0.4-2
+- Fixed Touch ID / Face ID alerts
+- Fixed Share Sheet bug
+
+Changes 6.0.4
+
+- Fixed Photos app albums
+- Status bar app store fix (thanks to @iCrazeiOS)
+- Alert support can now be toggled to allow another tweaks to override it.
+
+Changes 6.0.3-1
+
+- Re-support facebook Messenger
+- Fix notes app
+- Fix universal tint color
+- GMail Fixes
+- Share sheets can now be turned off in More options
+
+Changes 6.0.2
+
+- Removed Expiry
+
 Changes: Eclipse 6.0.1
 
 - iOS 12 Support

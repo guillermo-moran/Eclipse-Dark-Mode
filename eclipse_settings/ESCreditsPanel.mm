@@ -97,6 +97,16 @@
     }
 }
 
+- (void)icrazeios {
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://user?screen_name=icrazeios"]]) {
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=icrazeios"]];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/icrazeios"]];
+    }
+}
+
 - (void)reddit {
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://reddit.com/r/jailbreak"]];

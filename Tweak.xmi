@@ -252,6 +252,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Cydia.xm"
 #include "Application_Support/YouTube.xm"
 #include "Application_Support/OneFootball.xm"
+#include "Application_Support/Gmail.xm"
 
 /*
  db    db d888888b  .d8b.  d8888b. d8888b.
@@ -512,6 +513,22 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 */
 
+// %group CoreAuthUI //com.apple.CoreAuthUI
+//
+// %hook UILabel
+// -(void)layoutSubviews {
+//     %orig;
+//     [self setTextColor: TEXT_COLOR];
+// }
+//
+// -(void)setTextColor:(UIColor *)arg1 {
+//     arg1 = TEXT_COLOR;
+//     %orig(arg1);
+// }
+// %end
+//
+// %end
+
 
 static void checkAppBlackList() {
     if (idIsEqual(@"com.facebook.Facebook")) {
@@ -584,9 +601,6 @@ static void checkRunningApp() {
     if (idIsEqual(@"de.motain.iliga")) {
         %init(OneFootball);
     }
-
-
-
     //Stock Applications
 
     if (idIsEqual(@"com.apple.mobilephone")) {
@@ -647,6 +661,9 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.apple.Preferences")) {
         %init(WiFiKitFix);
     }
+    if (idIsEqual(@"com.google.Gmail")) {
+        %init(GMail);
+    }
 
 }
 
@@ -688,8 +705,9 @@ static void initializeApplications() {
         //Fix clock app crashing
         isClockApp = idIsEqual(@"com.apple.mobiletimer");
 
-
-        //darkenUIElements();
+        if (!idIsEqual(@"com.apple.mobilemail")) {
+            darkenUIElements();
+        }
 
         if (shouldAutoReplaceColors && !idIsEqual(@"com.apple.Preferences")) {
 
@@ -777,7 +795,10 @@ static void initializeApplications() {
                 else {
                     os_log(OS_LOG_DEFAULT, "NOCTIS NOT INSTALLED");
                     initializeApplications();
-                    %init(EclipseAlerts);
+                    if (alertsEnabled()) {
+                        %init(EclipseAlerts);
+                    }
+
                 }
 			}
 		}
