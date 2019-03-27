@@ -1,0 +1,9 @@
+document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';
+document.getElementsByTagName('body')[0].style.backgroundColor='#141414';
+
+
+var x = document.getElementsByTagName('div');
+var i; for (i = 0; i < x.length; i++) {
+	x[i].style.backgroundColor = '#141414';
+	x[i].style.borderColor = '#222222';
+};

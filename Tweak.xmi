@@ -12,6 +12,10 @@
  COPYRIGHT © 2018 GUILLERMO MORAN
 
 */
+// static NSString* darkSafariJS = @"document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4'; var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';};";
+static NSString* darkCydiaJS = @"var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = 'transparent';x[i].style.borderColor = '#222222';};document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';document.getElementsByTagName('body')[0].style.backgroundColor='#transparent';";
+static NSString* darkSafariJS = @"var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';x[i].style.borderColor = '#222222';};document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';document.getElementsByTagName('body')[0].style.backgroundColor='#141414';";
+
 #import <objc/runtime.h>
 
 
@@ -233,6 +237,8 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Calendar.xm"
 #include "Application_Support/Maps.xm"
 #include "Application_Support/Photos.xm"
+#include "Application_Support/Settings.xm"
+
 #include "UIKit/WiFiKit.xm"
 
 // Third Party App Support
@@ -254,264 +260,18 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/OneFootball.xm"
 #include "Application_Support/Gmail.xm"
 
-/*
- db    db d888888b  .d8b.  d8888b. d8888b.
- 88    88   `88'   d8' `8b 88  `8D 88  `8D
- 88    88    88    88ooo88 88oodD' 88oodD'
- 88    88    88    88~~~88 88~~~   88~~~
- 88b  d88   .88.   88   88 88      88
- ~Y8888P' Y888888P YP   YP 88      88
- */
- /*
-%group UIApp
-%hook UIApplication
-
- -(id)init {
-     id app = %orig;
-     BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/NoctisXI.dylib"];
-
-     if (noctisInstalled) {
-
-         os_log(OS_LOG_DEFAULT, "NOCTIS INSTALLED");
-
-         NSDictionary *applicationList = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_ENABLED_APPS]?:[NSDictionary dictionary] copy];
-
-         NSDictionary *noctisxiPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTISXI_PREFS]?:[NSDictionary dictionary] copy];
-
-         NSDictionary *noctisPrefs = [[[NSDictionary alloc] initWithContentsOfFile:NOCTIS_PREFS]?:[NSDictionary dictionary] copy];
-
-         NSArray* enabledApps = [applicationList objectForKey:@"Enabled Apps"];
-
-         BOOL applicationsEnabled = [[noctisxiPrefs objectForKey:@"enabledApplications"] boolValue];
-         BOOL noctisIsEnabled = [[noctisPrefs objectForKey:@"LQDDarkModeEnabled"] boolValue];
-
-         if (applicationsEnabled && noctisIsEnabled) {
-             if (![enabledApps containsObject:[NSBundle mainBundle].bundleIdentifier]) {
-                 [self initializeApplications];
-             }
-         }
-         else {
-             [self initializeApplications];
-         }
-     }
-     else {
-         os_log(OS_LOG_DEFAULT, "NOCTIS NOT INSTALLED");
-         [self initializeApplications];
-     }
-
-     return app;
- }
-
-%new
- -(void) checkAppBlackList {
-     if (idIsEqual(@"com.facebook.Facebook")) {
-         isEnabled = NO;
-     }
-     if (idIsEqual(@"com.apple.calculator")) {
-         isEnabled = NO;
-     }
-     if (idIsEqual(@"com.apple.Camera")) {
-         isEnabled = NO;
-     }
-
- }
-
-%new
- -(void)checkRunningApp {
-
-     //Third Party Application
-     if (idIsEqual(@"us.mxms.relay")) {
-         //%init(RelayApp);
-     }
-     if (idIsEqual(@"com.vine.iphone")) {
-         //VineApp
-     }
-     if (idIsEqual(@"com.tumblr.tumblr")) {
-         %init(TumblrApp);
-     }
-     if (idIsEqual(@"com.tapbots.Tweetbot3")) {
-         %init(TweetbotApp);
-     }
-     if (idIsEqual(@"ph.telegra.Telegraph")) {
-         %init(TelegramApp);
-     }
-     if (idIsEqual(@"com.kik.chat")) {
-         %init(KikApp);
-     }
-     if (idIsEqual(@"com.atebits.Tweetie2")) {
-         %init(TwitterApp);
-     }
-     if (idIsEqual(@"com.burbn.instagram")) {
-         %init(InstagramApp);
-     }
-     if (idIsEqual(@"net.whatsapp.WhatsApp")) {
-         %init(WhatsappApp);
-     }
-     //Added 6/4/14
-     if (idIsEqual(@"com.toyopagroup.picaboo")) {
-         %init(SnapchatApp);
-     }
-     if (idIsEqual(@"com.soundcloud.TouchApp")) {
-         %init(SoundcloudApp);
-     }
-     //Added 9/19/14
-     if (idIsEqual(@"com.facebook.Messenger")) {
-         %init(FBMessenger);
-     }
-     //Added 9/28
-     if (idIsEqual(@"ch.threema.iapp")) {
-         %init(ThreemaApp);
-     }
-     //Added 10/1
-     if (idIsEqual(@"com.cardify.tinder")) {
-         %init(TinderApp);
-     }
-     //Added 2/4/15
-
-
-
-     //Stock Applications
-
-     if (idIsEqual(@"com.apple.mobilephone")) {
-         %init(PhoneApp);
-
-         //dlopen("/Library/MobileSubstrate/DynamicLibraries/SleekPhone.dylib", RTLD_NOW);
-     }
-     if (idIsEqual(@"com.apple.mobilemail")) {
-         %init(MailApp);
-         shouldOverrideStatusBarStyle = YES;
-         //isEnabled = NO;
-     }
-     if (idIsEqual(@"com.apple.mobilesafari")) {
-         %init(SafariApp);
-         shouldOverrideStatusBarStyle = YES;
-         //isEnabled = NO;
-     }
-     if (idIsEqual(@"com.apple.Passbook")) {
-         %init(PassbookApp);
-     }
-     if (idIsEqual(@"com.apple.reminders")) {
-         %init(RemindersApp);
-     }
-     if (idIsEqual(@"com.apple.Music")) {
-         //%init(MusicApp);
-         %init(MusicApp, MusicPlayerTimeControl = objc_getClass("Music.PlayerTimeControl"), MusicNavBarBGView = objc_getClass("Music.NavigationBarBackgroundView"));
-     }
-     if (idIsEqual(@"com.apple.mobilenotes")) {
-         //isEnabled = NO;
-         %init(NotesApp);
-     }
-     if (idIsEqual(@"com.apple.AppStore")) {
-         //%init(AppstoreApp);
-         %init(AppstoreApp, AppStoreSearchHeaderView = objc_getClass("AppStore.SearchHeaderView"));
-
-     }
-     if (idIsEqual(@"com.apple.mobilecal")) {
-         %init(CalendarApp);
-         %init(CalendarFix);
-     }
-     if (idIsEqual(@"com.apple.MobileAddressBook")) {
-         %init(ContactsApp);
-     }
-     if (idIsEqual(@"com.apple.MobileStore")) {
-         %init(MobileStoreApp);
-     }
-
-     if (idIsEqual(@"com.saurik.Cydia")) {
-         %init(CydiaApp);
-     }
-     if (idIsEqual(@"com.apple.Bridge")) {
-         %init(WatchApp);
-     }
-     if (idIsEqual(@"com.apple.Maps")) {
-         %init(MapsApp);
-     }
-
-
- }
-
-%new
- -(void)initializeApplications {
-     //Check if Application is on the blacklist
-
-     //BOOL shouldAutoReplaceColors = NO;
-     //BOOL applicationIsEnabledInSettings = YES;
-
-     //BOOL shouldAutoReplaceColors = [[prefs objectForKey:[@"AutoColorReplacement-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
-     //isEnabled = isTweakEnabled();
-
-     BOOL applicationIsEnabledInSettings = [[prefs objectForKey:[@"EnabledApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
-     BOOL shouldAutoReplaceColors = NO;
-
-     isEnabled = applicationIsEnabledInSettings && isTweakEnabled();
-
-     [self checkAppBlackList];
-
-
-     if (idIsEqual(@"com.apple.springboard")) {
-         isEnabled = NO;
-     }
-
-
-     //If Tweak enabled:
-     if (isEnabled) {
-         [self checkRunningApp];
-         %init(_ungrouped);
-
-         if (!idIsEqual(@"com.apple.mobilesafari")) {
-             %init(SystemUIColors);
-         }
-
-         //Fix clock app crashing
-         if (idIsEqual(@"com.apple.mobiletimer")) {
-             isClockApp = YES;
-         }
-         else {
-             isClockApp = NO;
-         }
-
-         darkenUIElements();
-
-         if (shouldAutoReplaceColors && !idIsEqual(@"com.apple.Preferences")) {
-
-             %init(AutoReplaceColor);
-         }
-
-         //if (UniformityInstalled()) {
-         //    dlopen("/Library/MobileSubstrate/DynamicLibraries/Uniformity.dylib", RTLD_NOW);
-         //}
-
-     }
-
- }
-
-%end
-%end
-
-%ctor {
-
-    //Swift Classes
-
-    //Music Text Header
-
-
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
-	// register to receive changed notifications
-	registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
-    registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
-    registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
-    %init(UIApp);
-
-    BOOL noctisInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/NoctisXI.dylib"];
-
-    if (!noctisInstalled) {
-        %init(EclipseAlerts);
-    }
-	[pool release];
-}
-
-*/
+// %group NSStringHack
+// %hook NSString
+//
+// -(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
+//     CGSize x = %orig;
+// 	if (isEnabled) {
+// 		[RED_COLOR set];
+// 	}
+// 	return x;
+// }
+// %end
+// %end
 
 // %group CoreAuthUI //com.apple.CoreAuthUI
 //
@@ -540,11 +300,8 @@ static void checkAppBlackList() {
     if (idIsEqual(@"com.apple.Camera")) {
         isEnabled = NO;
     }
-    if (idIsEqual(@"com.apple.Preferences")) {
-        if (isBetterSettingsInstalled()) {
-            isEnabled = NO;
-        }
-    }
+    // if (idIsEqual(@"com.apple.Preferences")) {
+    // }
 
 }
 
@@ -659,7 +416,11 @@ static void checkRunningApp() {
         //%init(PhotosApp);
     }
     if (idIsEqual(@"com.apple.Preferences")) {
+        if (isBetterSettingsInstalled()) {
+            isEnabled = false;
+        }
         %init(WiFiKitFix);
+        %init(PreferencesApp);
     }
     if (idIsEqual(@"com.google.Gmail")) {
         %init(GMail);
@@ -694,7 +455,6 @@ static void initializeApplications() {
     //If Tweak enabled:
     if (isEnabled) {
         checkRunningApp();
-
         %init(_ungrouped);
 
 

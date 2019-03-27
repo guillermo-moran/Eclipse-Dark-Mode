@@ -9,25 +9,25 @@
 
 //Do not group (text bubbles in compose views system-wide)
 
-/*
-%subclass CKUIThemeEclipse : CKUITheme
-
--(UIColor *)transcriptBackgroundColor;
--(UIColor *)messagesControllerBackgroundColor;
--(UIColor *)conversationListBackgroundColor;
--(UIColor *)dimmingViewBackgroundColor;
--(UIColor *)searchResultsBackgroundColor;
--(UIColor *)searchResultsCellBackgroundColor;
--(UIColor *)searchResultsCellSelectedColor;
--(UIColor *)searchResultsSeperatorColor;
--(UIColor *)entryFieldBackgroundColor;
-
-%end
- */
-
 //static CKUIThemeDark *darkTheme;
 
 %subclass CKUIThemeEclipse : CKUIThemeDark
+
+// -(id)messageAcknowledgmentPickerBackgroundColor {
+//
+// }
+// -(id)messageAcknowledgmentBalloonBorderColor {
+//
+// }
+// -(id)messageAcknowledgment:(long long)arg1 acknowledgmentImageColor:(long long)arg2 {
+//
+// }
+// -(id)messageAcknowledgment:(long long)arg1 selectedAcknowledgmentImageColor:(long long)arg2 {
+//
+// }
+// -(id)messageAcknowledgmentBalloonColorForStyle:(long long)arg1 {
+//
+// }
 
 -(id)conversationListBackgroundColor {
         return VIEW_COLOR;
@@ -215,5 +215,4 @@ static CKUIThemeEclipse* eclipseTheme;
         [self setBackgroundColor: VIEW_COLOR];
     }
 }
-
 %end

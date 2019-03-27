@@ -1,3 +1,7 @@
+Changes 6.0.4-3
+- Fix wallpaper set UIButtons
+- Fix passcode entry in settings
+
 Changes 6.0.4-2
 - Fixed Touch ID / Face ID alerts
 - Fixed Share Sheet bug

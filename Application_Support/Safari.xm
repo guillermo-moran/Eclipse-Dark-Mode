@@ -6,7 +6,6 @@
 db   8D 88   88 88      88   88 88 `88.   .88.
 `8888Y' YP   YP YP      YP   YP 88   YD Y888888P
 */
-static NSString* darkSafariJS = @"document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4'; var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';};";
 
 
 @interface NavigationBarBackdrop : _UIBackdropView
@@ -29,28 +28,6 @@ static NSString* darkSafariJS = @"document.getElementsByTagName('*')[0].style.we
 // 	%end
 
 %group SafariApp
-
-// static NSString* safariJS = @"document.getElementsByTagName('body')[0].style.webkitTextFillColor= 'white';document.getElementsByTagName('html')[0].style.backgroundColor= 'black';var x = document.getElementsByTagName('div');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = 'transparent';};";
-
-
-// static NSString* _safariJS = @"
-// javascript: (
-//     function () {
-//         var css = 'html {-webkit-filter: invert(100%);'
-//          + '-moz-filter: invert(100%);'
-//          + '-o-filter: invert(100%);'
-//          + '-ms-filter: invert(100%);
-//      }',
-//      head = document.getElementsByTagName('head')[0],
-//      style = document.createElement('style');
-//      style.type = 'text/css';
-//      if (style.styleSheet){
-//          style.styleSheet.cssText = css;
-//      } else {
-//          style.appendChild(document.createTextNode(css));
-//      }
-//      head.appendChild(style);
-//  }());";
 
 %hook WKWebView
 

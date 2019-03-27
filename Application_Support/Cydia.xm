@@ -7,11 +7,11 @@
  |		___/
  */
 
+extern "C" void UISetColor(CGColorRef color);
+
 %group CydiaApp
 
-static NSString* cyJS = @"document.getElementsByTagName('body')[0].style.webkitTextFillColor= 'white'; document.getElementsByTagName('html')[0].style.backgroundColor= 'transparent'; var x = document.getElementsByTagName('fieldset'); var i; for (i = 0; i < x.length; i++) { x[i].style.backgroundColor = 'transparent'; };";
-
-
+// static NSString* cyJS = @"document.getElementsByTagName('body')[0].style.webkitTextFillColor= 'white'; document.getElementsByTagName('html')[0].style.backgroundColor= 'transparent'; var x = document.getElementsByTagName('fieldset'); var i; for (i = 0; i < x.length; i++) { x[i].style.backgroundColor = 'transparent'; };";
 
 static BOOL isPaidCydiaPackage;
 
@@ -21,7 +21,7 @@ static BOOL isPaidCydiaPackage;
 	%orig;
 	if (isEnabled) {
 		//[self.view setBackgroundColor:[UIColor blackColor]];
-		NSString *setJavaScript = cyJS;
+		NSString *setJavaScript = darkCydiaJS;
 		[arg1 stringByEvaluatingJavaScriptFromString:setJavaScript];
 		//[readerWebView setBackgroundColor:[UIColor blackColor]]; // doesn't solve it
 		//[self.scrollView setBackgroundColor:[UIColor blackColor]];
@@ -47,9 +47,7 @@ static BOOL isPaidCydiaPackage;
 %hook PackageCell
 
 - (void) setPackage:(id)package asSummary:(bool)summary {
-
 	isPaidCydiaPackage = (bool)[package isCommercial];
-
 	%orig;
 }
 
