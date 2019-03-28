@@ -216,3 +216,14 @@ static CKUIThemeEclipse* eclipseTheme;
     }
 }
 %end
+
+%hook CKHeartAcknowledgmentGlyphView
+
+
+-(void)layoutSubviews {
+    %orig;
+    [self setGlyphColor: UIColor.blueColor];
+    // [self setAlpha: 1];
+    // [self setHidden: false];
+}
+%end

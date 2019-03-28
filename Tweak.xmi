@@ -300,8 +300,11 @@ static void checkAppBlackList() {
     if (idIsEqual(@"com.apple.Camera")) {
         isEnabled = NO;
     }
-    // if (idIsEqual(@"com.apple.Preferences")) {
-    // }
+    if (idIsEqual(@"com.apple.Preferences")) {
+        if (isBetterSettingsInstalled()) {
+            isEnabled = NO;
+        }
+    }
 
 }
 
@@ -416,11 +419,10 @@ static void checkRunningApp() {
         //%init(PhotosApp);
     }
     if (idIsEqual(@"com.apple.Preferences")) {
-        if (isBetterSettingsInstalled()) {
-            isEnabled = false;
+        if (!isBetterSettingsInstalled()) {
+            %init(WiFiKitFix);
+            %init(PreferencesApp);
         }
-        %init(WiFiKitFix);
-        %init(PreferencesApp);
     }
     if (idIsEqual(@"com.google.Gmail")) {
         %init(GMail);

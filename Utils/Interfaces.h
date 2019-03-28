@@ -269,11 +269,14 @@
 @interface CKUITheme : NSObject
 @end
 
-@interface CKUIThemeDark : CKUITheme
+@interface CKUIThemeDark : CKUITheme 
+@property (nonatomic,readonly) UIColor * messageAcknowledgmentRedColor;
 @end
 
 @interface CKUIBehavior : NSObject
 - (id)theme;
++(id)sharedBehaviors;
+
 @end
 
 @interface CKUIBehaviorPhone : CKUIBehavior
