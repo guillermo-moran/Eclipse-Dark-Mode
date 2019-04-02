@@ -41,6 +41,7 @@ static BOOL      _tintSMSBubbles;
 static BOOL      _tintMessageBubbles;
 static BOOL      _reverseModeEnabled;
 
+static BOOL      _adaptiveUIEnabled;
 static BOOL      _customNavColorsEnabled;
 static BOOL      _customThemeColorsEnabled;
 static BOOL      _customTintColorsEnabled;
@@ -227,8 +228,48 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             _customTintHex = (NSString*)[prefs objectForKey:@"customTintHex"];
             _customStatusbarHex = (NSString*)[prefs objectForKey:@"customStatusbarHex"];
             _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
+
+            n = (NSNumber *)[prefs objectForKey:@"adaptiveUIEnabled"];
+            _adaptiveUIEnabled = (n)? [n boolValue]:NO;
+            // _adaptiveUIEnabled = YES;
         }
     }
+}
+
+@implementation UIColor (LightAndDark)
+
+- (UIColor *)lighterColor
+{
+    CGFloat h, s, b, a;
+    if ([self getHue:&h saturation:&s brightness:&b alpha:&a])
+        return [UIColor colorWithHue:h
+                          saturation:s
+                          brightness:MIN(b * 1.3, 1.0)
+                               alpha:a];
+    return nil;
+}
+
+- (UIColor *)darkerColor
+{
+    CGFloat h, s, b, a;
+    if ([self getHue:&h saturation:&s brightness:&b alpha:&a])
+        return [UIColor colorWithHue:h
+                          saturation:s
+                          brightness:b * 0.75
+                               alpha:a];
+    return nil;
+}
+@end
+
+static BOOL adaptiveUIEnabled(void) {
+    return _adaptiveUIEnabled;
+}
+
+static UIColor* generatedAdaptiveColor() {
+    NSString* identifier = [UIApplication displayIdentifier];
+    UIImage* icon = [UIImage _applicationIconImageForBundleIdentifier:identifier format:0 scale:[UIScreen mainScreen].scale];
+    UIColor* color = [UIColor getDominantColor: icon];
+    return [[color darkerColor] darkerColor];
 }
 
 static BOOL isBetterSettingsInstalled() {
@@ -238,7 +279,6 @@ static BOOL isBetterSettingsInstalled() {
 
 static BOOL isTweakEnabled(void) {
     return _isTweakEnabled;
-
 }
 
 static BOOL alertsEnabled(void) {
@@ -435,6 +475,10 @@ static UIColor* textColor(void) {
 
 static UIColor* selectedTableColor(void) {
 
+    if (adaptiveUIEnabled()) {
+        return generatedAdaptiveColor();
+    }
+
     int number = selectedTheme();
 
     if (customThemeColorEnabled()) {
@@ -507,6 +551,10 @@ static UIColor* selectedTableColor(void) {
 
 static UIColor* selectedViewColor(void) {
 
+    if (adaptiveUIEnabled()) {
+        return generatedAdaptiveColor();
+    }
+
     int number = selectedTheme();
 
     if (customThemeColorEnabled()) {
@@ -578,6 +626,10 @@ static UIColor* selectedViewColor(void) {
 }
 
 static UIColor* selectedBarColor(void) {
+
+    if (adaptiveUIEnabled()) {
+        return [generatedAdaptiveColor() darkerColor];
+    }
 
     int number = selectedNavColor();
 
@@ -678,6 +730,10 @@ static UIColor* theViewColor(void) {
 
 static UIColor* keyboardColor(void) {
     int number = selectedKeyboardColor();
+
+    if (adaptiveUIEnabled()) {
+        return [generatedAdaptiveColor() darkerColor];
+    }
 
     /*
     if (customColorEnabled()) {
@@ -808,6 +864,10 @@ static UIColor* selectedStatusbarTintColor(void) {
 
 
 static UIColor* selectedTintColor(void) {
+
+    if (adaptiveUIEnabled()) {
+        return [[generatedAdaptiveColor() lighterColor] lighterColor];
+    }
 
     int number = selectedTint();
 
