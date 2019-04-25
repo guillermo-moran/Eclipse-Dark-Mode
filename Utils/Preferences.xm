@@ -928,7 +928,7 @@ static UIColor* selectedTintColor(void) {
 
 static UIColor* tableSeparatorColor(void) {
     if (cellSeparatorsEnabled()) {
-        return [selectedTintColor() colorWithAlphaComponent:0.3];
+        return [[selectedTintColor() colorWithAlphaComponent:0.3] darkerColor];
     }
     else {
         return TABLE_COLOR;
@@ -948,16 +948,16 @@ static void setTintColors() {
     [[UITextField appearance] setTintColor:selectedTintColor()];
 
     [[UITableView appearance] setTintColor:selectedTintColor()];
-    /*
+
     //Experimental
 
     [[UIApplication sharedApplication] keyWindow].tintColor = selectedTintColor();
 
     //[[UIView appearance] setTintColor:selectedTintColor()]; //Buggy?
-    [[UITableView appearance] setTintColor:selectedTintColor()];
-    [[UITableViewCell appearance] setTintColor:selectedTintColor()];
-    [[UIButton appearance] setTintColor:selectedTintColor()];
-     */
+    // [[UITableView appearance] setTintColor:selectedTintColor()];
+    // [[UITableViewCell appearance] setTintColor:selectedTintColor()];
+    // [[UIButton appearance] setTintColor:selectedTintColor()];
+
 
     [[UIButton appearance] setTintColor:selectedTintColor()];
 

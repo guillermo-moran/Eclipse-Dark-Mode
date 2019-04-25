@@ -160,9 +160,27 @@
 	}
 	return %orig;
 }
+%end
 
+%hook IGGradientView
 
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+		[self setHidden:YES];
+	}
+}
+%end
 
+%hook IGDiscoveryNavigationTrayItemCell
+
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+		CAShapeLayer* bgLayer = MSHookIvar<CAShapeLayer*>(self, "_backgroundLayer");
+		bgLayer.fillColor = [UIColor clearColor].CGColor;
+	}
+}
 
 %end
 

@@ -51,11 +51,6 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
                 [self setSectionIndexColor:selectedTintColor()];
                 self.sectionIndexColor = selectedTintColor();
-
-
-                [self setBackgroundColor: TABLE_COLOR];
-                self.backgroundColor = TABLE_COLOR;
-
             }
         }
 
@@ -94,97 +89,32 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 
 
--(void)setBackgroundColor:(id)arg1 {
-
-    if (isEnabled) {
-        CGColorSpaceRef argColorSpace = CGColorGetColorSpace([arg1 CGColor]);
-
-        //if (argColorSpace == tableBGColorSpace || [arg1 isEqual:[UIColor whiteColor]] ) {
-
-        if ([UIColor color:arg1 isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
-
-
-            [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
-
-            [self setSectionIndexColor:selectedTintColor()];
-
-            self.sectionIndexBackgroundColor = [UIColor clearColor];
-            //[self setTableHeaderBackgroundColor:TABLE_COLOR];
-
-
-            %orig(TABLE_COLOR);
-            return;
-        }
-
-        %orig;
-        return;
-    }
-    %orig;
-}
-
--(id)backgroundColor {
-
-    id bgc = %orig;
-
-    if (isEnabled) {
-
-        CGColorSpaceRef origColorSpace = CGColorGetColorSpace([bgc CGColor]);
-
-        //if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
-
-        if ([UIColor color:bgc isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
-
-
-            self.sectionIndexBackgroundColor = [UIColor clearColor];
+// -(void)setBackgroundColor:(id)arg1 {
+//
+//     if (isEnabled) {
+//         %orig(TABLE_COLOR);
+//         return;
+//     }
+//     %orig;
+// }
+//
+// -(id)backgroundColor {
+//     if (isEnabled) {
+//         return TABLE_COLOR;
+//     }
+//     return %orig;
+// }
 
 
 
-            [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
-            self.sectionIndexTrackingBackgroundColor = [UIColor clearColor];
-
-
-            [self setSectionIndexColor:selectedTintColor()];
-            self.sectionIndexColor = selectedTintColor();
-
-
-            //[self sectionBorderColor];
-            bgc = TABLE_COLOR;
-        }
-        return bgc;
-    }
-    return bgc;
-}
-
-
-
-
-/*
 -(void)layoutSubviews {
     %orig;
 
-    if (isEnabled) {
-        self.sectionIndexBackgroundColor = [UIColor clearColor];
-
-
-        [self setSeparatorColor:TABLE_SEPARATOR_COLOR];
-        //self.separatorColor = TABLE_SEPARATOR_COLOR;
-
-        [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
-        //self.sectionIndexTrackingBackgroundColor = [UIColor clearColor];
-
-        [self setSectionIndexColor:selectedTintColor()];
-        //self.sectionIndexColor = selectedTintColor();
-
-        //This actually came in handy... Wow.
-        if ([UIColor color:self.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:2] && ![UIColor color:self.backgroundColor isEqualToColor:[UIColor clearColor] withTolerance:0.2]) {
-            [self setBackgroundColor:TABLE_COLOR];
-        }
-
+    if (isEnabled && ![self.backgroundColor isEqual:[UIColor clearColor]] && self.backgroundColor != nil) {
+        [self setBackgroundColor:TABLE_COLOR];
     }
-
-
 }
- */
+
 
 
 
@@ -454,6 +384,26 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
     return %orig;
 }
 
+
+%end
+
+%hook _UITableViewCellSeparatorView
+
+- (void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setTag:VIEW_EXCLUDE_TAG];
+        [self setBackgroundColor:TABLE_SEPARATOR_COLOR];
+    }
+}
+
+-(void)setBackgroundColor:(UIColor*)color {
+    if (isEnabled) {
+        %orig(TABLE_SEPARATOR_COLOR);
+        return;
+    }
+    %orig;
+}
 
 %end
 

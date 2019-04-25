@@ -71,8 +71,11 @@
 
 %hook UIColor
 
+static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi.dylib"];
+
+
 +(UIColor*)systemGreenColor {
-    if (isEnabled && (selectedTintColor() != WHITE_COLOR)) {
+    if (isEnabled && (selectedTintColor() != WHITE_COLOR) && !bazziInstalled) {
         return selectedTintColor();
     }
     return %orig;

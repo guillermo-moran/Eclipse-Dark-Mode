@@ -7,27 +7,6 @@
  ~Y8888P' Y888888P    YP    Y888888P Y88888P  `8b8' `8d8'
 */
 
-%hook _UITableViewCellSeparatorView
-
-- (void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-        [self setTag:VIEW_EXCLUDE_TAG];
-        [self setBackgroundColor:TABLE_SEPARATOR_COLOR];
-    }
-}
-
--(void)setBackgroundColor:(UIColor*)color {
-    if (isEnabled) {
-        %orig(TABLE_SEPARATOR_COLOR);
-        return;
-    }
-    %orig;
-}
-
-%end
-
-
 %hook UIKBBackdropView
 
 -(id)initWithFrame:(CGRect)arg1 style:(long long)arg2 primaryBackdrop:(BOOL)arg3 {
@@ -76,11 +55,11 @@
         if ([self class] == SC_GRADIENT) {
             [self setAlpha:0.0];
         }
-
     }
-
-
 }
+
+// %new
+// -(BOOL)
 
 -(id)backgroundColor {
     id color = %orig;
