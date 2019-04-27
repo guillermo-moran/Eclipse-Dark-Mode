@@ -20,6 +20,33 @@
 #define TEXT_COLOR                      [UIColor eclipseSelectedTextColor]
 #define VIEW_COLOR                      [UIColor eclipseSelectedViewColor]
 
+
+static BOOL isLightColor(UIColor* color) {
+
+
+    //BOOL is = NO;
+
+    CGFloat white = 0;
+    CGFloat red = 0;
+    CGFloat green = 0;
+    CGFloat blue = 0;
+    CGFloat alpha = 0;
+    [color getWhite:&white alpha:&alpha];
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+
+    //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:selectedTintColor()]));
+
+    if ((red <= 0.5) || (green <= 0.5) || (blue <= 0.5)) {
+        return NO;
+    }
+    else if (white >= 0.5 && alpha > 0.7) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 static NSDictionary *prefs = nil;
 
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -35,7 +62,10 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 }
 
 static BOOL isTweakEnabled() {
-    return (prefs) ? [prefs[@"enabled"] boolValue] : NO;
+    // NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    // BOOL applicationIsEnabledInSettings = [[prefs objectForKey:[@"EnabledApps-" stringByAppendingString:bundleIdentifier]] boolValue];
+    BOOL tweakEnabled = (prefs) ? [prefs[@"enabled"] boolValue] : NO;
+    return tweakEnabled;
     //return NO;
 }
 
@@ -44,12 +74,38 @@ static BOOL colorShareSheetsEnabled() {
     //return NO;
 }
 
+// %hook UIView
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isTweakEnabled()) {
+//         if (isLightColor(self.backgroundColor)) {
+//                 [self setBackgroundColor: VIEW_COLOR];
+//         }
+//     }
+// }
+//
+// %end
+
+%hook UIButton
+
+-(void)layoutSubviews {
+    %orig;
+    if(isTweakEnabled() && colorShareSheetsEnabled()){
+        [self setBackgroundColor: VIEW_COLOR];
+    }
+}
+
+%end
+
 %hook UILabel
 
 -(void)layoutSubviews {
 	%orig;
 	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		[self setTextColor:TEXT_COLOR];
+        [[[[self superview] superview] superview] setBackgroundColor:VIEW_COLOR];
+
 	}
 }
 
@@ -67,6 +123,8 @@ static BOOL colorShareSheetsEnabled() {
 	%orig;
 	if(isTweakEnabled() && colorShareSheetsEnabled()){
 		[self setTextColor:TEXT_COLOR];
+        [[self superview] setBackgroundColor:VIEW_COLOR];
+
 	}
 }
 
@@ -85,15 +143,20 @@ static BOOL colorShareSheetsEnabled() {
 	if (isTweakEnabled() && colorShareSheetsEnabled()) {
 		[self setHidden: true];
         [[self superview] setBackgroundColor:VIEW_COLOR];
+        // UIView* overlay = [[UIView alloc] initWithFrame:self.frame];
+        // overlay.backgroundColor = [UIColor redColor];
+        // overlay.userInteractionEnabled = NO;
+        // overlay.alpha = 1;
+        // [self addSubview: overlay];
 	}
 }
 
--(void)setHidden:(BOOL)arg1 {
-	if (isTweakEnabled() && colorShareSheetsEnabled()) {
-		arg1 = true;
-	}
-	%orig(arg1);
-}
+// -(void)setHidden:(BOOL)arg1 {
+// 	if (isTweakEnabled() && colorShareSheetsEnabled()) {
+// 		arg1 = true;
+// 	}
+// 	%orig(arg1);
+// }
 %end
 
 %hook _UIBackdropView
@@ -101,16 +164,23 @@ static BOOL colorShareSheetsEnabled() {
 -(void)layoutSubviews {
 	%orig;
 	if (isTweakEnabled() && colorShareSheetsEnabled()) {
-		[self setHidden: true];
+		// [self setHidden: true];
+        // [[self superview] setBackgroundColor:VIEW_COLOR];
+        // UIView* overlay = [[UIView alloc] initWithFrame:self.frame];
+        // overlay.backgroundColor = [UIColor redColor];;
+        // overlay.userInteractionEnabled = NO;
+        // overlay.alpha = 1;
+        // [self addSubview: overlay];
+
 	}
 }
 
--(void)setHidden:(BOOL)arg1 {
-	if (isTweakEnabled() && colorShareSheetsEnabled()) {
-		arg1 = true;
-	}
-	%orig(arg1);
-}
+// -(void)setHidden:(BOOL)arg1 {
+// 	if (isTweakEnabled() && colorShareSheetsEnabled()) {
+// 		arg1 = true;
+// 	}
+// 	%orig(arg1);
+// }
 
 %end
 
@@ -120,7 +190,7 @@ static BOOL colorShareSheetsEnabled() {
     registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
 
 
-    // %init(_ungrouped);
+    %init(_ungrouped);
 
     [pool release];
 }

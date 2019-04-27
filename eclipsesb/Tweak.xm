@@ -794,14 +794,23 @@ static UIColor* splashScreenColor(void) {
 
 %end
 
-%hook SpringBoard
-
--(void)applicationDidFinishLaunching:(BOOL)maybe {
-    %orig;
-
-}
-
-%end
+// %hook SpringBoard
+//
+// UIWindow* SBBrowserWindow = nil;
+//
+// -(void)applicationDidFinishLaunching:(BOOL)beh {
+//     %orig;
+//     if (SBBrowserWindow == nil) {
+//         SBBrowserWindow = [[[UIWindow alloc] initWithFrame:CGRectMake(0, 50, 320, 430)] retain];
+//         SBBrowserWindow.windowLevel = 66666;
+//     }
+//
+//     [SBBrowserWindow setAlpha:1];
+//     [SBBrowserWindow setHidden:NO];
+//     [SBBrowserWindow setBackgroundColor:[UIColor redColor]];
+// }
+//
+// %end
 //DRM
 
 //#import "NSString+Fr0st.h"
