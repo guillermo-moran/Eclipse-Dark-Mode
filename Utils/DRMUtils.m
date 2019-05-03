@@ -29,9 +29,14 @@
 	// Dustin, Max, Ryan, and everyone else who's helped me learn obj-c
 	// Would murder me.
 
+	// Return types:
+	// 0 = Purchased
+	// 1 = Not Authorized
+	// -1 = Error
+
 	dispatch_semaphore_t mySemaphore = dispatch_semaphore_create(0);
 
-	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://gmoran.me/api/drmcheck.php"]];
+	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://gmoran.me/api/middleman.php"]];
 
 	NSString* UDID = [self deviceUDID];
 	NSString* modelID = [self deviceModelIdentifier];

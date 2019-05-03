@@ -8,5 +8,6 @@ OBJC_EXTERN CFStringRef MGCopyAnswer(CFStringRef key) WEAK_IMPORT_ATTRIBUTE;
 
 - (NSString*)deviceModelIdentifier;
 - (NSString*)deviceUDID;
+- (int)packageWasPurchased;
 
 @end
