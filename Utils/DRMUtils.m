@@ -4,6 +4,10 @@
 
 // Uses GMmoran.me's middle-man API to securely utilize Packix's DRM API
 // For Developer's tweaks.
+// Modified for Eclipse Dark Mode
+
+#define API_URL @"https://gmoran.me/api/30541E18B09AB938AD36E8AE933F0447.php"
+#define PACKAGE_ID @"me.gmoran.eclipse12"
 
 // Will return device's model identifier
 // i.e : @"iPhone1,1" for iPhone 2G
@@ -29,18 +33,13 @@
 	// Dustin, Max, Ryan, and everyone else who's helped me learn obj-c
 	// Would murder me.
 
-	// Return types:
-	// 0 = Purchased
-	// 1 = Not Authorized
-	// -1 = Error
-
 	dispatch_semaphore_t mySemaphore = dispatch_semaphore_create(0);
 
-	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://gmoran.me/api/middleman.php"]];
+	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:API_URL]];
 
 	NSString* UDID = [self deviceUDID];
 	NSString* modelID = [self deviceModelIdentifier];
-	NSString* packageID = @"me.gmoran.eclipse12";
+	NSString* packageID = PACKAGE_ID;
 
 	NSString *userUpdate =[NSString stringWithFormat:@"UDID=%@&modelID=%@&packageID=%@", UDID, modelID, packageID];
 
