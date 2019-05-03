@@ -12,10 +12,10 @@ ARCHS = arm64 arm64e
 TWEAK_NAME = Eclipse
 Eclipse_LDFLAGS += -lCSColorPicker
 # Eclipse_CFLAGS = -fobjc-arc
-Eclipse_FILES = Tweak.xmi Utils/UIColor+Eclipse.m Utils/UIImage+Eclipse.m Utils/WKWebView+Eclipse.m
+Eclipse_FILES = Tweak.xmi Utils/UIColor+Eclipse.m Utils/UIImage+Eclipse.m Utils/WKWebView+Eclipse.m utils/DRMUtils.m
 Eclipse_FRAMEWORKS = UIKit CoreGraphics CoreFoundation CoreText QuartzCore WebKit
 Eclipse_PRIVATE_FRAMEWORKS = BackBoardServices WiFiKitUI Preferences PhotoLibrary
-# Eclipse_LIBRARIES = colorpicker
+Eclipse_LIBRARIES = MobileGestalt
 
 include $(THEOS)/makefiles/common.mk
 
