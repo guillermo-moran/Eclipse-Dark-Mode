@@ -1,3 +1,18 @@
+Changes: 6.1.2
+- Support for latest instagram version
+- Fix Whatsapp search bar
+- Fix Activity Indicator color
+
+Changes: 6.1.1
+- update libcscolorpicker library for arm64e
+
+Changes: 6.1
+- Adaptive theming
+- Arm64e support
+- Fix improper cell/table colors
+- Instagram fixes
+
+
 Changes 6.0.4-3
 - Fix wallpaper set UIButtons
 - Fix passcode entry in settings
