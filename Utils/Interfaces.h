@@ -294,6 +294,9 @@
 @property (nonatomic, retain) CAGradientLayer *fadeLayer;
 @end
 
+@interface IGTabBarButton : UIButton
+@end
+
 //
 //  ColorPicker.h
 //

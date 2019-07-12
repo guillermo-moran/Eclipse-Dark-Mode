@@ -35,7 +35,6 @@
 
 		[_backgroundImageView setAlpha:0.1];
 	}
-
 }
 
 %end
@@ -101,66 +100,37 @@
 %end
 
 
-%hook IGColors
+%hook IGTabBarButton
 
-+ (id)separatorColor {
+- (id)_initWithFrame:(struct CGRect)arg1 badgeType:(unsigned long long)arg2 clearsBadgeWhenSelected:(_Bool)arg3 {
+	id x = %orig;
 	if (isEnabled) {
-		return selectedTintColor();
+		applyInvertFilter((UIButton*)self);
 	}
-	return %orig;
-}
-
-+ (id)boldLinkHighlightedColor {
-	if (isEnabled) {
-		return selectedTintColor();
-	}
-	return %orig;
-}
-+ (id)boldLinkColor {
-	if (isEnabled) {
-		return selectedTintColor();
-	}
-	return %orig;
-}
-+ (id)linkHighlightedColor {
-	if (isEnabled) {
-		return selectedTintColor();
-	}
-	return %orig;
-
-}
-+ (id)linkColor {
-	if (isEnabled) {
-		return selectedTintColor();
-	}
-	return %orig;
-}
-+ (id)veryLightTextColor {
-	if (isEnabled) {
-		return TEXT_COLOR;
-	}
-	return %orig;
-}
-+ (id)secondaryTextColor {
-	if (isEnabled) {
-		return TEXT_COLOR;
-	}
-	return %orig;
-}
-+ (id)textColor {
-	if (isEnabled) {
-		return TEXT_COLOR;
-	}
-	return %orig;
+	return x;
 }
 
-+ (id)lightBarBackgroundColor {
-	if (isEnabled) {
-		return NAV_COLOR;
-	}
-	return %orig;
-}
+// - (void)layoutSubviews {
+// 	%orig;
+// 	self = [UIButton buttonWithType:(UIButtonTypeCustom)];
+// 	if (isEnabled) {
+// 		[self setTintColor: RED_COLOR];
+// 	}
+// }
+
 %end
+
+%hook UIView //Very hacky method of hooking IGUFIButtonBarView, which for some reason wouldn't hook. Hmm.
+
+-(void)layoutSubviews {
+	%orig;
+	if ([NSStringFromClass([self class]) isEqualToString:@"IGUFIButtonBarView"]) {
+            [self setColorType:1];
+        }
+}
+
+%end
+
 
 %hook IGGradientView
 
