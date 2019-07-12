@@ -156,6 +156,12 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 %end
 
+/*
+    Activity Indicator
+*/
+
+#include "UIKit/UIActivityIndicatorView.xm"
+
 
 /*
  d888888b db    db d888888b d88888b d888888b d88888b db      d8888b.

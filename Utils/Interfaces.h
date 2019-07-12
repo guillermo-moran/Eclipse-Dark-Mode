@@ -198,6 +198,8 @@
 
 #define YELLOW_COLOR [UIColor eclipseYellowTintColor]
 
+#define INDICATOR_COLOR [UIColor whiteColor]
+
 
 //Continue
 

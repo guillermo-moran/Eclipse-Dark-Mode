@@ -16,6 +16,18 @@
 
 @end
 
+%hook _UITextFieldContentView
+
+-(id)initWithContentContextProvider:(id)arg1 {
+	id x = %orig;
+	if (isEnabled) {
+		applyInvertFilter((UIView*)self);
+	}
+	return x;
+}
+
+%end
+
 %hook WAActionSheetButton
 
 - (void)layoutSubviews {
