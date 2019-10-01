@@ -71,7 +71,7 @@
 
 %hook UIColor
 
-static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi.dylib"];
+static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi.dylib"] || [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi2.dylib"];
 
 
 +(UIColor*)systemGreenColor {
