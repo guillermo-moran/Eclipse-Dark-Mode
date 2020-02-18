@@ -34,7 +34,6 @@ static void wallpaperChanged(CFNotificationCenterRef center, void *observer, CFS
 
 static BOOL      _isTweakEnabled;
 static BOOL      _colorDetailText;
-static BOOL      _translucentNavbars;
 static BOOL      _cellSeparatorsEnabled;
 static BOOL      _darkenKeyboard;
 static BOOL      _tintSMSBubbles;
@@ -94,12 +93,6 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
         n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
         _colorDetailText = (n)? [n boolValue]:NO;
 
-        //n = (NSNumber *)[prefs objectForKey:@"translucentNavbars"];
-        //_translucentNavbars = (n)? [n boolValue]:NO;
-        _translucentNavbars = NO;
-
-
-
         n = (NSNumber *)[prefs objectForKey:@"cellSeparatorsEnabled"];
         _cellSeparatorsEnabled = (n)? [n boolValue]:NO;
 
@@ -156,7 +149,7 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
     else {
 
         NSDate * currentDate = [NSDate date];
-        NSDate * otherDate = [[NSDate alloc] initWithString:@"2999-02-27 12:00:00 +0600"];
+        NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-02-27 12:00:00 +0600"];
         NSComparisonResult result = [currentDate compare:otherDate];
 
         if (result == NSOrderedAscending) { //Before Expiry
@@ -169,10 +162,6 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
             n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
             _colorDetailText = (n)? [n boolValue]:NO;
-
-            //n = (NSNumber *)[prefs objectForKey:@"translucentNavbars"];
-            //_translucentNavbars = (n)? [n boolValue]:NO;
-            _translucentNavbars = NO;
 
             n = (NSNumber *)[prefs objectForKey:@"alertsEnabled"];
             _alertsEnabled = (n)? [n boolValue]:NO;
@@ -288,10 +277,6 @@ static BOOL alertsEnabled(void) {
 
 static BOOL shouldColorDetailText(void) {
     return _colorDetailText;
-}
-
-static BOOL translucentNavbarEnabled(void) {
-    return _translucentNavbars;
 }
 
 static BOOL cellSeparatorsEnabled(void) {

@@ -1,10 +1,11 @@
-Package: me.gmoran.eclipse12
-Name: Eclipse Dark Mode (iOS 12)
-Depends: mobilesubstrate, preferenceloader, applist, firmware (>= 12.0), com.creaturesurvive.libcscolorpicker
-Version: 6.1.2-2
+Package: me.gmoran.eclipse13
+Name: Eclipse for iOS 13
+Depends: mobilesubstrate, preferenceloader, applist, firmware (>= 13.0), com.creaturesurvive.libcscolorpicker
+Version: 7.0a
 Architecture: iphoneos-arm
-Description: Customizable Dark Mode iOS 12!
+Description: Extensions for iOS 13's Dark Mode
 Depiction: http://gmoran.me/eclipse_12_repo.html
 Maintainer: Guillermo Morán (fr0st)
 Author: Guillermo Morán (fr0st)
 Section: Tweaks
+ 

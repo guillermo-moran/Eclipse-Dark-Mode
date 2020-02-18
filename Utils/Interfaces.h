@@ -299,6 +299,37 @@
 @interface IGTabBarButton : UIButton
 @end
 
+@interface UIUserInterfaceStyleArbiter : NSObject {
+	long long _currentModeValue;
+	long long _currentStyle;
+	long long _lastProposedAutomaticStyle;
+	int _screenDimmingNotificationToken;
+	BOOL _isDim;
+	NSDate* _lastUpdateDate;
+	int _notificationToken;
+}
+@property (nonatomic,readonly) long long currentStyle; 
+@property (readonly) unsigned long long hash; 
+@property (readonly) Class superclass; 
+@property (copy,readonly) NSString * description; 
+@property (copy,readonly) NSString * debugDescription; 
++(id)sharedInstance;
+-(id)_init;
+-(long long)currentStyle;
+-(void)_updateCurrentStyleAndNotify:(BOOL)arg1 forReason:(long long)arg2 ;
+-(void)_logPeriodicEvent;
+-(void)toggleCurrentStyleWithOverrideTiming:(long long)arg1 ;
+-(void)_updateCurrentStyleForReason:(long long)arg1 ;
+-(BOOL)_updateControllersWithOldModeValue:(long long)arg1 newModeValue:(long long)arg2 ;
+-(long long)_proposedStyleForCurrentMode;
+-(void)_setWatchesScreenDim:(BOOL)arg1 ;
+-(void)_logChangeEventWithNewMode:(long long)arg1 oldMode:(long long)arg2 newStyle:(long long)arg3 oldStyle:(long long)arg4 reason:(long long)arg5 ;
+-(void)_updateScreenDimUpdatingStyle:(BOOL)arg1 ;
+-(void)userInterfaceStyleModeDidChange:(id)arg1 ;
+-(void)toggleCurrentStyle;
+
+@end
+
 //
 //  ColorPicker.h
 //
