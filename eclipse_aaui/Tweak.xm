@@ -96,9 +96,6 @@ static BOOL disableInSB() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
     registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
-
-
     // %init(_ungrouped);
-
     [pool release];
 }

@@ -84,9 +84,6 @@
 -(void)setBarTintColor:(UIColor*)color {
     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
         color = NAV_COLOR;
-        if (translucentNavbarEnabled()) {
-            [self setAlpha:0.9];
-        }
     }
     %orig(color);
 }

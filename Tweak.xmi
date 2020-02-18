@@ -379,7 +379,6 @@ static void checkRunningApp() {
     }
     if (idIsEqual(@"com.apple.mobilesafari")) {
         %init(SafariApp);
-        shouldOverrideStatusBarStyle = YES;
         //isEnabled = NO;
     }
     if (idIsEqual(@"com.apple.Passbook")) {
