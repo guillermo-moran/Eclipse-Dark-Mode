@@ -90,12 +90,12 @@
  %hook PHEmergencyHandsetDialerView
 
 
- - (id)initWithFrame:(struct CGRect)arg1 {
- isEnabled = NO;
- id meow = %orig;
- isEnabled = isTweakEnabled();
- return meow;
+//  - (id)initWithFrame:(struct CGRect)arg1 {
+//  isEnabled = NO;
+//  id meow = %orig;
+//  isEnabled = isTweakEnabled();
+//  return meow;
 
- }
+//  }
 
  %end

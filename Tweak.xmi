@@ -226,7 +226,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
 //System Applications
 
 //Do not group SMS
-#include "Application_Support/SMS.xm"
+// #include "Application_Support/SMS.xm"
 //Do not group Contacts
 #include "Application_Support/Contacts.xm"
 
@@ -436,6 +436,8 @@ static void checkRunningApp() {
 }
 
 static void initializeApplications() {
+
+
     //Check if Application is on the blacklist
 
     //BOOL shouldAutoReplaceColors = NO;
@@ -448,8 +450,7 @@ static void initializeApplications() {
     BOOL shouldAutoReplaceColors = NO;
 
 
-    isEnabled = applicationIsEnabledInSettings && isTweakEnabled();
-
+    isEnabled = isTweakEnabled();
     //isEnabled = false;
 
     checkAppBlackList();
@@ -489,6 +490,23 @@ static void initializeApplications() {
 
 }
 
+// %hook UIApplication
+
+// -(id)init {
+//     id app = %orig;
+//     NSLog(@"HELLO FROM ECLIPSE");   
+
+//     id modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) _init];
+//     int style = [modeStyleArbiter currentStyle];
+
+//     printf("ECLIPSE APP STYLE : %i", style);
+//     NSLog(@"ECLIPSE APP STYLE : %i", style);
+
+//     return app;
+// }
+
+// %end
+
 
 #import <os/log.h>
 
@@ -516,7 +534,7 @@ static void initializeApplications() {
                 prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
                 registerNotification(quitAppsRequest, QUIT_APPS_NOTIF);
             }
-            if (isApplication) {
+            if (isApplication && !isSpringBoard) {
             //if (true) {
                 // IS APPLICATION
 
@@ -571,7 +589,5 @@ static void initializeApplications() {
 		}
 	}
 
-
     [pool release];
-
 }

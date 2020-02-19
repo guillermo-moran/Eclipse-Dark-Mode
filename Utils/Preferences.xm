@@ -106,7 +106,27 @@ static BOOL isBetterSettingsInstalled() {
 
 
 static BOOL isTweakEnabled(void) {
-    return _isTweakEnabled;
+    // // UIUserInterfaceStyleArbiter *modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) sharedInstance];
+    // // long long style = [modeStyleArbiter currentStyle];
+
+    // int style = (int)[[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle];
+
+    // // UIUserInterfaceStyleArbiter *modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) sharedInstance];
+    // // long long style = [MSHookIvar<long long>(modeStyleArbiter, "_currentStyle")];
+    // printf("ECLIPSE STYLE : %i", style);
+    // NSLog(@"ECLIPSE STYLE : %i", style);
+    // return (style == 2) ? YES : NO;
+
+    // Protect SpringBoard from crashing.
+    int style = 0;
+    @try {
+        style = [[[UIScreen mainScreen] traitCollection] userInterfaceStyle];
+
+    }
+    @catch (NSException * e) {
+        style = 0;
+    }
+    return style == 2;
 }
 
 static BOOL alertsEnabled(void) {
@@ -946,9 +966,6 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             NSNumber *n = (NSNumber *)[prefs objectForKey:@"enabled"];
             // style == 1 -> light mode
             // style == 2 -> dark mode
-            UIUserInterfaceStyleArbiter *modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) sharedInstance];
-            long long style = [modeStyleArbiter currentStyle];
-            _isTweakEnabled = (style == 2);
 
             n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
             _colorDetailText = (n)? [n boolValue]:NO;
@@ -1009,7 +1026,8 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
 
             n = (NSNumber *)[prefs objectForKey:@"adaptiveUIEnabled"];
-            _adaptiveUIEnabled = (n)? [n boolValue]:NO;
+            // _adaptiveUIEnabled = (n)? [n boolValue]:NO;
+            _adaptiveUIEnabled = NO;
             
             if (_adaptiveUIEnabled) {
                 _adaptiveColor = generatedAdaptiveColor();
