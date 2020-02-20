@@ -73,7 +73,6 @@
 
 static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi.dylib"] || [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/Bazzi2.dylib"];
 
-
 +(UIColor*)systemGreenColor {
     if (isEnabled && (selectedTintColor() != WHITE_COLOR) && !bazziInstalled) {
         return selectedTintColor();
