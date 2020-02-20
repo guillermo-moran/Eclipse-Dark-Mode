@@ -490,30 +490,26 @@ static void initializeApplications() {
 
 }
 
-// %hook UIApplication
+%hook UIApplication
 
-// -(id)init {
-//     id app = %orig;
-//     NSLog(@"HELLO FROM ECLIPSE");   
+-(id)init {
+    id app = %orig;
+    return app;
+}
 
-//     id modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) _init];
-//     int style = [modeStyleArbiter currentStyle];
+-(UIWindow*)keyWindow {
+    UIWindow* window = %orig;
+    // [window setOverrideUserInterfaceStyle:USER_INTERFACE_DARK];
+    return window;
+}
 
-//     printf("ECLIPSE APP STYLE : %i", style);
-//     NSLog(@"ECLIPSE APP STYLE : %i", style);
-
-//     return app;
-// }
-
-// %end
+%end
 
 
 #import <os/log.h>
 
 
 %ctor {
-
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
 	NSUInteger count = args.count;
@@ -588,6 +584,4 @@ static void initializeApplications() {
 			}
 		}
 	}
-
-    [pool release];
 }

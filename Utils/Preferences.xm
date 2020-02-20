@@ -118,15 +118,14 @@ static BOOL isTweakEnabled(void) {
     // return (style == 2) ? YES : NO;
 
     // Protect SpringBoard from crashing.
-    int style = 0;
+    int style = USER_INTERFACE_LIGHT;
     @try {
-        style = [[[UIScreen mainScreen] traitCollection] userInterfaceStyle];
-
+        style = ACTIVE_USER_INTERFACE_STYLE;
     }
     @catch (NSException * e) {
-        style = 0;
+        style = USER_INTERFACE_LIGHT;
     }
-    return style == 2;
+    return style == USER_INTERFACE_DARK;
 }
 
 static BOOL alertsEnabled(void) {
@@ -304,8 +303,6 @@ static UIColor* hexTextColor(void) {
 }
 
 /* -------------------------- */
-
-
 static UIColor* textColor(void) {
     if (customTextColorEnabled()) {
         if (hexTextColor()) {
@@ -313,162 +310,16 @@ static UIColor* textColor(void) {
         }
     }
 
-    return [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
+    UIColor* eclipseColor = [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
+            return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
+                [UIColor whiteColor] :             // Dark Mode Color
+                [UIColor blackColor];  // Light Mode Color
+        }];
+    }         
+    return eclipseColor;
 }
-
-
-static UIColor* selectedTableColorIndex(void) {
-
-    if (adaptiveUIEnabled()) {
-        return _adaptiveColor;
-    }
-
-    int number = selectedTheme();
-
-    if (customThemeColorEnabled()) {
-        if (hexThemeColor()) {
-            return hexThemeColor();
-        }
-    }
-
-    if (number == -1) {
-        return MIDNIGHT_TABLE_COLOR;
-    }
-
-    else if (number == 0) {
-        return NIGHT_TABLE_COLOR;
-    }
-    else if (number == 1) {
-        return GRAPHITE_TABLE_COLOR;
-    }
-    else if (number == 2) {
-        return SILVER_TABLE_COLOR;
-    }
-    else if (number == 3) {
-        return CRIMSON_TABLE_COLOR;
-    }
-    else if (number == 4) {
-        return ROSE_PINK_TABLE_COLOR;
-    }
-    else if (number == 5) {
-        return GRAPE_TABLE_COLOR;
-    }
-    else if (number == 6) {
-        return WINE_TABLE_COLOR;
-    }
-    else if (number == 7) {
-        return VIOLET_TABLE_COLOR;
-    }
-    else if (number == 8) {
-        return SKY_TABLE_COLOR;
-    }
-    else if (number == 9) {
-        return LAPIS_TABLE_COLOR;
-    }
-    else if (number == 10) {
-        return NAVY_TABLE_COLOR;
-    }
-    else if (number == 11) {
-        return DUSK_TABLE_COLOR;
-    }
-    else if (number == 12) {
-        return JUNGLE_TABLE_COLOR;
-    }
-    else if (number == 13) {
-        return BAMBOO_TABLE_COLOR;
-    }
-    else if (number == 14) {
-        return SAFFRON_TABLE_COLOR;
-    }
-    else if (number == 15) {
-        return CITRUS_TABLE_COLOR;
-    }
-    else if (number == 16) {
-        return AMBER_TABLE_COLOR;
-    }
-
-    else {
-        return NIGHT_TABLE_COLOR;
-    }
-
-}
-
-static UIColor* selectedViewColorIndex(void) {
-
-    if (adaptiveUIEnabled()) {
-        return _adaptiveColor;
-    }
-
-    int number = selectedTheme();
-
-    if (customThemeColorEnabled()) {
-        if (hexThemeColor()) {
-            return darkerColorForColor(hexThemeColor());
-        }
-    }
-
-    if (number == -1) {
-        return MIDNIGHT_VIEW_COLOR;
-    }
-    else if (number == 0) {
-        return NIGHT_VIEW_COLOR;
-    }
-    else if (number == 1) {
-        return GRAPHITE_VIEW_COLOR;
-    }
-    else if (number == 2) {
-        return SILVER_VIEW_COLOR;
-    }
-    else if (number == 3) {
-        return CRIMSON_VIEW_COLOR;
-    }
-    else if (number == 4) {
-        return ROSE_PINK_VIEW_COLOR;
-    }
-    else if (number == 5) {
-        return GRAPE_VIEW_COLOR;
-    }
-    else if (number == 6) {
-        return WINE_VIEW_COLOR;
-    }
-    else if (number == 7) {
-        return VIOLET_VIEW_COLOR;
-    }
-    else if (number == 8) {
-        return SKY_VIEW_COLOR;
-    }
-    else if (number == 9) {
-        return LAPIS_VIEW_COLOR;
-    }
-    else if (number == 10) {
-        return NAVY_VIEW_COLOR;
-    }
-    else if (number == 11) {
-        return DUSK_VIEW_COLOR;
-    }
-    else if (number == 12) {
-        return JUNGLE_VIEW_COLOR;
-    }
-    else if (number == 13) {
-        return BAMBOO_VIEW_COLOR;
-    }
-    else if (number == 14) {
-        return SAFFRON_VIEW_COLOR;
-    }
-    else if (number == 15) {
-        return CITRUS_VIEW_COLOR;
-    }
-    else if (number == 16) {
-        return AMBER_VIEW_COLOR;
-    }
-
-
-    else {
-        return NIGHT_VIEW_COLOR;
-    }
-
-}
-
 static UIColor* selectedBarColor(void) {
 
     if (adaptiveUIEnabled()) {
@@ -548,25 +399,25 @@ static UIColor* selectedBarColor(void) {
 
 static UIColor* selectedTableColor(void) {
     if (reverseModeEnabled()) {
-        return selectedViewColorIndex();
+        return [UIColor eclipseSelectedViewColor];
     }
     else {
-        return selectedTableColorIndex();
+        return [UIColor eclipseSelectedTableColor];
     }
 }
 
 static UIColor* selectedViewColor(void) {
     if (reverseModeEnabled()) {
-        return selectedTableColorIndex();
+        return [UIColor eclipseSelectedTableColor];
     }
     else {
-        return selectedViewColorIndex();
+        return [UIColor eclipseSelectedViewColor];
     }
 }
 
 #define TABLE_COLOR selectedTableColor() //Used for TableView
-#define NAV_COLOR selectedBarColor() //Used for NavBars, Toolbars, TabBars
 #define VIEW_COLOR selectedViewColor() //Used for TableCells, UIViews
+#define NAV_COLOR [UIColor eclipseSelectedNavColor] //Used for NavBars, Toolbars, TabBars
 #define TEXT_COLOR textColor()
 #define TABLE_SEPARATOR_COLOR tableSeparatorColor()
 #define TINT_COLOR selectedTintColor()
@@ -707,62 +558,7 @@ static UIColor* selectedTintColor(void) {
     if (adaptiveUIEnabled()) {
         return [[_adaptiveColor lighterColor] lighterColor];
     }
-
-    int number = selectedTint();
-
-    if (customTintColorEnabled()) {
-        if (hexTintColor()) {
-            return hexTintColor();
-        }
-    }
-
-    if (number == 0) {
-        return BABY_BLUE_COLOR;
-    }
-    if (number == 1) {
-        return WHITE_COLOR;
-    }
-    if (number == 2) {
-        return DARK_ORANGE_COLOR;
-    }
-    if (number == 3) {
-        return PINK_COLOR;
-    }
-    if (number == 4) {
-        return GREEN_COLOR;
-    }
-    if (number == 5) {
-        return PURPLE_COLOR;
-    }
-    if (number == 6) {
-        return RED_COLOR;
-    }
-    if (number == 7) {
-        return YELLOW_COLOR;
-    }
-    if (number == 8) {
-
-
-        NSArray* availableColors = @[BABY_BLUE_COLOR, PINK_COLOR, DARK_ORANGE_COLOR, GREEN_COLOR, PURPLE_COLOR, RED_COLOR, YELLOW_COLOR];
-
-        UIColor* rand = availableColors.count == 0 ? nil : availableColors[arc4random_uniform(availableColors.count)];
-
-        return rand;
-
-        /*
-         CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-         CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-         CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-         UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
-
-         return color;
-         */
-    }
-    else {
-        return BABY_BLUE_COLOR;
-    }
-
-
+    return [UIColor eclipseSelectedTintColor];
 }
 
 static UIColor* tableSeparatorColor(void) {
@@ -853,7 +649,6 @@ static void darkenUIElements() {
     setTintColors();
 
     [[UINavigationBar appearance] setBarTintColor:NAV_COLOR];
-    [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
 
     //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
 
@@ -863,7 +658,6 @@ static void darkenUIElements() {
     //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
 
     [[UITabBar appearance] setBarTintColor:NAV_COLOR];
-    [[UITabBar appearance] setBarStyle:UIBarStyleBlack];
 
     [[UISwitch appearance] setTintColor:[TINT_COLOR colorWithAlphaComponent:0.6]];
     [[UISwitch appearance] setOnTintColor:[TINT_COLOR colorWithAlphaComponent:0.3]];

@@ -14,6 +14,10 @@
 
 #pragma mark Preferences
 
+#define ACTIVE_USER_INTERFACE_STYLE [[[UIScreen mainScreen] traitCollection] userInterfaceStyle]
+#define USER_INTERFACE_LIGHT 1
+#define USER_INTERFACE_DARK 2
+
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)

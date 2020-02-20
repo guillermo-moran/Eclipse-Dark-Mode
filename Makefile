@@ -19,7 +19,7 @@ Eclipse_LIBRARIES = MobileGestalt
 
 include $(THEOS)/makefiles/common.mk
 
-SUBPROJECTS = eclipse_settings # eclipsesb eclipse_sharesheets eclipse_aaui eclipseactivator eclipseflipswitch
+SUBPROJECTS = eclipse_settings
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk
