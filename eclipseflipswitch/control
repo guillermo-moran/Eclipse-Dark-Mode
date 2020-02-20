@@ -1,9 +1,0 @@
-Package: com.gmoran.eclipseflipswitch
-Name: EclipseFlipswitch
-Depends: mobilesubstrate, com.a3tweaks.flipswitch
-Version: 0.0.1
-Architecture: iphoneos-arm
-Description: A Simple Switch for the Flipswitch API!
-Maintainer: Guillermo Morán
-Author: Guillermo Morán
-Section: Addons (Flipswitch)
