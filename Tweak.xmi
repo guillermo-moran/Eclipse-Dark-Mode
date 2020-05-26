@@ -161,7 +161,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP   YP Y8888P' Y88888P Y88888P
 */
 
-// #include "UIKit/UITableView.xm"
+#include "UIKit/UITableView.xm"
 
 /*
  db   dD d88888b db    db d8888b.  .d88b.   .d8b.  d8888b. d8888b.

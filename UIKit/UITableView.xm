@@ -31,19 +31,16 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 -(void)override {
 
     @try {
-
         if (isEnabled) {
 
-            CGColorSpaceRef origColorSpace = CGColorGetColorSpace([self.backgroundColor CGColor]);
+            UIColor* originalColor = self.backgroundColor;
+            // CGColorSpaceRef origColorSpace = CGColorGetColorSpace([self.backgroundColor CGColor]);
 
             //if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
 
-            if ([UIColor color:self.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:0.5]) {
-
+            if (isLightColor(originalColor)) {
 
                 self.sectionIndexBackgroundColor = [UIColor clearColor];
-
-
 
 
                 [self setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
@@ -56,12 +53,9 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 
     }
-
-
     @catch (NSException* e) {
         //Error
     }
-
 
 }
 
@@ -109,9 +103,11 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 -(void)layoutSubviews {
     %orig;
-
-    if (isEnabled && ![self.backgroundColor isEqual:[UIColor clearColor]] && self.backgroundColor != nil) {
-        [self setBackgroundColor:TABLE_COLOR];
+    
+    UIColor* originalColor = self.backgroundColor;
+    if (isEnabled && ![self.backgroundColor isEqual:[UIColor clearColor]] && self.backgroundColor != nil) { // should we check isLight?
+        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+        [self setBackgroundColor:dynamicColor];
     }
 }
 
@@ -246,8 +242,10 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 -(id)initWithFrame:(CGRect)arg1 {
     id bgView = %orig;
-    if (isEnabled && ([[self backgroundColor] isEqual:[UIColor clearColor]])) {
-        [self setBackgroundColor:VIEW_COLOR];
+    if (isEnabled && (![[self backgroundColor] isEqual:[UIColor clearColor]])) {
+        UIColor* originalColor = (UIColor*)[bgView backgroundColor];
+        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_BG_COLOR);
+        [self setBackgroundColor:dynamicColor];
     }
 
     return bgView;
@@ -269,9 +267,12 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 %hook UIGroupTableViewCellBackground
 
-- (id)_fillColor {
+- (UIColor*)_fillColor {
     if (isEnabled) {
-        return VIEW_COLOR;
+        UIColor* originalColor = %orig;
+        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+        
+        return dynamicColor;
     }
     return %orig;
 }
@@ -294,17 +295,19 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 
 
-%new
--(void)override {
+// %new
+// -(void)override {
 
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
-            [self setBackgroundColor:VIEW_COLOR];
+//     if (isEnabled) {
+//         if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
+//             UIColor* originalColor = self.backgroundColor;
+//             UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+//             [self setBackgroundColor:dynamicColor];
 
-        }
-    }
+//         }
+//     }
 
-}
+// }
 
 -(void)drawRect:(CGRect)arg1 {
     %orig;
@@ -335,43 +338,55 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
     return label;
 }
 
--(id)init {
-    id iRanOutOfNamesForThisID = %orig;
-    [self override];
-    return iRanOutOfNamesForThisID;
-}
+// -(id)init {
+//     id orig = %orig;
+//     [self override];
+//     return orig;
+// }
 
-
--(void)setBackgroundColor:(id)arg1 {
-
+-(void)layoutSubviews {
+    %orig;
+    self.tag = VIEW_EXCLUDE_TAG; // temp workaround
     if (isEnabled) {
-
-        if (!isLightColor(arg1) && ![arg1 isEqual:[UIColor clearColor]]) {
-            //[self.textLabel setTextColor:TEXT_COLOR];
-
-            arg1 = VIEW_COLOR;
+        if (isLightColor(self.backgroundColor)) {
+            UIColor* originalColor = self.backgroundColor;
+            UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+            [self setBackgroundColor:dynamicColor];
         }
     }
-
-
-        %orig(arg1);
 }
 
+// -(void)setBackgroundColor:(id)arg1 {
 
--(id)backgroundColor {
+//     if (isEnabled) {
 
-    id kitties = %orig;
+//         if (!isLightColor(arg1) && ![arg1 isEqual:[UIColor clearColor]]) {
+//             //[self.textLabel setTextColor:TEXT_COLOR];
+//             UIColor* dynamicColor = createEclipseDynamicColor(arg1, TABLE_COLOR);
+//             [self setBackgroundColor:dynamicColor];
 
-    if (isEnabled) {
+//             arg1 = dynamicColor;
+//         }
+//     }
 
-        if (!isLightColor(kitties) && ![kitties isEqual:[UIColor clearColor]]) {
-            //[((UITableViewCell*)self).textLabel setTextColor:TEXT_COLOR];
-            kitties = VIEW_COLOR;
-        }
-    }
 
-    return kitties;
-}
+//         %orig(arg1);
+// }
+
+
+// -(id)backgroundColor {
+//     if (isEnabled) {
+//         UIColor* originalColor = %orig;
+//         if (!isLightColor(originalColor) && ![originalColor isEqual:[UIColor clearColor]]) {
+//             //[((UITableViewCell*)self).textLabel setTextColor:TEXT_COLOR];
+
+//             UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+//             [self setBackgroundColor:dynamicColor];
+//         }
+//     }
+
+//     return %orig;
+// }
 
 
 -(id)selectionTintColor {

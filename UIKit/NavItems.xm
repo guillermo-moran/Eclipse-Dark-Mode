@@ -17,7 +17,7 @@
         UIColor* newBarColor = createEclipseDynamicColor(originalBarColor, NAV_COLOR);
 
         [self setBackgroundColor:newBarColor];
-        [self setHidden: NO];
+        // [self setHidden: NO];
         if (selectedNavColor() == -1) {
             id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
             [_backgroundEffectView setHidden:YES];
@@ -32,9 +32,9 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]] && ![[self barTintColor] isEqual:[UIColor clearColor]]) {
-        UIColor* originalBarTintColor = [self barTintColor];
-        UIColor* newBarTintColor = createEclipseDynamicColor(originalBarTintColor, NAV_COLOR);
-        [self setBarTintColor: newBarTintColor];
+        // UIColor* originalBarTintColor = [self barTintColor];
+        // UIColor* newBarTintColor = createEclipseDynamicColor(originalBarTintColor, NAV_COLOR);
+        // [self setBarTintColor: newBarTintColor];
 
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
