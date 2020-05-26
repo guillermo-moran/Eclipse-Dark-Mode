@@ -12,19 +12,12 @@ d8888b. d8888b. d88888b d88888b .d8888.
 static BOOL isClockApp;
 
 static NSDictionary *prefs;
+static NSDictionary *uikit_prefs;
 
-static void wallpaperChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 
+static void userDefaultsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    os_log(OS_LOG_DEFAULT, "ECLIPSE RECEIVED USER DEFAULTS CHANGE");
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR(PREFS_CHANGED_NOTIF), NULL, NULL, TRUE);
-
-
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Eclipse 2"
-    message:@"Please respring your device for changes to take effect."
-    delegate:nil
-    cancelButtonTitle:@"OK"
-    otherButtonTitles: nil];
-    [alert show];
-
 }
 
 //================ Preferences KEYS ================//
@@ -60,10 +53,6 @@ static NSString* _customTextHex;
 
 static UIColor* _adaptiveColor;
 
-@interface SpringBoard : UIApplication
--(void)relaunchSpringBoard; // Respring
-@end
-
 @implementation UIColor (LightAndDark)
 
 - (UIColor *)lighterColor
@@ -86,7 +75,7 @@ static UIColor* _adaptiveColor;
                           brightness:b * 0.75
                                alpha:a];
     return nil;
-}
+} 
 @end
 
 static BOOL adaptiveUIEnabled(void) {
@@ -106,26 +95,20 @@ static BOOL isBetterSettingsInstalled() {
 
 
 static BOOL isTweakEnabled(void) {
-    // // UIUserInterfaceStyleArbiter *modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) sharedInstance];
-    // // long long style = [modeStyleArbiter currentStyle];
+    // if (IS_BETA_BUILD) {
+    //     NSDate * currentDate = [NSDate date];
+    //     NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-04-30 12:00:00 +0600"];
+    //     NSComparisonResult result = [currentDate compare:otherDate];
 
-    // int style = (int)[[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle];
+    //     if (result == NSOrderedAscending) { //Before Expiry
+    //         return _isTweakEnabled;
+    //     }
 
-    // // UIUserInterfaceStyleArbiter *modeStyleArbiter = [%c(UIUserInterfaceStyleArbiter) sharedInstance];
-    // // long long style = [MSHookIvar<long long>(modeStyleArbiter, "_currentStyle")];
-    // printf("ECLIPSE STYLE : %i", style);
-    // NSLog(@"ECLIPSE STYLE : %i", style);
-    // return (style == 2) ? YES : NO;
-
-    // Protect SpringBoard from crashing.
-    int style = USER_INTERFACE_LIGHT;
-    @try {
-        style = ACTIVE_USER_INTERFACE_STYLE;
-    }
-    @catch (NSException * e) {
-        style = USER_INTERFACE_LIGHT;
-    }
-    return style == USER_INTERFACE_DARK;
+    //     return NO;
+    // }
+    return _isTweakEnabled;
+    // return YES;
+    
 }
 
 static BOOL alertsEnabled(void) {
@@ -189,14 +172,6 @@ static bool darkWebEnabled(void) {
 }
 
 static BOOL isEnabled = isTweakEnabled();
-
-
-
-//Useful Macros
-
-#define colorWithHexString(h,a) [UIColor colorWithHexString:h alpha:a]
-#define darkerColorForColor(c) [UIColor darkerColorForColor:c]
-
 
 //Selections
 
@@ -314,8 +289,8 @@ static UIColor* textColor(void) {
     if (@available(iOS 13.0, *)) {
         return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
             return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-                [UIColor whiteColor] :             // Dark Mode Color
-                [UIColor blackColor];  // Light Mode Color
+                eclipseColor :             // Dark Mode Color
+                [UIColor labelColor];  // Light Mode Color
         }];
     }         
     return eclipseColor;
@@ -552,7 +527,6 @@ static UIColor* selectedStatusbarTintColor(void) {
 
 }
 
-
 static UIColor* selectedTintColor(void) {
 
     if (adaptiveUIEnabled()) {
@@ -596,72 +570,26 @@ static void setTintColors() {
 
 }
 
-static BOOL isLightColor(UIColor* color) {
-
-
-    //BOOL is = NO;
-
-    CGFloat white = 0;
-    CGFloat red = 0;
-    CGFloat green = 0;
-    CGFloat blue = 0;
-    CGFloat alpha = 0;
-    [color getWhite:&white alpha:&alpha];
-    [color getRed:&red green:&green blue:&blue alpha:&alpha];
-
-    //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:TINT_COLOR]));
-
-    if ((red <= 0.5) || (green <= 0.5) || (blue <= 0.5)) {
-        return NO;
-    }
-    if (white >= 0.5 && alpha > 0.7) {
-        return YES;
-    }
-    return NO;
-}
-
-static BOOL isTextDarkColor(UIColor* color) {
-
-    /*
-    CGFloat white = 0;
-    CGFloat red = 0;
-    CGFloat green = 0;
-    CGFloat blue = 0;
-    [color getWhite:&white alpha:nil];
-    [color getRed:&red green:&green blue:&blue alpha:nil];
-
-   return ((white <= 0.5) && (red <= 0.5) && (green <= 0.5)  && (blue <= 0.5) && (![color isEqual:TINT_COLOR]));
-     */
-
-    if ([UIColor color:color isEqualToColor:[UIColor blackColor] withTolerance:0.6] && (![color isEqual:TINT_COLOR])) {
-        return YES;
-    }
-    else {
-        return NO;
-    }
-
-}
-
 //Uniformity Support
 
 
 static void darkenUIElements() {
-    setTintColors();
+    // setTintColors();
 
-    [[UINavigationBar appearance] setBarTintColor:NAV_COLOR];
+    // [[UINavigationBar appearance] setBarTintColor:NAV_COLOR];
 
-    //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
+    // //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
 
-    //[[UISearchBar appearance] setBarStyle:UIBarStyleBlack];
+    // //[[UISearchBar appearance] setBarStyle:UIBarStyleBlack];
 
-    [[UIToolbar appearance] setBarTintColor:NAV_COLOR];
-    //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
+    // [[UIToolbar appearance] setBarTintColor:NAV_COLOR];
+    // //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
 
-    [[UITabBar appearance] setBarTintColor:NAV_COLOR];
+    // [[UITabBar appearance] setBarTintColor:NAV_COLOR];
 
-    [[UISwitch appearance] setTintColor:[TINT_COLOR colorWithAlphaComponent:0.6]];
-    [[UISwitch appearance] setOnTintColor:[TINT_COLOR colorWithAlphaComponent:0.3]];
-    //[[UISwitch appearance] setThumbTintColor:TEXT_COLOR];
+    // [[UISwitch appearance] setTintColor:[TINT_COLOR colorWithAlphaComponent:0.6]];
+    // [[UISwitch appearance] setOnTintColor:[TINT_COLOR colorWithAlphaComponent:0.3]];
+    // //[[UISwitch appearance] setThumbTintColor:TEXT_COLOR];
 }
 
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -672,94 +600,17 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
      _isTweakEnabled = !CFPreferencesCopyAppValue(CFSTR("enabled"), CFSTR("com.gmoran.eclipse")) ? YES : [(id)CFBridgingRelease(CFPreferencesCopyAppValue(CFSTR("enabled"), CFSTR("com.gmoran.eclipse"))) boolValue];
      */
 
-    if (!IS_BETA_BUILD) {
+    prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
+    uikit_prefs = [[NSDictionary alloc] initWithContentsOfFile:UIKIT_PREFS_FILE_PATH];
+    //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
 
-        //boolean values
+            NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
+            BOOL sysDarkModeEnabled = (n.intValue == 2);
 
-        if (prefs != nil) {
-            prefs = nil;
-            [prefs release];
+            n = (NSNumber* )[prefs objectForKey:@"enabled"];
+            BOOL eclipseEnabled = (n)? [n boolValue]:NO;
 
-        }
-
-        prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
-        //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
-
-       
-
-        NSNumber *n = (NSNumber *)[prefs objectForKey:@"enabled"];
-        _isTweakEnabled = NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
-        _colorDetailText = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"cellSeparatorsEnabled"];
-        _cellSeparatorsEnabled = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"darkenKeyboard"];
-        _darkenKeyboard = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"tintSMSBubbles"];
-        _tintSMSBubbles = (n)? [n boolValue]:NO;
-
-        //_tintSMSBubbles = YES;
-
-       n = (NSNumber *)[prefs objectForKey:@"tintMessageBubbles"];
-       _tintMessageBubbles = (n)? [n boolValue]:NO;
-
-        //_tintMessageBubbles = YES;
-
-        n = (NSNumber *)[prefs objectForKey:@"reverseModeEnabled"];
-        _reverseModeEnabled = (n)? [n boolValue]:NO;
-
-        _selectedTheme = [(NSNumber*)[prefs objectForKey:@"selectedTheme"] intValue];
-        _selectedNavColor = [(NSNumber*)[prefs objectForKey:@"selectedNavColor"] intValue];
-        _selectedKeyboardColor = [(NSNumber*)[prefs objectForKey:@"selectedKeyboardColor"] intValue];
-        _statusbarTint = [(NSNumber*)[prefs objectForKey:@"statusbarTint"] intValue];
-        _selectedTint = [(NSNumber*)[prefs objectForKey:@"selectedTint"] intValue];
-
-
-        /* Custom Colors */
-
-        n = (NSNumber *)[prefs objectForKey:@"customNavColorsEnabled"];
-        _customNavColorsEnabled = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"customThemeColorsEnabled"];
-        _customThemeColorsEnabled = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"customTintColorsEnabled"];
-        _customTintColorsEnabled = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"customStatusbarColorsEnabled"];
-        _customStatusbarColorsEnabled = (n)? [n boolValue]:NO;
-
-        n = (NSNumber *)[prefs objectForKey:@"customTextColorsEnabled"];
-        _customTextColorsEnabled = (n)? [n boolValue]:NO;
-        //_customColorsEnabled = NO;
-
-        _customNavBarHex = (NSString*)[prefs objectForKey:@"customNavBarHex"];
-        _customThemeHex = (NSString*)[prefs objectForKey:@"customThemeHex"];
-        _customTintHex = (NSString*)[prefs objectForKey:@"customTintHex"];
-        _customStatusbarHex = (NSString*)[prefs objectForKey:@"customStatusbarHex"];
-        _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
-
-
-    }
-
-    else {
-
-        NSDate * currentDate = [NSDate date];
-        NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-02-27 12:00:00 +0600"];
-        NSComparisonResult result = [currentDate compare:otherDate];
-
-        if (result == NSOrderedAscending) { //Before Expiry
-
-            prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFS_FILE_PATH];
-            //prefs = [[NSUserDefaults standardUserDefaults] persistentDomainForName:PREFS_DOMAIN];
-
-            NSNumber *n = (NSNumber *)[prefs objectForKey:@"enabled"];
-            // style == 1 -> light mode
-            // style == 2 -> dark mode
+            _isTweakEnabled = sysDarkModeEnabled && eclipseEnabled;
 
             n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
             _colorDetailText = (n)? [n boolValue]:NO;
@@ -826,6 +677,6 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             if (_adaptiveUIEnabled) {
                 _adaptiveColor = generatedAdaptiveColor();
             }
-        }
-    }
+
+   
 }

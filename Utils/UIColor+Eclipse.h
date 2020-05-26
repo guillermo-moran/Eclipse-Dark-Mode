@@ -17,7 +17,7 @@
 
 -(NSDictionary*)eclipsePrefs;
 
-+(UIColor*)createEclipseColor:(UIColor*)defaultColor darkColor:(UIColor*)darkColor;
++(UIColor*)createDynamicEclipseColor:(UIColor*)defaultColor darkColor:(UIColor*)darkColor;
 
 +(UIColor*)darkerColorForSelectionColor:(UIColor *)c;
 + (UIColor*)changeBrightness:(UIColor*)color amount:(CGFloat)amount;

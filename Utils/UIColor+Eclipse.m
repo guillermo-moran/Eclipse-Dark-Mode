@@ -450,15 +450,19 @@
 
 }
 
-+(UIColor*)createDynamicEclipseColor:(UIColor*)defaultColor darkColor:(UIColor*)darkColor {
++(UIColor*)createDynamicEclipseColor:(UIColor*)lightColor darkColor:(UIColor*)darkColor {
     if (@available(iOS 13.0, *)) {
-        return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
+
+        UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight];
+        UIColor* resolvedDefaultColor = lightColor ? [lightColor resolvedColorWithTraitCollection:traitCollection] : [UIColor clearColor];
+
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
             return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
                 darkColor :     // Dark Mode Color
-                defaultColor;   // Light Mode Color
+                resolvedDefaultColor;   // Light Mode Color
         }];
     }         
-    return defaultColor;
+    return lightColor ? lightColor : [UIColor clearColor];
 }
 
 +(UIColor*)darkerColorForSelectionColor:(UIColor *)c {
@@ -718,19 +722,7 @@ struct pixel {
 }
 
 +(UIColor*)violetTableColor {
-    UIColor* eclipseColor = [self colorWithRed:91.0f/255.0f green:50.0f/255.0f blue:86.0f/255.0f alpha:1.0];
-    UIColor* defaultColor = [self systemGray6Color];
-
-    return [self createDynamicEclipseColor:defaultColor darkColor:eclipseColor];
-
-    // if (@available(iOS 13.0, *)) {
-    //     return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
-    //         return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-    //             eclipseColor :             // Dark Mode Color
-    //             [self systemGray6Color];  // Light Mode Color
-    //     }];
-    // }         
-    // return eclipseColor;
+    return [self colorWithRed:91.0f/255.0f green:50.0f/255.0f blue:86.0f/255.0f alpha:1.0];
 }
 
 
@@ -805,20 +797,7 @@ struct pixel {
 }
 
 +(UIColor*)violetViewColor {
-
-    UIColor* eclipseColor = [self colorWithRed:81.0f/255.0f green:40.0f/255.0f blue:76.0f/255.0f alpha:1.0];
-    UIColor* defaultColor = [self systemGray6Color];
-
-    return [self createDynamicEclipseColor:defaultColor darkColor:eclipseColor];
-    // if (@available(iOS 13.0, *)) {
-    //     return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
-    //         return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-    //             eclipseColor :             // Dark Mode Color
-    //             [self systemGray6Color];  // Light Mode Color
-    //     }];
-    // }         
-    // return eclipseColor;
-    
+    return [self colorWithRed:81.0f/255.0f green:40.0f/255.0f blue:76.0f/255.0f alpha:1.0];
 }
 
 +(UIColor*)skyViewColor {
@@ -884,18 +863,7 @@ struct pixel {
     return [UIColor colorWithRed:88.0f/255.0f green:23.0f/255.0f blue:74.0f/255.0f alpha:1.0];
 }
 +(UIColor*)violetBarColor {
-    UIColor* eclipseColor = [self colorWithRed:61.0f/255.0f green:20.0f/255.0f blue:56.0f/255.0f alpha:1.0];
-    UIColor* defaultColor = [self systemGray6Color];
-
-    return [self createDynamicEclipseColor:defaultColor darkColor:eclipseColor];
-    // if (@available(iOS 13.0, *)) {
-    //     return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
-    //         return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-    //             eclipseColor :             // Dark Mode Color
-    //             [self systemGray6Color];  // Light Mode Color
-    //     }];
-    // }         
-    // return eclipseColor;
+    return [self colorWithRed:61.0f/255.0f green:20.0f/255.0f blue:56.0f/255.0f alpha:1.0];
 }
 +(UIColor*)skyBarColor {
     return [UIColor colorWithRed:47.0f/255.0f green:113.0f/255.0f blue:142.0f/255.0f alpha:1.0];

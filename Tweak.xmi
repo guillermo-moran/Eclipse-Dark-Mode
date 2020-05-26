@@ -39,6 +39,8 @@ d8888b. d8888b. d88888b d88888b .d8888.
 */
 
 #include "Utils/Preferences.xm"
+#include "Utils/EclipseAdaptiveColorUtil.xm"
+
 
 
 %group AppTerminator
@@ -80,42 +82,6 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "UIKit/UIColorReplacement.xm"
 
 /*
-  .o88b.  .d88b.  db      db           db    db d888888b d88888b db   d8b   db
- d8P  Y8 .8P  Y8. 88      88           88    88   `88'   88'     88   I8I   88
- 8P      88    88 88      88           Y8    8P    88    88ooooo 88   I8I   88
- 8b      88    88 88      88           `8b  d8'    88    88~~~~~ Y8   I8I   88
- Y8b  d8 `8b  d8' 88booo. 88booo.       `8bd8'    .88.   88.     `8b d8'8b d8'
-  `Y88P'  `Y88P'  Y88888P Y88888P         YP    Y888888P Y88888P  `8b8' `8d8'
- */
-
-/*
-
- Collection View in Videos is 0 alpha BGColor. Figure it out, asshole.
-
-%hook UICollectionView
-
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-
-        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ![self isKindOfClass:%c(HBFPBackgroundView)]) {
-
-            [self setBackgroundColor:VIEW_COLOR];
-        }
-    }
-}
-
-%end
- */
-
-/*
-
- UIImageView
-
-*/
-
-
-/*
  db    db d888888b db    db d888888b d88888b db   d8b   db
  88    88   `88'   88    88   `88'   88'     88   I8I   88
  88    88    88    Y8    8P    88    88ooooo 88   I8I   88
@@ -136,31 +102,31 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP    YP    YP       YP    Y888888P Y88888P  `8b8' `8d8'
 */
 
-#include "UIKit/UITextView.xm"
+// #include "UIKit/UITextView.xm"
 
-//Text Caret
-%hook UITextSelectionView
+// //Text Caret
+// %hook UITextSelectionView
 
--(id)caretViewColor {
-    if (isEnabled) {
-        if (_selectedTint == 1) {
-            return BABY_BLUE_COLOR;
-        }
-        else {
-            return selectedTintColor();
-        }
+// -(id)caretViewColor {
+//     if (isEnabled) {
+//         if (_selectedTint == 1) {
+//             return BABY_BLUE_COLOR;
+//         }
+//         else {
+//             return selectedTintColor();
+//         }
 
-    }
-    return %orig;
-}
+//     }
+//     return %orig;
+// }
 
-%end
+// %end
 
 /*
     Activity Indicator
 */
 
-#include "UIKit/UIActivityIndicatorView.xm"
+// #include "UIKit/UIActivityIndicatorView.xm"
 
 
 /*
@@ -183,7 +149,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
  ~Y8888P' Y888888P Y88888P YP   YP Y8888P' Y88888P Y88888P
 */
 
-#include "UIKit/UILabel.xm"
+// #include "UIKit/UILabel.xm"
 
 
 /*
@@ -195,7 +161,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP   YP Y8888P' Y88888P Y88888P
 */
 
-#include "UIKit/UITableView.xm"
+// #include "UIKit/UITableView.xm"
 
 /*
  db   dD d88888b db    db d8888b.  .d88b.   .d8b.  d8888b. d8888b.
@@ -206,7 +172,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
  YP   YD Y88888P    YP    Y8888P'  `Y88P'  YP   YP 88   YD Y8888D'
 */
 
-#include "UIKit/UIKeyboard.xm"
+// #include "UIKit/UIKeyboard.xm"
 
 /*
  .d8888. d888888b  .d8b.  d888888b db    db .d8888. d8888b.  .d8b.  d8888b.
@@ -217,7 +183,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
  `8888Y'    YP    YP   YP    YP    ~Y8888P' `8888Y' Y8888P' YP   YP 88   YD
  */
 
-#include "UIKit/UIStatusBar.xm"
+// #include "UIKit/UIStatusBar.xm"
 
 //LibColorPicker fixes
 
@@ -243,14 +209,14 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Calendar.xm"
 #include "Application_Support/Maps.xm"
 #include "Application_Support/Photos.xm"
-#include "Application_Support/Settings.xm"
+// #include "Application_Support/Settings.xm"
 
 #include "UIKit/WiFiKit.xm"
 
 // Third Party App Support
 
 #include "Application_Support/WhatsApp.xm"
-#include "Application_Support/Instagram.xm"
+// #include "Application_Support/Instagram.xm"
 #include "Application_Support/Twitter.xm"
 #include "Application_Support/Kik.xm"
 #include "Application_Support/Threema.xm"
@@ -266,39 +232,9 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/OneFootball.xm"
 #include "Application_Support/Gmail.xm"
 
-// %group NSStringHack
-// %hook NSString
-//
-// -(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
-//     CGSize x = %orig;
-// 	if (isEnabled) {
-// 		[RED_COLOR set];
-// 	}
-// 	return x;
-// }
-// %end
-// %end
-
-// %group CoreAuthUI //com.apple.CoreAuthUI
-//
-// %hook UILabel
-// -(void)layoutSubviews {
-//     %orig;
-//     [self setTextColor: TEXT_COLOR];
-// }
-//
-// -(void)setTextColor:(UIColor *)arg1 {
-//     arg1 = TEXT_COLOR;
-//     %orig(arg1);
-// }
-// %end
-//
-// %end
-
-
 static void checkAppBlackList() {
     if (idIsEqual(@"com.facebook.Facebook")) {
-        isEnabled = NO;
+        // isEnabled = NO;
     }
     if (idIsEqual(@"com.apple.calculator")) {
         isEnabled = NO;
@@ -339,7 +275,7 @@ static void checkRunningApp() {
         %init(TwitterApp);
     }
     if (idIsEqual(@"com.burbn.instagram")) {
-        %init(InstagramApp);
+        // %init(InstagramApp);
     }
     if (idIsEqual(@"net.whatsapp.WhatsApp")) {
         %init(WhatsappApp);
@@ -426,7 +362,7 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.apple.Preferences")) {
         if (!isBetterSettingsInstalled()) {
             %init(WiFiKitFix);
-            %init(PreferencesApp);
+            // %init(PreferencesApp);
         }
     }
     if (idIsEqual(@"com.google.Gmail")) {
@@ -490,18 +426,89 @@ static void initializeApplications() {
 
 }
 
+// %hook NSBundle
+
+// -(NSDictionary *)infoDictionary {
+//     NSDictionary* originalDict = %orig;
+//     NSMutableDictionary* mutableDict = [originalDict mutableCopy];
+//     [mutableDict removeObjectForKey: @"UIUserInterfaceStyle"];
+//     return mutableDict;
+// }
+
+// -(id)objectForInfoDictionaryKey:(NSString*)key {
+//     if ([key isEqualToString: @"UIUserInterfaceStyle"]) {
+//         return nil;
+//     }
+//     return %orig;
+// }
+
+// %end
+
+// %hook UIWindow
+
+// -(void)_setOverrideUserInterfaceStyle:(long long)arg1 {
+//     return %orig(nil);
+// }
+
+// -(long long)overrideUserInterfaceStyle {
+//     return nil;
+// }
+
+// -(void)setOverrideUserInterfaceStyle:(long long)arg1 {
+//     return %orig(nil);
+// }
+
+// -(long long)_overrideUserInterfaceStyle {
+//     return nil;
+// }
+
+
+// %end
+
+static BOOL windowNeedsInterfaceOverride = YES;
+
 %hook UIApplication
 
 -(id)init {
     id app = %orig;
+    // [self monitorFile];
     return app;
 }
 
 -(UIWindow*)keyWindow {
     UIWindow* window = %orig;
-    // [window setOverrideUserInterfaceStyle:USER_INTERFACE_DARK];
+
+    if (isEnabled) { // isEnabled means that both system dark mode and Eclipse are enabled in Settings
+        BOOL isAppStillLight = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 1);
+        BOOL isAppDark = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 2);
+
+        if (isAppDark) {
+            windowNeedsInterfaceOverride = NO; // Prevent override on apps that already support dark mode natively
+        }
+        
+        if (isAppStillLight && windowNeedsInterfaceOverride) { // App does not support dark mode
+            os_log(OS_LOG_DEFAULT, "ECLIPSE: Overriding user interface style to dark");
+            [window setOverrideUserInterfaceStyle: USER_INTERFACE_DARK]; // Force dark mode on all views through the key window
+        }
+        os_log(OS_LOG_DEFAULT, "ECLIPSE: Current user interface style for app: %ld", ACTIVE_APPLICATION_USER_INTERFACE_STYLE);
+
+    }
+
+    // NSString* executableName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
+    // os_log(OS_LOG_DEFAULT, "ECLIPSE: Executable name is %@", executableName);
+
+
+    // [window layoutSubviews]; // Probably not necessary
+
     return window;
+
 }
+
+// -(void)traitCollectionDidChange:(id)arg1 {
+//     %orig;
+//     os_log(OS_LOG_DEFAULT, "ECLIPSE : TRAIT COLLECTION CHANGED");
+
+// }
 
 %end
 
@@ -541,8 +548,7 @@ static void initializeApplications() {
                 prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
             	// register to receive changed notifications
             	registerNotification(prefsChanged, PREFS_CHANGED_NOTIF);
-                registerNotification(wallpaperChanged, WALLPAPER_CHANGED_NOTIF);
-
+                registerNotification2(userDefaultsChanged, (__bridge CFStringRef)NSUserDefaultsDidChangeNotification);
 
                 // NoctisXI Support
 
@@ -576,10 +582,6 @@ static void initializeApplications() {
                 else {
                     os_log(OS_LOG_DEFAULT, "NOCTIS NOT INSTALLED");
                     initializeApplications();
-                    if (alertsEnabled()) {
-                        %init(EclipseAlerts);
-                    }
-
                 }
 			}
 		}

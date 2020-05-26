@@ -11,13 +11,6 @@
  NIGHT MODE FOR IOS - Interfaces
  COPYRIGHT © 2014 GUILLERMO MORAN
  */
-
-#pragma mark Preferences
-
-#define ACTIVE_USER_INTERFACE_STYLE [[[UIScreen mainScreen] traitCollection] userInterfaceStyle]
-#define USER_INTERFACE_LIGHT 1
-#define USER_INTERFACE_DARK 2
-
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -31,8 +24,6 @@
 #define IsiPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
 #define IS_BETA_BUILD YES
-
-#define registerNotification(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 #define PREFS_DOMAIN @"com.gmoran.eclipse"
 #define PREFS_CHANGED_NOTIF "com.gmoran.eclipse.prefs-changed"
@@ -49,11 +40,22 @@
 
 #define VIEW_EXCLUDE_TAG 199
 
+// Dark/Light Mode
+#define UIKIT_PREFS_FILE_PATH @"/var/mobile/Library/Preferences/com.apple.uikitservices.userInterfaceStyleMode.plist"
+#define ACTIVE_APPLICATION_USER_INTERFACE_STYLE [[[UIScreen mainScreen] traitCollection] userInterfaceStyle]
+#define USER_INTERFACE_LIGHT 1
+#define USER_INTERFACE_DARK 2
+#define INTERFACE_PREFS_KEY @"UserInterfaceStyleMode"
+
 //#define idIsEqual(id) [[NSBundle mainBundle].bundleIdentifier isEqualToString:id]
 #define idIsEqual(id) [[UIApplication displayIdentifier] isEqualToString:id]
+#define registerNotification(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce);
+#define registerNotification2(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), (n), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
+#define colorWithHexString(h,a) [UIColor colorWithHexString:h alpha:a]
+#define darkerColorForColor(c) [UIColor darkerColorForColor:c]
 
 //Continue
-
 //Colors
 
 
@@ -203,12 +205,6 @@
 #define YELLOW_COLOR [UIColor eclipseYellowTintColor]
 
 #define INDICATOR_COLOR [UIColor whiteColor]
-
-
-//Continue
-
-#pragma mark SpringBoard
-
 @interface SBUIController : NSObject{} @end
 
 @interface SBAppSwitcherController : NSObject {}

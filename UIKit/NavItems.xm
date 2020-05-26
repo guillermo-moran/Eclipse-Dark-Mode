@@ -12,7 +12,11 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
-        [self setBackgroundColor:NAV_COLOR];
+
+        UIColor* originalBarColor = (UIColor*)[self backgroundColor];
+        UIColor* newBarColor = createEclipseDynamicColor(originalBarColor, NAV_COLOR);
+
+        [self setBackgroundColor:newBarColor];
         [self setHidden: NO];
         if (selectedNavColor() == -1) {
             id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
@@ -27,66 +31,57 @@
 
 -(void)layoutSubviews {
     %orig;
-    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]] && ![[self barTintColor] isEqual:[UIColor clearColor]]) {
+        UIColor* originalBarTintColor = [self barTintColor];
+        UIColor* newBarTintColor = createEclipseDynamicColor(originalBarTintColor, NAV_COLOR);
+        [self setBarTintColor: newBarTintColor];
 
-        @try {
-            [self setBarTintColor:NAV_COLOR];
-            [self setBackgroundColor:NAV_COLOR];
-            //[self setBarStyle:UIBarStyleBlack];
-            [self setTitleTextAttributes: @{NSForegroundColorAttributeName:TEXT_COLOR}];
-
-        }
-        @catch (NSException * e) {
-            //Nah
-        }
-        @finally {
-            //NSLog(@"Eclipse 3: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
-        }
-
-
+        UIColor* originalBarBgColor = [self backgroundColor];
+        UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
+        [self setBackgroundColor: newBarBgColor];
     }
 }
 
--(void)drawRect:(CGRect)arg1 {
-    %orig;
-    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
+// -(void)drawRect:(CGRect)arg1 {
+//     %orig;
+//     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
 
-        @try {
-            [self setBarTintColor:NAV_COLOR];
+//         @try {
+//             [self setBarTintColor:NAV_COLOR];
 
-        }
-        @catch (NSException * e) {
-            //Nah
-        }
-        @finally {
-            //NSLog(@"Eclipse 3: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
-        }
-    }
-}
+//         }
+//         @catch (NSException * e) {
+//             //Nah
+//         }
+//         @finally {
+//             //NSLog(@"Eclipse 3: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
+//         }
+//     }
+// }
 
--(void)setBounds:(CGRect)arg1 {
-    %orig;
-    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
+// -(void)setBounds:(CGRect)arg1 {
+//     %orig;
+//     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
 
-        @try {
-            [self setBarTintColor:NAV_COLOR];
+//         @try {
+//             [self setBarTintColor:NAV_COLOR];
 
-        }
-        @catch (NSException * e) {
-            //Nah
-        }
-        @finally {
-            //NSLog(@"Eclipse 3: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
-        }
-    }
-}
+//         }
+//         @catch (NSException * e) {
+//             //Nah
+//         }
+//         @finally {
+//             //NSLog(@"Eclipse 3: An error occured while attempting to color the Nav Bar. This application may not support this feature.");
+//         }
+//     }
+// }
 
--(void)setBarTintColor:(UIColor*)color {
-    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
-        color = NAV_COLOR;
-    }
-    %orig(color);
-}
+// -(void)setBarTintColor:(UIColor*)color {
+//     if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
+//         color = NAV_COLOR;
+//     }
+//     %orig(color);
+// }
 
 %end
 
@@ -97,37 +92,41 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
+        UIColor* originalBarBgColor = [self backgroundColor];
+        UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
+        [self setBackgroundColor: newBarBgColor];
+
+        // self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
 
     }
 }
 
--(void)setBarTintColor:(id)arg1 {
-    if (isEnabled) {
-        self.backgroundColor = NAV_COLOR;
-        %orig(NAV_COLOR);
-        return;
-    }
-    %orig;
-}
+// -(void)setBarTintColor:(id)arg1 {
+//     if (isEnabled) {
+//         self.backgroundColor = NAV_COLOR;
+//         %orig(NAV_COLOR);
+//         return;
+//     }
+//     %orig;
+// }
 
 %end
 
-%hook SKUITabBarBackgroundView
+// %hook SKUITabBarBackgroundView
 
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-        UIView* eclipseBarView = [[UIView alloc] initWithFrame:[self frame]];
-        [eclipseBarView setBackgroundColor:NAV_COLOR];
-        [self addSubview:eclipseBarView];
-        [eclipseBarView release];
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         UIView* eclipseBarView = [[UIView alloc] initWithFrame:[self frame]];
+//         [eclipseBarView setBackgroundColor:NAV_COLOR];
+//         [self addSubview:eclipseBarView];
+//         [eclipseBarView release];
 
-    }
-}
+//     }
+// }
 
 
-%end
+// %end
 
 
 %hook UIToolbar
@@ -135,7 +134,10 @@
 
 -(void)setBarStyle:(int)arg1 {
     if (isEnabled && !(IsiPad)) {
-        [self setBarTintColor:NAV_COLOR];
+        UIColor* originalBarBgColor = [self barTintColor];
+        UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
+        // [self setBackgroundColor: newBarBgColor];
+        [self setBarTintColor:newBarBgColor];
         return;
     }
     %orig;
@@ -144,7 +146,9 @@
 
 -(void)setBarTintColor:(id)arg1 {
     if (isEnabled && !(IsiPad)) {
-        %orig(NAV_COLOR);
+        UIColor* originalBarBgColor = [self barTintColor];
+        UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
+        %orig(newBarBgColor);
         return;
     }
     %orig;

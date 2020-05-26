@@ -38,41 +38,40 @@
 #define SC_HEADER objc_getClass("SCBottomBorderedView") //snapchat fix (prevent bans)
 #define SC_GRADIENT objc_getClass("SCGradientView")
 
+
 %new
 -(void)override {
-
     if (isEnabled) {
 
         if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
 
             [self setBackgroundColor:VIEW_COLOR];
         }
-
-        //Snapchat fix (prevent ban/connection error)
-        if ([self class] == SC_HEADER) {
-            [self setBackgroundColor:NAV_COLOR];
-        }
-        if ([self class] == SC_GRADIENT) {
-            [self setAlpha:0.0];
-        }
     }
 }
 
-// %new
-// -(BOOL)
+
+
+-(void)setBackgroundColor:(UIColor*)color {
+    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+        UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        %orig(eclipseColor);
+        return;
+    }
+    %orig;
+
+    
+}
 
 -(id)backgroundColor {
     id color = %orig;
 
-    if (isEnabled) {
-
-        if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
-
-            return VIEW_COLOR;
-        }
+    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+        UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        return eclipseColor;
     }
-
-    return %orig;
+    return color;
+   
 
 }
 
@@ -132,94 +131,86 @@
 }
 
 
-//#define KB_BG_COLOR [UIColor colorWithRed:1.0f green:0.87f blue:0.87f alpha:0.87] //Fuck You Apple. (Some apps don't use whiteColor)
+// //#define KB_BG_COLOR [UIColor colorWithRed:1.0f green:0.87f blue:0.87f alpha:0.87] //Fuck You Apple. (Some apps don't use whiteColor)
 
 
 
-//if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
-
--(void)setBackgroundColor:(UIColor*)color {
-
-    if (isEnabled) {
-        if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
-
-            color = VIEW_COLOR;
-
-        }
-    }
-
-    %orig(color);
-}
+// //if (origColorSpace == tableBGColorSpace || origColorSpace == whiteColorSpace || origColorSpace == cellWhiteColorSpace) {
 
 
 
--(void)layoutSubviews {
-
-    %orig;
-
-    if (isEnabled && !isClockApp) {
 
 
-        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+// // -(void)layoutSubviews {
 
-            for (UILabel* v in [self subviews]){
+// //     os_log(OS_LOG_DEFAULT, "ECLIPSE: INTERFACE CHANGE CALLED LAYOUTSUBVIEWS");
 
-                if ([(UILabel*)v respondsToSelector:@selector(setTextColor:)] && [(UILabel*)v respondsToSelector:@selector(textColor)]) {
 
-                    if (isTextDarkColor([(UILabel*)v textColor])) {
-                        [(UILabel*)v setTag:52961101];
-                        [(UILabel*)v setBackgroundColor:[UIColor clearColor]];
-                        [(UILabel*)v setTextColor: TEXT_COLOR];
-                    }
-                }
-            }
-        }
-    }
-}
+// //     %orig;
 
-/*
+// //     if (isEnabled && !isClockApp) {
 
- //Comment to fix crashing on Viber, possibly others.
 
--(void)didAddSubview:(id)v {
-    %orig;
+// //         if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
 
-    if (isEnabled) {
+// //             for (UILabel* v in [self subviews]){
 
-        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+// //                 if ([(UILabel*)v respondsToSelector:@selector(setTextColor:)] && [(UILabel*)v respondsToSelector:@selector(textColor)]) {
 
-            if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+// //                     if (isTextDarkColor([(UILabel*)v textColor])) {
+// //                         [(UILabel*)v setTag:52961101];
+// //                         [(UILabel*)v setBackgroundColor:[UIColor clearColor]];
+// //                         [(UILabel*)v setTextColor: TEXT_COLOR];
+// //                     }
+// //                 }
+// //             }
+// //         }
+// //     }
+// // }
 
-                if (isTextDarkColor([v textColor])) {
-                    [v setTag:52961101];
-                    [v setBackgroundColor:[UIColor clearColor]];
-                    [v setTextColor: TEXT_COLOR];
-                }
-            }
-        }
-    }
-}
+// /*
 
--(void)addSubview:(id)v {
-    %orig;
+//  //Comment to fix crashing on Viber, possibly others.
 
-    if (isEnabled) {
+// -(void)didAddSubview:(id)v {
+//     %orig;
 
-        if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+//     if (isEnabled) {
 
-            if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+//         if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
 
-                if (isTextDarkColor([v textColor])) {
-                    [v setTag:52961101];
-                    [v setBackgroundColor:[UIColor clearColor]];
-                    [v setTextColor: TEXT_COLOR];
-                }
-            }
-        }
-    }
+//             if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
 
-}
+//                 if (isTextDarkColor([v textColor])) {
+//                     [v setTag:52961101];
+//                     [v setBackgroundColor:[UIColor clearColor]];
+//                     [v setTextColor: TEXT_COLOR];
+//                 }
+//             }
+//         }
+//     }
+// }
 
- */
+// -(void)addSubview:(id)v {
+//     %orig;
+
+//     if (isEnabled) {
+
+//         if (!isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && (self.tag != VIEW_EXCLUDE_TAG)) {
+
+//             if ([v respondsToSelector:@selector(setTextColor:)] && [v respondsToSelector:@selector(textColor)]) {
+
+//                 if (isTextDarkColor([v textColor])) {
+//                     [v setTag:52961101];
+//                     [v setBackgroundColor:[UIColor clearColor]];
+//                     [v setTextColor: TEXT_COLOR];
+//                 }
+//             }
+//         }
+//     }
+
+// }
+
+//  */
 
 %end
