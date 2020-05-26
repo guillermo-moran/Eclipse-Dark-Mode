@@ -240,15 +240,17 @@ static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteCol
 
 %hook _UITableViewHeaderFooterViewBackground
 
--(id)initWithFrame:(CGRect)arg1 {
-    id bgView = %orig;
-    if (isEnabled && (![[self backgroundColor] isEqual:[UIColor clearColor]])) {
-        UIColor* originalColor = (UIColor*)[bgView backgroundColor];
-        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_BG_COLOR);
-        [self setBackgroundColor:dynamicColor];
-    }
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         UIColor* originalColor = (UIColor*)[self backgroundColor];
+//         UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_BG_COLOR);
+//         [self setBackgroundColor:dynamicColor];
+//     }
+// }
 
-    return bgView;
+-(id)backgroundColor {
+    return [UIColor clearColor];
 }
 
 %end

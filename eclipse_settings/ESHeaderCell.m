@@ -10,16 +10,13 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier specifier:specifier];
 
 	if (self) {
-		self.backgroundColor = [UIColor clearColor];
-		self.backgroundView = IS_IOS_OR_NEWER(iOS_7_0) ? nil : [[[UIView alloc] init] autorelease];
-
 		UIView *containerView = [[[UIView alloc] init] autorelease];
 		containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 		[self.contentView addSubview:containerView];
+        self.contentView.backgroundColor = [UIColor clearColor];
 
 		UIImageView *imageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"eclipse_header" inBundle:[NSBundle bundleForClass:self.class]]] autorelease];
 		
-
         
 		UILabel *typeLabel = [[[UILabel alloc] init] autorelease];
         typeLabel.backgroundColor = [UIColor clearColor];
@@ -35,7 +32,9 @@ static CGFloat const qHeaderCellFontSize = 30.f;
         
 		statusLabel.backgroundColor = [UIColor clearColor];
 		statusLabel.font = [UIFont boldSystemFontOfSize:qHeaderCellFontSize];
-		
+
+	    [self setBackgroundColor: [UIColor clearColor]];
+
 
 		typeLabel.frame = CGRectMake(imageView.image.size.width + 10.f, -1.f, [typeLabel.text sizeWithFont:typeLabel.font].width, imageView.image.size.height);
         
@@ -50,30 +49,9 @@ static CGFloat const qHeaderCellFontSize = 30.f;
         
         
         //BOOL listFileExists = YES;
-        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse12.list"];
+        BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse13.list"];
 
-        
-        //if ([result isEqualToString:@"Not Licensed"] || !listFileExists) {
-        if (!listFileExists) {
-
-            /*
-            UIWebView *webview = [[UIWebView alloc]initWithFrame:CGRectMake(self.contentView.frame.size.width / 8, 0, 330, 65)];
-            
-            webview.delegate = self;
-            
-            //webview.center = self.contentView.center;
-            
-            webview.scrollView.scrollEnabled = NO;
-            
-            NSString *url = @"http://gmoran.me/repo/depictions/EclipseAd.html";
-            NSURL *nsurl = [NSURL URLWithString:url];
-            NSURLRequest *nsrequest = [NSURLRequest requestWithURL:nsurl];
-            [webview loadRequest:nsrequest];
-            
-            [self.contentView addSubview:webview];
-            
-            [webview release];
-             */
+                if (!listFileExists) {
             
             typeLabel.text = @"Pirated";
             statusLabel.text = @":(";
