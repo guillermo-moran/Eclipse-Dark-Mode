@@ -231,10 +231,12 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/YouTube.xm"
 #include "Application_Support/OneFootball.xm"
 #include "Application_Support/Gmail.xm"
+#include "Application_Support/Facebook.xm"
 
 static void checkAppBlackList() {
     if (idIsEqual(@"com.facebook.Facebook")) {
         // isEnabled = NO;
+        %init(Facebook);
     }
     if (idIsEqual(@"com.apple.calculator")) {
         isEnabled = NO;

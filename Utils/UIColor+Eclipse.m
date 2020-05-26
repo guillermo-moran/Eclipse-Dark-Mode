@@ -142,58 +142,58 @@
         }
     }
 
-    if (number == -1) {
+    if (number == 0) {
         return MIDNIGHT_VIEW_COLOR;
     }
-    else if (number == 0) {
+    else if (number == 1) {
         return NIGHT_VIEW_COLOR;
     }
-    else if (number == 1) {
+    else if (number == 2) {
         return GRAPHITE_VIEW_COLOR;
     }
-    else if (number == 2) {
+    else if (number == 3) {
         return SILVER_VIEW_COLOR;
     }
-    else if (number == 3) {
+    else if (number == 4) {
         return CRIMSON_VIEW_COLOR;
     }
-    else if (number == 4) {
+    else if (number == 5) {
         return ROSE_PINK_VIEW_COLOR;
     }
-    else if (number == 5) {
+    else if (number == 6) {
         return GRAPE_VIEW_COLOR;
     }
-    else if (number == 6) {
+    else if (number == 7) {
         return WINE_VIEW_COLOR;
     }
-    else if (number == 7) {
+    else if (number == 8) {
         return VIOLET_VIEW_COLOR;
     }
-    else if (number == 8) {
+    else if (number == 9) {
         return SKY_VIEW_COLOR;
     }
-    else if (number == 9) {
+    else if (number == 10) {
         return LAPIS_VIEW_COLOR;
     }
-    else if (number == 10) {
+    else if (number == 11) {
         return NAVY_VIEW_COLOR;
     }
-    else if (number == 11) {
+    else if (number == 12) {
         return DUSK_VIEW_COLOR;
     }
-    else if (number == 12) {
+    else if (number == 13) {
         return JUNGLE_VIEW_COLOR;
     }
-    else if (number == 13) {
+    else if (number == 14) {
         return BAMBOO_VIEW_COLOR;
     }
-    else if (number == 14) {
+    else if (number == 15) {
         return SAFFRON_VIEW_COLOR;
     }
-    else if (number == 15) {
+    else if (number == 16) {
         return CITRUS_VIEW_COLOR;
     }
-    else if (number == 16) {
+    else if (number == 17) {
         return AMBER_VIEW_COLOR;
     }
 
@@ -215,59 +215,59 @@
         }
     }
 
-    if (number == -1) {
+    if (number == 0) {
         return MIDNIGHT_TABLE_COLOR;
     }
 
-    else if (number == 0) {
+    else if (number == 1) {
         return NIGHT_TABLE_COLOR;
     }
-    else if (number == 1) {
+    else if (number == 2) {
         return GRAPHITE_TABLE_COLOR;
     }
-    else if (number == 2) {
+    else if (number == 3) {
         return SILVER_TABLE_COLOR;
     }
-    else if (number == 3) {
+    else if (number == 4) {
         return CRIMSON_TABLE_COLOR;
     }
-    else if (number == 4) {
+    else if (number == 5) {
         return ROSE_PINK_TABLE_COLOR;
     }
-    else if (number == 5) {
+    else if (number == 6) {
         return GRAPE_TABLE_COLOR;
     }
-    else if (number == 6) {
+    else if (number == 7) {
         return WINE_TABLE_COLOR;
     }
-    else if (number == 7) {
+    else if (number == 8) {
         return VIOLET_TABLE_COLOR;
     }
-    else if (number == 8) {
+    else if (number == 9) {
         return SKY_TABLE_COLOR;
     }
-    else if (number == 9) {
+    else if (number == 10) {
         return LAPIS_TABLE_COLOR;
     }
-    else if (number == 10) {
+    else if (number == 11) {
         return NAVY_TABLE_COLOR;
     }
-    else if (number == 11) {
+    else if (number == 12) {
         return DUSK_TABLE_COLOR;
     }
-    else if (number == 12) {
+    else if (number == 13) {
         return JUNGLE_TABLE_COLOR;
     }
-    else if (number == 13) {
+    else if (number == 14) {
         return BAMBOO_TABLE_COLOR;
     }
-    else if (number == 14) {
+    else if (number == 15) {
         return SAFFRON_TABLE_COLOR;
     }
-    else if (number == 15) {
+    else if (number == 16) {
         return CITRUS_TABLE_COLOR;
     }
-    else if (number == 16) {
+    else if (number == 17) {
         return AMBER_TABLE_COLOR;
     }
 
@@ -288,58 +288,58 @@
         }
     }
 
-    if (number == -1) {
+    if (number == 0) {
         return MIDNIGHT_BAR_COLOR;
     }
-    else if (number == 0) {
+    else if (number == 1) {
         return NIGHT_BAR_COLOR;
     }
-    else if (number == 1) {
+    else if (number == 2) {
         return GRAPHITE_BAR_COLOR;
     }
-    else if (number == 2) {
+    else if (number == 3) {
         return SILVER_BAR_COLOR;
     }
-    else if (number == 3) {
+    else if (number == 4) {
         return CRIMSON_BAR_COLOR;
     }
-    else if (number == 4) {
+    else if (number == 5) {
         return ROSE_PINK_BAR_COLOR;
     }
-    else if (number == 5) {
+    else if (number == 6) {
         return GRAPE_BAR_COLOR;
     }
-    else if (number == 6) {
+    else if (number == 7) {
         return WINE_BAR_COLOR;
     }
-    else if (number == 7) {
+    else if (number == 8) {
         return VIOLET_BAR_COLOR;
     }
-    else if (number == 8) {
+    else if (number == 9) {
         return SKY_BAR_COLOR;
     }
-    else if (number == 9) {
+    else if (number == 10) {
         return LAPIS_BAR_COLOR;
     }
-    else if (number == 10) {
+    else if (number == 11) {
         return NAVY_BAR_COLOR;
     }
-    else if (number == 11) {
+    else if (number == 12) {
         return DUSK_BAR_COLOR;
     }
-    else if (number == 12) {
+    else if (number == 13) {
         return JUNGLE_BAR_COLOR;
     }
-    else if (number == 13) {
+    else if (number == 14) {
         return BAMBOO_BAR_COLOR;
     }
-    else if (number == 14) {
+    else if (number == 15) {
         return SAFFRON_BAR_COLOR;
     }
-    else if (number == 15) {
+    else if (number == 16) {
         return CITRUS_BAR_COLOR;
     }
-    else if (number == 16) {
+    else if (number == 17) {
         return AMBER_BAR_COLOR;
     }
 
@@ -690,7 +690,7 @@ struct pixel {
 //Table Colors
 
 +(UIColor*)midnightTableColor {
-    return [UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
 }
 
 +(UIColor*)nightTableColor {
@@ -765,7 +765,7 @@ struct pixel {
 //View Colors
 
 +(UIColor*)midnightViewColor {
-    return [UIColor colorWithRed:17.0f/255.0f green:17.0f/255.0f blue:17.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed: 0.02 green: 0.02 blue: 0.02 alpha: 1.00];
 }
 
 +(UIColor*)nightViewColor {
@@ -839,7 +839,7 @@ struct pixel {
 //Nav Bar Colors
 
 +(UIColor*)midnightBarColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed: 0.03 green: 0.03 blue: 0.03 alpha: 1.00];
 }
 +(UIColor*)nightBarColor {
     return [UIColor colorWithRed:10.0f/255.0f green:10.0f/255.0f blue:10.0f/255.0f alpha:1.0];

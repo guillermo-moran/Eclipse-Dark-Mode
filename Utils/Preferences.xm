@@ -298,81 +298,17 @@ static UIColor* textColor(void) {
 static UIColor* selectedBarColor(void) {
 
     if (adaptiveUIEnabled()) {
-        return [_adaptiveColor darkerColor];
+        return [[[generatedAdaptiveColor() darkerColor] darkerColor] darkerColor];
     }
-
-    int number = selectedNavColor();
-
-    if (customNavColorEnabled()) {
-        if (hexNavColor()) {
-            return hexNavColor();
-        }
-    }
-
-    if (number == -1) {
-        return MIDNIGHT_BAR_COLOR;
-    }
-    else if (number == 0) {
-        return NIGHT_BAR_COLOR;
-    }
-    else if (number == 1) {
-        return GRAPHITE_BAR_COLOR;
-    }
-    else if (number == 2) {
-        return SILVER_BAR_COLOR;
-    }
-    else if (number == 3) {
-        return CRIMSON_BAR_COLOR;
-    }
-    else if (number == 4) {
-        return ROSE_PINK_BAR_COLOR;
-    }
-    else if (number == 5) {
-        return GRAPE_BAR_COLOR;
-    }
-    else if (number == 6) {
-        return WINE_BAR_COLOR;
-    }
-    else if (number == 7) {
-        return VIOLET_BAR_COLOR;
-    }
-    else if (number == 8) {
-        return SKY_BAR_COLOR;
-    }
-    else if (number == 9) {
-        return LAPIS_BAR_COLOR;
-    }
-    else if (number == 10) {
-        return NAVY_BAR_COLOR;
-    }
-    else if (number == 11) {
-        return DUSK_BAR_COLOR;
-    }
-    else if (number == 12) {
-        return JUNGLE_BAR_COLOR;
-    }
-    else if (number == 13) {
-        return BAMBOO_BAR_COLOR;
-    }
-    else if (number == 14) {
-        return SAFFRON_BAR_COLOR;
-    }
-    else if (number == 15) {
-        return CITRUS_BAR_COLOR;
-    }
-    else if (number == 16) {
-        return AMBER_BAR_COLOR;
-    }
-
-
     else {
-        return NIGHT_BAR_COLOR;
+        return [UIColor eclipseSelectedNavColor];
     }
-
-
 }
 
 static UIColor* selectedTableColor(void) {
+    if (adaptiveUIEnabled()) {
+        return [generatedAdaptiveColor() darkerColor];
+    }
     if (reverseModeEnabled()) {
         return [UIColor eclipseSelectedViewColor];
     }
@@ -382,6 +318,9 @@ static UIColor* selectedTableColor(void) {
 }
 
 static UIColor* selectedViewColor(void) {
+    if (adaptiveUIEnabled()) {
+        return [[generatedAdaptiveColor() darkerColor] darkerColor];
+    }
     if (reverseModeEnabled()) {
         return [UIColor eclipseSelectedTableColor];
     }
@@ -392,7 +331,7 @@ static UIColor* selectedViewColor(void) {
 
 #define TABLE_COLOR selectedTableColor() //Used for TableView
 #define VIEW_COLOR selectedViewColor() //Used for TableCells, UIViews
-#define NAV_COLOR [UIColor eclipseSelectedNavColor] //Used for NavBars, Toolbars, TabBars
+#define NAV_COLOR selectedBarColor() //Used for NavBars, Toolbars, TabBars
 #define TEXT_COLOR textColor()
 #define TABLE_SEPARATOR_COLOR tableSeparatorColor()
 #define TINT_COLOR selectedTintColor()
@@ -404,7 +343,7 @@ static UIColor* keyboardColor(void) {
     int number = selectedKeyboardColor();
 
     if (adaptiveUIEnabled()) {
-        return [_adaptiveColor darkerColor];
+        return [generatedAdaptiveColor() darkerColor];
     }
 
     /*
@@ -415,63 +354,63 @@ static UIColor* keyboardColor(void) {
     }
      */
 
-    if (number == -2) {
+    if (number == 0) {
         return VIEW_COLOR;
     }
 
-    else if (number == -1) {
+    else if (number == 1) {
         return MIDNIGHT_TABLE_COLOR;
     }
 
-    else if (number == 0) {
+    else if (number == 2) {
         return NIGHT_TABLE_COLOR;
     }
-    else if (number == 1) {
+    else if (number == 3) {
         return GRAPHITE_TABLE_COLOR;
     }
-    else if (number == 2) {
+    else if (number == 4) {
         return SILVER_TABLE_COLOR;
     }
-    else if (number == 3) {
+    else if (number == 5) {
         return CRIMSON_TABLE_COLOR;
     }
-    else if (number == 4) {
+    else if (number == 6) {
         return ROSE_PINK_TABLE_COLOR;
     }
-    else if (number == 5) {
+    else if (number == 7) {
         return GRAPE_TABLE_COLOR;
     }
-    else if (number == 6) {
+    else if (number == 8) {
         return WINE_TABLE_COLOR;
     }
-    else if (number == 7) {
+    else if (number == 9) {
         return VIOLET_TABLE_COLOR;
     }
-    else if (number == 8) {
+    else if (number == 10) {
         return SKY_TABLE_COLOR;
     }
-    else if (number == 9) {
+    else if (number == 11) {
         return LAPIS_TABLE_COLOR;
     }
-    else if (number == 10) {
+    else if (number == 12) {
         return NAVY_TABLE_COLOR;
     }
-    else if (number == 11) {
+    else if (number == 13) {
         return DUSK_TABLE_COLOR;
     }
-    else if (number == 12) {
+    else if (number == 14) {
         return JUNGLE_TABLE_COLOR;
     }
-    else if (number == 13) {
+    else if (number == 15) {
         return BAMBOO_TABLE_COLOR;
     }
-    else if (number == 14) {
+    else if (number == 16) {
         return SAFFRON_TABLE_COLOR;
     }
-    else if (number == 15) {
+    else if (number == 17) {
         return CITRUS_TABLE_COLOR;
     }
-    else if (number == 16) {
+    else if (number == 18) {
         return AMBER_TABLE_COLOR;
     }
 
@@ -530,7 +469,7 @@ static UIColor* selectedStatusbarTintColor(void) {
 static UIColor* selectedTintColor(void) {
 
     if (adaptiveUIEnabled()) {
-        return [[_adaptiveColor lighterColor] lighterColor];
+        return [[generatedAdaptiveColor() lighterColor] lighterColor];
     }
     return [UIColor eclipseSelectedTintColor];
 }
@@ -671,12 +610,12 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             _customTextHex = (NSString*)[prefs objectForKey:@"customTextHex"];
 
             n = (NSNumber *)[prefs objectForKey:@"adaptiveUIEnabled"];
-            // _adaptiveUIEnabled = (n)? [n boolValue]:NO;
-            _adaptiveUIEnabled = NO;
+            _adaptiveUIEnabled = (n)? [n boolValue]:NO;
+            // _adaptiveUIEnabled = NO;
             
-            if (_adaptiveUIEnabled) {
-                _adaptiveColor = generatedAdaptiveColor();
-            }
+            // if (_adaptiveUIEnabled) {
+            //     _adaptiveColor = generatedAdaptiveColor();
+            // }
 
    
 }

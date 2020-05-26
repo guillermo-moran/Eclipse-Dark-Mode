@@ -7,23 +7,6 @@
     YP    YP   YP Y8888P' Y88888P Y88888P
 */
 
-#define TABLE_BG_COLOR [UIColor colorWithRed:0.937255 green:0.937255 blue:0.956863 alpha:1.0f] //Default Table BG Color
-
-static CGColorSpaceRef tableBGColorSpace = CGColorGetColorSpace([TABLE_BG_COLOR CGColor]);
-
-#define CELL_WHITE [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0f] //Fuck You Apple. (Some apps don't use whiteColor)
-
-static CGColorSpaceRef cellWhiteColorSpace = CGColorGetColorSpace([CELL_WHITE CGColor]);
-
-#define IPAD_CELL_WHITE [UIColor colorWithRed:0.145098 green:0.145098 blue:0.145098 alpha:1.0f]
-
-static CGColorSpaceRef iPadCellWhiteColorSpace = CGColorGetColorSpace([IPAD_CELL_WHITE CGColor]);
-
-
-static CGColorSpaceRef whiteColorSpace = CGColorGetColorSpace([[UIColor whiteColor] CGColor]);
-
-
-
 %hook UITableView
 
 

@@ -62,8 +62,8 @@
 
 //Table Colors
 
-//#define MIDNIGHT_TABLE_COLOR [UIColor midnightTableColor]
-#define MIDNIGHT_TABLE_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_TABLE_COLOR [UIColor midnightTableColor]
+// #define MIDNIGHT_TABLE_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
 
 #define NIGHT_TABLE_COLOR [UIColor nightTableColor]
 
@@ -102,8 +102,8 @@
 
 //View Colors (Table - 10 or 15)
 
-//#define MIDNIGHT_VIEW_COLOR [UIColor midnightViewColor]
-#define MIDNIGHT_VIEW_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_VIEW_COLOR [UIColor midnightViewColor]
+// #define MIDNIGHT_VIEW_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
 
 #define NIGHT_VIEW_COLOR [UIColor nightViewColor]
 
@@ -142,8 +142,8 @@
 
 //Nav Colors (Table - 30)
 
-//#define MIDNIGHT_BAR_COLOR [UIColor midnightBarColor]
-#define MIDNIGHT_BAR_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
+#define MIDNIGHT_BAR_COLOR [UIColor midnightBarColor]
+// #define MIDNIGHT_BAR_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
 
 #define NIGHT_BAR_COLOR [UIColor nightBarColor]
 
