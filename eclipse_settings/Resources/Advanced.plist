@@ -258,6 +258,22 @@
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 		</dict>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>darkMailEnabled</string>
+			<key>label</key>
+			<string>Email Dark Mode (Beta)</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>More Options</string>

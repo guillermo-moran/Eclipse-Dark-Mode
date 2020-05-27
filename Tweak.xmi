@@ -15,6 +15,7 @@
 // static NSString* darkSafariJS = @"document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4'; var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';};";
 static NSString* darkCydiaJS = @"var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = 'transparent';x[i].style.borderColor = '#222222';};document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';document.getElementsByTagName('body')[0].style.backgroundColor='#transparent';";
 static NSString* darkSafariJS = @"var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';x[i].style.borderColor = '#222222';};document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';document.getElementsByTagName('body')[0].style.backgroundColor='#141414';";
+static NSString* darkMailJS = @"var x = document.getElementsByTagName('*');var i; for (i = 0; i < x.length; i++) {x[i].style.backgroundColor = '#141414';x[i].style.borderColor = '#222222';};document.getElementsByTagName('*')[0].style.webkitTextFillColor='#F4F4F4';document.getElementsByTagName('body')[0].style.backgroundColor='#141414';";
 
 #import <objc/runtime.h>
 

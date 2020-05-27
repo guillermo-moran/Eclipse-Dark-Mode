@@ -37,6 +37,7 @@ static BOOL      _customTintColorsEnabled;
 static BOOL      _customStatusbarColorsEnabled;
 static BOOL      _customTextColorsEnabled;
 static BOOL      _darkWebEnabled;
+static BOOL      _darkMailEnabled;
 static BOOL      _alertsEnabled;
 
 static int       _selectedTheme;
@@ -169,6 +170,10 @@ static BOOL darkenKeyboard(void) {
 //Experimental Features
 static bool darkWebEnabled(void) {
     return _darkWebEnabled;
+}
+
+static bool darkMailEnabled(void) {
+    return _darkMailEnabled;
 }
 
 static BOOL isEnabled = isTweakEnabled();
@@ -486,10 +491,10 @@ static UIColor* tableSeparatorColor(void) {
 
 static void setTintColors() {
 
-    [[UINavigationBar appearance] setTintColor:TINT_COLOR];
+    // [[UINavigationBar appearance] setTintColor:TINT_COLOR];
     [[UISlider appearance] setMinimumTrackTintColor:TINT_COLOR];
-    [[UIToolbar appearance] setTintColor:TINT_COLOR];
-    [[UITabBar appearance] setTintColor:TINT_COLOR];
+    // [[UIToolbar appearance] setTintColor:TINT_COLOR];
+    // [[UITabBar appearance] setTintColor:TINT_COLOR];
 
     [[UITextView appearance] setTintColor:TINT_COLOR];
     [[UITextField appearance] setTintColor:TINT_COLOR];
@@ -514,22 +519,22 @@ static void setTintColors() {
 
 
 static void darkenUIElements() {
-    // setTintColors();
+    setTintColors();
 
     // [[UINavigationBar appearance] setBarTintColor:NAV_COLOR];
 
-    // //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
+    //[[UISearchBar appearance] setBarTintColor:NAV_COLOR]; //Crashes Dropbox
 
-    // //[[UISearchBar appearance] setBarStyle:UIBarStyleBlack];
+    //[[UISearchBar appearance] setBarStyle:UIBarStyleBlack];
 
     // [[UIToolbar appearance] setBarTintColor:NAV_COLOR];
-    // //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
+    //[[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
 
     // [[UITabBar appearance] setBarTintColor:NAV_COLOR];
 
-    // [[UISwitch appearance] setTintColor:[TINT_COLOR colorWithAlphaComponent:0.6]];
-    // [[UISwitch appearance] setOnTintColor:[TINT_COLOR colorWithAlphaComponent:0.3]];
-    // //[[UISwitch appearance] setThumbTintColor:TEXT_COLOR];
+    [[UISwitch appearance] setTintColor:[TINT_COLOR colorWithAlphaComponent:0.6]];
+    [[UISwitch appearance] setOnTintColor:[TINT_COLOR colorWithAlphaComponent:0.3]];
+    //[[UISwitch appearance] setThumbTintColor:TEXT_COLOR];
 }
 
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -603,6 +608,9 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
             n = (NSNumber *)[prefs objectForKey:@"darkWebEnabled"];
             _darkWebEnabled = (n)? [n boolValue]:NO;
+
+            n = (NSNumber *)[prefs objectForKey:@"darkMailEnabled"];
+            _darkMailEnabled = (n)? [n boolValue]:NO;
 
             _customNavBarHex = (NSString*)[prefs objectForKey:@"customNavBarHex"];
             _customThemeHex = (NSString*)[prefs objectForKey:@"customThemeHex"];
