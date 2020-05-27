@@ -390,7 +390,7 @@ static void initializeApplications() {
     BOOL shouldAutoReplaceColors = NO;
 
 
-    isEnabled = isTweakEnabled();
+    isEnabled = isTweakEnabled() && applicationIsEnabledInSettings;
     //isEnabled = false;
 
     checkAppBlackList();
