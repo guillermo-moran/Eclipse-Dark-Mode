@@ -550,7 +550,7 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             n = (NSNumber* )[prefs objectForKey:@"enabled"];
             BOOL eclipseEnabled = (n)? [n boolValue]:NO;
 
-            _isTweakEnabled = eclipseEnabled && sysDarkModeEnabled;
+            _isTweakEnabled = eclipseEnabled;
 
             n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
             _colorDetailText = (n)? [n boolValue]:NO;

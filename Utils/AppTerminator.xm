@@ -1,13 +1,15 @@
 static void quitAllApps() {
 
-    [[%c(SBSyncController) sharedInstance] _killApplicationsIfNecessary];
+    id applicationController = [%c(SBApplicationController) sharedInstance];
+    NSArray* runningApplications = [applicationController runningApplications];
 
+    UIApplication *currentApp = [UIApplication sharedApplication];
+    [currentApp performSelector:@selector(suspend)];
 
-    id _recents = [[%c(SBAppSwitcherModel) sharedInstance] valueForKey:@"_recents"];
-    [[%c(SBAppSwitcherModel) sharedInstance] remove:_recents];
-
-
-
+    for (NSString* id in runningApplications) {
+        UIApplication* app = [applicationController applicationWithBundleIdentifier: id];
+        [app terminateWithSuccess];
+    }
 }
 
 extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);

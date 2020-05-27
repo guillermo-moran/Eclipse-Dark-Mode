@@ -144,7 +144,7 @@ static CKUIThemeEclipse* eclipseTheme;
 %hook CKUIBehaviorPad
 - (id)theme {
     if (isEnabled) {
-        eclipseTheme = [[%c(CKUIThemeEclipse)  alloc] init];
+        eclipseTheme = [[%c(CKUIThemeEclipse) alloc] init];
         return eclipseTheme;
     }
     return %orig;
@@ -157,73 +157,73 @@ static CKUIThemeEclipse* eclipseTheme;
 @end
  */
 
-%hook UILabel
+// %hook UILabel
 
--(void)layoutSubviews {
-    %orig;
-    if ([NSStringFromClass([self.superview class]) isEqualToString:@"LPTextView"]) {
-        if (selectedTint() == 1) {
-            [self setTextColor: RED_COLOR];
-        }
-        else {
-            [self setTextColor: selectedTintColor()];
-        }
+// -(void)layoutSubviews {
+//     %orig;
+//     if ([NSStringFromClass([self.superview class]) isEqualToString:@"LPTextView"]) {
+//         if (selectedTint() == 1) {
+//             [self setTextColor: RED_COLOR];
+//         }
+//         else {
+//             [self setTextColor: selectedTintColor()];
+//         }
 
-    }
-}
+//     }
+// }
 
-%end
+// %end
 
-%hook CKBrowserSwitcherFooterView
+// %hook CKBrowserSwitcherFooterView
 
--(void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-        UICollectionView* _collectionView = MSHookIvar<UICollectionView*>(self, "_collectionView");
-        [_collectionView setBackgroundColor: VIEW_COLOR];
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         UICollectionView* _collectionView = MSHookIvar<UICollectionView*>(self, "_collectionView");
+//         [_collectionView setBackgroundColor: VIEW_COLOR];
 
-    }
-}
+//     }
+// }
 
--(id)initWithFrame:(CGRect)arg1 {
-    id x = %orig;
-    if (isEnabled) {
-        UICollectionView* _collectionView = MSHookIvar<UICollectionView*>(self, "_collectionView");
-        [_collectionView setBackgroundColor: VIEW_COLOR];
+// -(id)initWithFrame:(CGRect)arg1 {
+//     id x = %orig;
+//     if (isEnabled) {
+//         UICollectionView* _collectionView = MSHookIvar<UICollectionView*>(self, "_collectionView");
+//         [_collectionView setBackgroundColor: VIEW_COLOR];
 
-    }
-    return x;
-}
-
-
--(UICollectionView*)collectionView {
-    UICollectionView* c = %orig;
-    if (isEnabled) {
-        [c setBackgroundColor: VIEW_COLOR];
-    }
-    return c;
-}
+//     }
+//     return x;
+// }
 
 
-%end
-
-%hook CNContactView
-
--(void)layoutSubviews{
-    %orig;
-    if (isEnabled) {
-        [self setBackgroundColor: VIEW_COLOR];
-    }
-}
-%end
-
-%hook CKHeartAcknowledgmentGlyphView
+// -(UICollectionView*)collectionView {
+//     UICollectionView* c = %orig;
+//     if (isEnabled) {
+//         [c setBackgroundColor: VIEW_COLOR];
+//     }
+//     return c;
+// }
 
 
--(void)layoutSubviews {
-    %orig;
-    [self setGlyphColor: UIColor.blueColor];
-    // [self setAlpha: 1];
-    // [self setHidden: false];
-}
-%end
+// %end
+
+// %hook CNContactView
+
+// -(void)layoutSubviews{
+//     %orig;
+//     if (isEnabled) {
+//         [self setBackgroundColor: VIEW_COLOR];
+//     }
+// }
+// %end
+
+// %hook CKHeartAcknowledgmentGlyphView
+
+
+// -(void)layoutSubviews {
+//     %orig;
+//     [self setGlyphColor: UIColor.blueColor];
+//     // [self setAlpha: 1];
+//     // [self setHidden: false];
+// }
+// %end
