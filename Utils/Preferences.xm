@@ -95,17 +95,17 @@ static BOOL isBetterSettingsInstalled() {
 
 
 static BOOL isTweakEnabled(void) {
-    // if (IS_BETA_BUILD) {
-    //     NSDate * currentDate = [NSDate date];
-    //     NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-04-30 12:00:00 +0600"];
-    //     NSComparisonResult result = [currentDate compare:otherDate];
+    if (IS_BETA_BUILD) {
+        NSDate * currentDate = [NSDate date];
+        NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-05-30 12:00:00 +0600"];
+        NSComparisonResult result = [currentDate compare:otherDate];
 
-    //     if (result == NSOrderedAscending) { //Before Expiry
-    //         return _isTweakEnabled;
-    //     }
+        if (result == NSOrderedAscending) { //Before Expiry
+            return _isTweakEnabled;
+        }
 
-    //     return NO;
-    // }
+        return NO;
+    }
     return _isTweakEnabled;
     // return YES;
     
@@ -280,20 +280,21 @@ static UIColor* hexTextColor(void) {
 /* -------------------------- */
 static UIColor* textColor(void) {
     if (customTextColorEnabled()) {
-        if (hexTextColor()) {
-            return hexTextColor();
+        UIColor* hexColor = hexTextColor();
+        if (hexColor) {
+            return hexColor;
         }
     }
 
-    UIColor* eclipseColor = [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
-            return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-                eclipseColor :             // Dark Mode Color
-                [UIColor labelColor];  // Light Mode Color
-        }];
-    }         
-    return eclipseColor;
+    UIColor* eclipseTextColor = [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
+    // if (@available(iOS 13.0, *)) {
+    //     return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
+    //         return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
+    //             eclipseColor :             // Dark Mode Color
+    //             [UIColor labelColor];  // Light Mode Color
+    //     }];
+    // }         
+    return eclipseTextColor;
 }
 static UIColor* selectedBarColor(void) {
 
@@ -549,7 +550,7 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
             n = (NSNumber* )[prefs objectForKey:@"enabled"];
             BOOL eclipseEnabled = (n)? [n boolValue]:NO;
 
-            _isTweakEnabled = sysDarkModeEnabled && eclipseEnabled;
+            _isTweakEnabled = eclipseEnabled && sysDarkModeEnabled;
 
             n = (NSNumber *)[prefs objectForKey:@"colorDetailText"];
             _colorDetailText = (n)? [n boolValue]:NO;

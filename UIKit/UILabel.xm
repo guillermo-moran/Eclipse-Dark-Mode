@@ -15,18 +15,26 @@
 
 %hook UILabel
 
-
+%new
+-(BOOL)isSuperviewEclipsed {
+    // if (isEnabled) {
+    //     return [self.superview isEclipsed];
+    // }
+    // return NO;
+    return YES;
+}
 
 -(void)drawRect:(CGRect)arg1 {
     %orig;
 
     if (isEnabled) {
-        if (!isLightColor(self.superview.backgroundColor)) {
+        if ([self isSuperviewEclipsed]) {
 
-            if (isTextDarkColor(self.textColor)) {
-                //self.tag = 52961101;
+            UIColor* originalTextColor = self.textColor;
+            if (isTextDarkColor(originalTextColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
                 [self setBackgroundColor:[UIColor clearColor]];
-                [self setTextColor:TEXT_COLOR];
+                [self setTextColor:newColor];
             }
         }
     }
@@ -37,12 +45,13 @@
     %orig;
 
     if (isEnabled) {
-        if (!isLightColor(self.superview.backgroundColor)) {
+        if ([self isSuperviewEclipsed]) {
 
-            if (isTextDarkColor(self.textColor)) {
-                //self.tag = 52961101;
+            UIColor* originalTextColor = self.textColor;
+            if (isTextDarkColor(originalTextColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
                 [self setBackgroundColor:[UIColor clearColor]];
-                [self setTextColor:TEXT_COLOR];
+                [self setTextColor:newColor];
             }
         }
     }
@@ -53,12 +62,13 @@
     %orig;
 
     if (isEnabled) {
-        if (!isLightColor(self.superview.backgroundColor)) {
+        if ([self isSuperviewEclipsed]) {
 
-            if (isTextDarkColor(self.textColor)) {
-                //self.tag = 52961101;
+            UIColor* originalTextColor = self.textColor;
+            if (isTextDarkColor(originalTextColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
                 [self setBackgroundColor:[UIColor clearColor]];
-                [self setTextColor:TEXT_COLOR];
+                [self setTextColor:newColor];
             }
         }
     }
@@ -75,17 +85,16 @@
         //     %orig(color);
         //     return;
         // }
-        if (!isLightColor(self.superview.backgroundColor)) {
+        if ([self isSuperviewEclipsed]) {
 
-            if (isTextDarkColor(color)) {
-                //self.tag = 52961101;
-                self.backgroundColor = [UIColor clearColor];
-                color = TEXT_COLOR;
+            UIColor* originalTextColor = color;
+            if (isTextDarkColor(originalTextColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+                [self setBackgroundColor:[UIColor clearColor]];
+                %orig(newColor);
             }
         }
     }
-
-
     %orig(color);
 }
 

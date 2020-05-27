@@ -139,7 +139,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP    YP    YP    YP      Y888888P Y88888P Y88888P Y8888D'
 */
 
-#include "UIKit/UITextField.xm"
+// #include "UIKit/UITextField.xm"
 
 /*
  db    db d888888b db       .d8b.  d8888b. d88888b db
@@ -150,8 +150,9 @@ d8888b. d8888b. d88888b d88888b .d8888.
  ~Y8888P' Y888888P Y88888P YP   YP Y8888P' Y88888P Y88888P
 */
 
-// #include "UIKit/UILabel.xm"
-
+%group UILabelHooks
+#include "UIKit/UILabel.xm"
+%end
 
 /*
  d888888b  .d8b.  d8888b. db      d88888b
@@ -395,9 +396,10 @@ static void initializeApplications() {
     checkAppBlackList();
 
 
-    // if (idIsEqual(@"com.apple.springboard")) {
-    //     isEnabled = NO;
-    // }
+    if (idIsEqual(@"com.apple.springboard")) {
+        isEnabled = NO;
+        return;
+    }
 
     //If Tweak enabled:
     if (isEnabled) {
@@ -408,6 +410,10 @@ static void initializeApplications() {
         // if (!idIsEqual(@"com.apple.mobilesafari")) {
             %init(SystemUIColors);
         // }
+
+        if (customTextColorEnabled()) {
+            %init(UILabelHooks)
+        }
 
         //Fix clock app crashing
         isClockApp = idIsEqual(@"com.apple.mobiletimer");

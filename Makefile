@@ -7,7 +7,7 @@ THEOS_DEVICE_IP = 192.168.1.118
 
 #THEOS_DEVICE_PORT=2222
 
-ARCHS = arm64e
+ARCHS = arm64 arm64e
 
 TWEAK_NAME = Eclipse
 Eclipse_LDFLAGS += -lCSColorPicker

@@ -27,10 +27,14 @@
 
 @interface UIView(Eclipse)
 -(void)override;
+
+@property (nonatomic) BOOL eclipsed;
+
 @end
 
 
 %hook UIView
+%property (nonatomic) BOOL eclipsed;
 
 //HBFPBackgroundView == FlagPaint
 
@@ -38,24 +42,28 @@
 #define SC_HEADER objc_getClass("SCBottomBorderedView") //snapchat fix (prevent bans)
 #define SC_GRADIENT objc_getClass("SCGradientView")
 
+%new
+-(BOOL)isEclipsed {
+    return self.eclipsed;
+}
+
 
 %new
 -(void)override {
     if (isEnabled) {
 
         if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
-
             [self setBackgroundColor:VIEW_COLOR];
+            self.eclipsed = true;
         }
     }
 }
-
-
 
 -(void)setBackgroundColor:(UIColor*)color {
     if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
         UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
         %orig(eclipseColor);
+        self.eclipsed = true;
         return;
     }
     %orig;
@@ -68,6 +76,7 @@
 
     if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
         UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        self.eclipsed = true;
         return eclipseColor;
     }
     return color;

@@ -266,6 +266,19 @@
 
 %end
 
+%hook UITableViewCellContentView
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]] && [self backgroundColor] != nil) {
+        UIColor* originalColor = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+        [self setBackgroundColor: newColor];
+    }
+}
+
+%end
+
 @interface UITableViewCell(Eclipse)
 -(void)override;
 -(BOOL)isLightColor:(id)clr;
@@ -280,19 +293,19 @@
 
 
 
-// %new
-// -(void)override {
+%new
+-(void)override {
 
-//     if (isEnabled) {
-//         if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
-//             UIColor* originalColor = self.backgroundColor;
-//             UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
-//             [self setBackgroundColor:dynamicColor];
+    if (isEnabled) {
+        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
+            UIColor* originalColor = self.backgroundColor;
+            UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+            [self setBackgroundColor:dynamicColor];
 
-//         }
-//     }
+        }
+    }
 
-// }
+}
 
 -(void)drawRect:(CGRect)arg1 {
     %orig;
@@ -311,11 +324,14 @@
     UILabel* label = %orig;
 
     if (isEnabled) {
+        UIColor* originalColor = [label textColor];
         if (shouldColorDetailText()) {
-            [label setTextColor:selectedTintColor()];
+            UIColor* newColor = createEclipseDynamicColor(originalColor, selectedTintColor());
+            [label setTextColor:newColor];
         }
         else {
-            [label setTextColor:TEXT_COLOR];
+            UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+            [label setTextColor:newColor];
         }
     }
 
@@ -323,11 +339,11 @@
     return label;
 }
 
-// -(id)init {
-//     id orig = %orig;
-//     [self override];
-//     return orig;
-// }
+-(id)init {
+    id orig = %orig;
+    [self override];
+    return orig;
+}
 
 -(void)layoutSubviews {
     %orig;
