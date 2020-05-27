@@ -20,7 +20,9 @@
             //do nothing
         }
         else {
-            self.foregroundColor = selectedStatusbarTintColor();
+            UIColor* originalColor = self.foregroundColor;
+            self.foregroundColor = createEclipseDynamicColor(originalColor, selectedStatusbarTintColor());
+
         }
         //self.foregroundColor = selectedStatusbarTintColor();
     }
@@ -33,7 +35,7 @@
 -(id)foregroundColor {
     UIColor* color = %orig;
     if (isEnabled) {
-        color = selectedStatusbarTintColor();
+        return createEclipseDynamicColor(color, selectedStatusbarTintColor());
     }
     return color;
 }
@@ -42,8 +44,9 @@
 %hook UIStatusBarNewUIStyleAttributes
 - (id)initWithRequest:(id)arg1 backgroundColor:(id)arg2 foregroundColor:(id)arg3 hasBusyBackground:(bool)arg4 {
     if (isEnabled) {
-        arg2 = VIEW_COLOR;
-        arg3 = selectedStatusbarTintColor();
+        UIColor* backgroundColor = createEclipseDynamicColor(arg2, VIEW_COLOR);
+        UIColor* foregroundColor = createEclipseDynamicColor(arg3, selectedStatusbarTintColor());
+        return %orig(arg1, backgroundColor, foregroundColor, arg4);
     }
     return %orig(arg1, arg2, arg3, arg4);
 }

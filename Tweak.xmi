@@ -102,31 +102,32 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP    YP    YP       YP    Y888888P Y88888P  `8b8' `8d8'
 */
 
-// #include "UIKit/UITextView.xm"
+// #include "UIKit/UITextView.xm" Not sure we need this, forced dark mode handles it
 
-// //Text Caret
-// %hook UITextSelectionView
+//Text Caret
+%hook UITextSelectionView
 
-// -(id)caretViewColor {
-//     if (isEnabled) {
-//         if (_selectedTint == 1) {
-//             return BABY_BLUE_COLOR;
-//         }
-//         else {
-//             return selectedTintColor();
-//         }
+-(id)caretViewColor {
+    UIColor* originalColor = %orig;
+    if (isEnabled) {
+        if (_selectedTint == 1) { // white... ugh
+            return createEclipseDynamicColor(originalColor, BABY_BLUE_COLOR);
+        }
+        else {
+            return createEclipseDynamicColor(originalColor, selectedTintColor());
 
-//     }
-//     return %orig;
-// }
+        }
+    }
+    return %orig;
+}
 
-// %end
+%end
 
 /*
     Activity Indicator
 */
 
-// #include "UIKit/UIActivityIndicatorView.xm"
+// #include "UIKit/UIActivityIndicatorView.xm" // Not sure we need this, forced dark mode handles it
 
 
 /*
@@ -172,7 +173,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
  YP   YD Y88888P    YP    Y8888P'  `Y88P'  YP   YP 88   YD Y8888D'
 */
 
-// #include "UIKit/UIKeyboard.xm"
+#include "UIKit/UIKeyboard.xm"
 
 /*
  .d8888. d888888b  .d8b.  d888888b db    db .d8888. d8888b.  .d8b.  d8888b.

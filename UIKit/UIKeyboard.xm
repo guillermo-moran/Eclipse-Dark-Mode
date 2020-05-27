@@ -12,47 +12,49 @@
 -(void)layoutSubviews {
     %orig;
     if (isEnabled && darkenKeyboard()) {
-        [self setBackgroundColor:keyboardColor()];
+        UIColor* originalColor = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(originalColor, keyboardColor());
+        [self setBackgroundColor:newColor];
     }
 }
 
 %end
 
-%hook UITextInputTraits
+// %hook UITextInputTraits
+// 
+// 
+// -(int)keyboardAppearance {
+//     if (isEnabled && darkenKeyboard()) {
+//         return 0;
+//     }
+//     return %orig;
+// }
+
+// %end
 
 
--(int)keyboardAppearance {
-    if (isEnabled && darkenKeyboard()) {
-        return 0;
-    }
-    return %orig;
-}
+// %hook UIKBRenderConfig
 
+// -(BOOL)lightKeyboard {
+//     if (isEnabled && darkenKeyboard()) {
+//         return NO;
+//     }
+//     return %orig;
+// }
 
-%end
-
-
-%hook UIKBRenderConfig
-
--(BOOL)lightKeyboard {
-    if (isEnabled && darkenKeyboard()) {
-        return NO;
-    }
-    return %orig;
-}
-
-
-%end
+// %end
 
 
 %hook UIKeyboard
 
 -(id)initWithFrame:(CGRect)arg1 {
-    id meow = %orig;
+    id kb = %orig;
     if (isEnabled && darkenKeyboard()) {
-        [self setBackgroundColor:keyboardColor()];
+        UIColor* originalColor = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(originalColor, keyboardColor());
+        [self setBackgroundColor:newColor];
     }
-    return meow;
+    return kb;
 }
 
 %end
