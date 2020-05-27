@@ -1,15 +1,21 @@
 static void quitAllApps() {
 
-    id applicationController = [%c(SBApplicationController) sharedInstance];
-    NSArray* runningApplications = [applicationController runningApplications];
+    // id model = [%c(SBAppSwitcherModel) sharedInstance];
+    // id recentAppLayouts = MSHookIvar<id>(model, "_recents");
+    // NSMutableArray* allRecents = MSHookIvar<NSMutableArray*>(recentAppLayouts, "_allRecents");
 
-    UIApplication *currentApp = [UIApplication sharedApplication];
-    [currentApp performSelector:@selector(suspend)];
+    // id applicationController = [%c(SBApplicationController) _sharedInstanceCreateIfNecessary:YES];
+    // NSArray* runningApplications = [applicationController runningApplications];
 
-    for (NSString* id in runningApplications) {
-        UIApplication* app = [applicationController applicationWithBundleIdentifier: id];
-        [app terminateWithSuccess];
-    }
+    // UIApplication *currentApp = [UIApplication sharedApplication];
+    // [currentApp performSelector:@selector(suspend)];
+
+    // os_log(OS_LOG_DEFAULT, "ECLIPSE: Running Apps: %@", runningApplications);
+
+    // for (NSString* id in runningApplications) {
+    //     UIApplication* app = [applicationController applicationWithBundleIdentifier: id];
+    //     [app terminateWithSuccess];
+    // }
 }
 
 extern "C" CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
