@@ -18,10 +18,10 @@
 
         [self setBackgroundColor:newBarColor];
         // [self setHidden: NO];
-        if (selectedNavColor() == -1) {
-            id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
-            [_backgroundEffectView setHidden:YES];
-        }
+        // if (selectedNavColor() == -1) {
+        //     id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
+        //     [_backgroundEffectView setHidden:YES];
+        // }
     }
 }
 
