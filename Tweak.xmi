@@ -511,6 +511,7 @@ static BOOL ranKeyWindowForTheFirstTime = NO;
         if (isEnabled) { // isEnabled means that both system dark mode and Eclipse are enabled in Settings
             
             BOOL isAppStillLight = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 1);
+            BOOL isAppUnsupported = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 0);
             BOOL isAppDark = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 2);
 
             if (isAppDark) {
@@ -518,13 +519,14 @@ static BOOL ranKeyWindowForTheFirstTime = NO;
                 // ranKeyWindowForTheFirstTime = YES;
             }
             
-            if (isAppStillLight && windowNeedsInterfaceOverride && sysDarkModeEnabled) { // App does not support dark mode
+            if ((isAppStillLight || isAppUnsupported) && windowNeedsInterfaceOverride && sysDarkModeEnabled) { // App does not support dark mode
                 os_log(OS_LOG_DEFAULT, "ECLIPSE: Overriding user interface style to dark");
                 [window setOverrideUserInterfaceStyle: USER_INTERFACE_DARK]; // Force dark mode on all views through the key window
+                 [window _setOverrideUserInterfaceStyle: USER_INTERFACE_DARK];
+                window.overrideUserInterfaceStyle = USER_INTERFACE_DARK;
                 // ranKeyWindowForTheFirstTime = YES;
             }
             os_log(OS_LOG_DEFAULT, "ECLIPSE: Current user interface style for app: %ld", ACTIVE_APPLICATION_USER_INTERFACE_STYLE);
-
         }
     }
     // NSString* executableName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];

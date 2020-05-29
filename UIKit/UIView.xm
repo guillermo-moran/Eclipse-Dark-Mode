@@ -41,29 +41,27 @@
 #define FLAGPAINT objc_getClass("UITextField")
 #define SC_HEADER objc_getClass("SCBottomBorderedView") //snapchat fix (prevent bans)
 #define SC_GRADIENT objc_getClass("SCGradientView")
+#define CARET objc_getClass("UITextSelectionView")
 
-%new
--(BOOL)isEclipsed {
-    return self.eclipsed;
-}
-
+static BOOL didOverrideColor = NO;
 
 %new
 -(void)override {
     if (isEnabled) {
 
-        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
-            [self setBackgroundColor:VIEW_COLOR];
-            self.eclipsed = true;
+        if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+            UIColor* newColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+            [self setBackgroundColor: newColor];
+            [self setEclipsed: YES];
         }
     }
 }
 
 -(void)setBackgroundColor:(UIColor*)color {
-    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
         UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
         %orig(eclipseColor);
-        self.eclipsed = true;
+        [self setEclipsed: YES];
         return;
     }
     %orig;
@@ -74,31 +72,29 @@
 -(id)backgroundColor {
     id color = %orig;
 
-    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+    if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
         UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
-        self.eclipsed = true;
+        [self setEclipsed: YES];
         return eclipseColor;
     }
     return color;
-   
-
 }
 
-/* //Crashed venmo. Possibly others.
--(id)init {
-    @try {
-        id ok = %orig;
-        [self override];
-        return ok;
-    }
-    @catch (NSException* e) {
-        NSLog(@"Error");
-    }
-    @finally {
-        return %orig;
-    }
-}
-*/
+// //Crashed venmo. Possibly others.
+// -(id)init {
+//     @try {
+//         id ok = %orig;
+//         [self override];
+//         return ok;
+//     }
+//     @catch (NSException* e) {
+//         NSLog(@"Error");
+//         return %orig;
+//     }
+//     @finally {
+//         return %orig;
+//     }
+// }
 
 -(id)initWithFrame:(CGRect)arg1 {
     id ok = %orig;
@@ -139,6 +135,41 @@
     return ok;
 }
 
+-(id)_initWithLayer:(id)arg1 {
+id ok = %orig;
+
+    @try {
+        [self override];
+    }
+    @catch (NSException* e) {
+        NSLog(@"Error");
+    }
+
+    return ok;
+}
+
+-(id)_initWithMaskImage:(id)arg1 {
+    id ok = %orig;
+
+    @try {
+        [self override];
+    }
+    @catch (NSException* e) {
+        NSLog(@"Error");
+    }
+
+    return ok;
+}
+
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+    if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+        [self setBackgroundColor:createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR)];
+        [self setEclipsed: YES];
+    }
+
+}
+
 
 // //#define KB_BG_COLOR [UIColor colorWithRed:1.0f green:0.87f blue:0.87f alpha:0.87] //Fuck You Apple. (Some apps don't use whiteColor)
 
@@ -148,7 +179,12 @@
 
 
 
-
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != FLAGPAINT) && (self.tag != VIEW_EXCLUDE_TAG)) {
+//         [self setBackgroundColor: createEclipseDynamicColor(self.backgroundColor, RED_COLOR)];
+//     }
+// }
 
 // // -(void)layoutSubviews {
 

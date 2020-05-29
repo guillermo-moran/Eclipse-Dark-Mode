@@ -87,6 +87,127 @@ static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"
     return %orig;
 }
 
-%end
+
+// System Colors
+
+// Thanks for this one @skittyblock
+// + (id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
+//     UIColor* orig = %orig(red, green, blue, alpha);
+// 	if (red == 0.0 && green == 122.0/255.0 && blue == 1.0) {
+// 		return createEclipseDynamicColor(orig, VIEW_COLOR);
+// 	}
+// 	return %orig;
+// }
+
+// // Default tint
+// + (id)systemBlueColor {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
+// }
+// + (id)_systemBlueColor2 {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
+// }
+
+// // Selection point
+// + (id)insertionPointColor {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
+// }
+// // Selection highlight
+// + (id)selectionHighlightColor {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? highlight : %orig;
+// }
+// // Selection grabbers
+// + (id)selectionGrabberColor {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
+// }
+// // Links
+// + (id)linkColor {
+// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
+// }
+
+// Primary color
++ (id)systemBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
++ (id)systemGroupedBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, TABLE_COLOR);
+}
++ (id)groupTableViewBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, TABLE_COLOR);
+}
++ (id)tableBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, TABLE_COLOR);
+}
++ (id)tableCellPlainBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
++ (id)tableCellGroupedBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, TABLE_COLOR);
+}
+
+// Secondary color
++ (id)secondarySystemBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
++ (id)secondarySystemGroupedBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
+
+// Tertiary color
++ (id)tertiarySystemBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
++ (id)tertiarySystemGroupedBackgroundColor {
+    UIColor* orig = %orig;
+	return createEclipseDynamicColor(orig, VIEW_COLOR);
+}
+
+// Separator color
+// + (id)separatorColor {
+// 	return dynamicColorWithOptions(%orig, @"lightSeparatorColor", @"darkSeparatorColor");
+// }
+// + (id)opaqueSeparatorColor {
+// 	return dynamicColorWithOptions(%orig, @"lightSeparatorColor", @"darkSeparatorColor");
+// }
+// + (id)tableSeparatorColor {
+// 	return dynamicColorWithOptions(%orig, @"lightSeparatorColor", @"darkSeparatorColor");
+// }
+
+// Label colors
+// + (id)labelColor {
+// 	return dynamicColorWithOptions(%orig, @"lightLabelColor", @"darkLabelColor");
+// }
+// + (id)secondaryLabelColor {
+// 	return dynamicColorWithOptions(%orig, @"lightSecondaryLabelColor", @"darkSecondaryLabelColor");
+// }
+// + (id)placeholderLabelColor {
+// 	return dynamicColorWithOptions(%orig, @"lightPlaceholderLabelColor", @"darkPlaceholderLabelColor");
+// }
+// + (id)tertiaryLabelColor {
+// 	return dynamicColorWithOptions(%orig, @"lightTertiaryLabelColor", @"darkTertiaryLabelColor");
+// }
+
+// + (id)tablePlainHeaderFooterBackgroundColor {
+// 	return dynamicColorWithOptions(%orig, @"lightTertiaryLabelColor", @"darkTertiaryLabelColor");
+// }
+
+// UITableViewCell selection color
+// + (id)systemGray4Color {
+// 	return dynamicColorWithOptions(%orig, @"lightTableViewCellSelectionColor", @"darkTableViewCellSelectionColor");
+// }
+// + (id)systemGray5Color {
+// 	return dynamicColorWithOptions(%orig, @"lightTableViewCellSelectionColor", @"darkTableViewCellSelectionColor");
+// }
+
 
 %end
+%end
+

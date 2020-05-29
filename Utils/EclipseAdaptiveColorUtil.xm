@@ -30,7 +30,9 @@ static BOOL isLightColor(UIColor* color) {
     [resolvedLightColor getRed:&red green:&green blue:&blue alpha:&alpha];
 
     //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:TINT_COLOR]));
-
+    // if ([resolvedLightColor isEqual: [UIColor clearColor]]) {
+    //     return NO;
+    // }
     if ((red <= 0.5) || (green <= 0.5) || (blue <= 0.5)) {
         return NO;
     }
