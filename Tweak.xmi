@@ -352,7 +352,7 @@ static void checkRunningApp() {
         %init(MobileStoreApp);
     }
 
-    if (idIsEqual(@"com.saurik.Cydia")) {
+    if (idIsEqual(@"com.saurik.Cydia-")) {
         %init(CydiaApp);
     }
     if (idIsEqual(@"com.apple.Bridge")) {
