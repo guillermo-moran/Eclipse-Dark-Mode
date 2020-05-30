@@ -72,7 +72,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Applications</string>
+			<string>Force Dark Mode In Applications</string>
 			<key>isController</key>
 			<true/>
 			<key>bundle</key>
