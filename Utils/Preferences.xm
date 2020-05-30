@@ -498,7 +498,7 @@ static void setTintColors() {
     // [[UINavigationBar appearance] setTintColor:TINT_COLOR];
     [[UISlider appearance] setMinimumTrackTintColor:TINT_COLOR];
     // [[UIToolbar appearance] setTintColor:TINT_COLOR];
-    // [[UITabBar appearance] setTintColor:TINT_COLOR];
+    [[UITabBar appearance] setTintColor:TINT_COLOR];
 
     [[UITextView appearance] setTintColor:TINT_COLOR];
     [[UITextField appearance] setTintColor:TINT_COLOR];

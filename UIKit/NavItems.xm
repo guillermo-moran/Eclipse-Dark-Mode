@@ -7,14 +7,53 @@
  VP   V8P YP   YP    YP         Y888888P    YP    Y88888P YP  YP  YP `8888Y'
 */
 
+// %hook _UIVisualEffectBackdropView
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         // [self setAlpha: 1.0];
+//         UIColor* originalColor = (UIColor*)[self backgroundColor];
+//         UIColor* newColor = createEclipseDynamicColor(originalColor, [[[NAV_COLOR lighterColor] lighterColor] lighterColor]);
+//         [self setBackgroundColor: newColor];
+//     }
+// }
+
+// %end
+
+// %hook _UINavigationBarContentView
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         UIColor* originalBarColor = (UIColor*)[self backgroundColor];
+//         UIColor* newBarColor = createEclipseDynamicColor(originalBarColor, NAV_COLOR);
+//         [self setBackgroundColor: newBarColor];
+//     }
+// }
+
+// %end
+
 %hook _UIBarBackground
+
+// static UIView* barBgView;
 
 -(void)layoutSubviews {
     %orig;
-    if (isEnabled && ![[self backgroundColor] isEqual:[UIColor clearColor]]) {
+    if (isEnabled) {
 
         UIColor* originalBarColor = (UIColor*)[self backgroundColor];
         UIColor* newBarColor = createEclipseDynamicColor(originalBarColor, NAV_COLOR);
+
+        // if (!barBgView) {
+        //     // [barBgView removeFromSuperview];
+        //     // [barBgView release];
+        //     // barBgView = nil;
+        //     barBgView = [[UIView alloc] initWithFrame:[self frame]];
+        //     [barBgView setBackgroundColor: createEclipseDynamicColor([UIColor clearColor], NAV_COLOR)];
+        //     [self addSubview: barBgView];
+        // }
+        
 
         [self setBackgroundColor:newBarColor];
         // [self setHidden: NO];
@@ -22,6 +61,11 @@
         //     id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
         //     [_backgroundEffectView setHidden:YES];
         // }
+        id effectView1 = MSHookIvar<id>(self, "_effectView1");
+        id effectView2 = MSHookIvar<id>(self, "_effectView2");
+        BOOL isDark = ACTIVE_APPLICATION_USER_INTERFACE_STYLE == USER_INTERFACE_DARK;
+        [effectView1 setHidden: isDark];
+        [effectView2 setHidden: isDark];
     }
 }
 
@@ -89,12 +133,36 @@
 
 %hook UITabBar
 
+-(void)setFrame:(CGRect)arg1 {
+    %orig;
+     if (isEnabled) {
+        UIColor* originalBarBgColor = [self backgroundColor];
+        UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
+        [self setBackgroundColor: newBarBgColor];
+
+        // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
+        UIColor* originalUnselectedImageTintColor = [self selectedImageTintColor];
+        UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
+        [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
+
+
+        // self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
+
+    }
+}
+
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
         [self setBackgroundColor: newBarBgColor];
+
+        // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
+        UIColor* originalUnselectedImageTintColor = [self selectedImageTintColor];
+        UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
+        [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
+
 
         // self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
 

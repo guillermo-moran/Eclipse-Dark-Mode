@@ -41,7 +41,23 @@
 
 }
 
--(void)setFrame:(CGRect)arg1 {
+// -(void)setFrame:(CGRect)arg1 {
+//     %orig;
+
+//     if (isEnabled) {
+//         if ([self isSuperviewEclipsed]) {
+
+//             UIColor* originalTextColor = self.textColor;
+//             if (isTextDarkColor(originalTextColor)) {
+//                 UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+//                 [self setBackgroundColor:[UIColor clearColor]];
+//                 [self setTextColor:newColor];
+//             }
+//         }
+//     }
+// }
+
+-(void)layoutSubviews {
     %orig;
 
     if (isEnabled) {
@@ -57,25 +73,6 @@
     }
 
 }
-
--(void)didMoveToSuperview {
-    %orig;
-
-    if (isEnabled) {
-        if ([self isSuperviewEclipsed]) {
-
-            UIColor* originalTextColor = self.textColor;
-            if (isTextDarkColor(originalTextColor)) {
-                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
-                [self setBackgroundColor:[UIColor clearColor]];
-                [self setTextColor:newColor];
-            }
-        }
-    }
-
-}
-
-
 
 -(void)setTextColor:(id)color {
 

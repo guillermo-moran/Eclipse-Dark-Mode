@@ -84,7 +84,7 @@ static BOOL isTextDarkColor(UIColor* color) {
     [resolvedLightColor getWhite:&white alpha:nil];
     [resolvedLightColor getRed:&red green:&green blue:&blue alpha:nil];
 
-    BOOL isDark = ((white <= 0.5) && (red <= 0.5) && (green <= 0.5)  && (blue <= 0.5) && (![resolvedDarkColor isEqual:TINT_COLOR]));
+    BOOL isDark = ((white <= 0.5) && (red <= 0.5) && (green <= 0.5)  && (blue <= 0.5) && (![resolvedDarkColor isEqual:TINT_COLOR]) && (![resolvedLightColor isEqual:TINT_COLOR]));
 
     if ([UIColor color:resolvedLightColor isEqualToColor:[UIColor blackColor] withTolerance:0.6] && isDark) {
         return YES;
