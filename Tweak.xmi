@@ -475,9 +475,6 @@ static void initializeApplications() {
 
 // %end
 
-static BOOL windowNeedsInterfaceOverride = YES;
-static BOOL ranKeyWindowForTheFirstTime = NO;
-
 %hook UIApplication
 
 -(id)init {
@@ -524,6 +521,7 @@ static BOOL ranKeyWindowForTheFirstTime = NO;
                 [window setOverrideUserInterfaceStyle: USER_INTERFACE_DARK]; // Force dark mode on all views through the key window
                  [window _setOverrideUserInterfaceStyle: USER_INTERFACE_DARK];
                 window.overrideUserInterfaceStyle = USER_INTERFACE_DARK;
+                didNeedInterfaceStyleOverride = YES;
                 // ranKeyWindowForTheFirstTime = YES;
             }
             os_log(OS_LOG_DEFAULT, "ECLIPSE: Current user interface style for app: %ld", ACTIVE_APPLICATION_USER_INTERFACE_STYLE);

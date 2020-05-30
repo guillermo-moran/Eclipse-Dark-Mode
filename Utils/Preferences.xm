@@ -54,6 +54,10 @@ static NSString* _customTextHex;
 
 static UIColor* _adaptiveColor;
 
+static BOOL windowNeedsInterfaceOverride = YES;
+static BOOL ranKeyWindowForTheFirstTime = NO;
+static BOOL didNeedInterfaceStyleOverride = NO;
+
 @implementation UIColor (LightAndDark)
 
 - (UIColor *)lighterColor

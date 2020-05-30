@@ -64,7 +64,35 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Makes table cells lighter</string>
+			<string>Force Applications to use dark mode. Use this only if an application does not respond to dark mode when it is enabled under &quot;Enabled Applications&quot; and Eclipse is turned on.</string>
+		</dict>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Applications</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>ALNavigationTitle</key>
+			<string>Force Dark Mode Override</string>
+			<key>ALSingleEnabledMode</key>
+			<false/>
+			<key>ALChangeNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+			<key>ALAllowsSelection</key>
+			<false/>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.gmoran.eclipse.plist</string>
+			<key>ALSettingsKeyPrefix</key>
+			<string>ForcedApps-</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>cell</key>

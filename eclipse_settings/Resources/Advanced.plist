@@ -102,7 +102,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<true/>
+			<false/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
