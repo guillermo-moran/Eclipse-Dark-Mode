@@ -87,41 +87,38 @@ static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"
     return %orig;
 }
 
++ (id)_systemBlueColor2 {
+    if (isEnabled) {
+        return selectedTintColor();
+    }
+    return %orig;
+}
+
 
 // System Colors
 
-// Thanks for this one @skittyblock
 // + (id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
-//     UIColor* orig = %orig(red, green, blue, alpha);
-// 	if (red == 0.0 && green == 122.0/255.0 && blue == 1.0) {
-// 		return createEclipseDynamicColor(orig, VIEW_COLOR);
-// 	}
-// 	return %orig;
+//     //Let's make these darker in dark mode?
+//     UIColor* originalColor = %orig;
+//     return createEclipseDynamicColor(originalColor, [originalColor darkerColor]); 
 // }
 
 // // Default tint
 // + (id)systemBlueColor {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
 // }
-// + (id)_systemBlueColor2 {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
-// }
+
 
 // // Selection point
 // + (id)insertionPointColor {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
 // }
 // // Selection highlight
 // + (id)selectionHighlightColor {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? highlight : %orig;
 // }
 // // Selection grabbers
 // + (id)selectionGrabberColor {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
 // }
 // // Links
 // + (id)linkColor {
-// 	return (getPrefBool(@"customTintColor") || currentProfile[@"tintColor"]) ? tint : %orig;
 // }
 
 // Primary color
