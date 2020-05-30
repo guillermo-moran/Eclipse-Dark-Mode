@@ -110,6 +110,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 -(id)caretViewColor {
     UIColor* originalColor = %orig;
+    [self setTag: VIEW_EXCLUDE_TAG];
     if (isEnabled) {
         if (_selectedTint == 1) { // white... ugh
             return createEclipseDynamicColor(originalColor, BABY_BLUE_COLOR);

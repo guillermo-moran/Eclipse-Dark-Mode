@@ -50,6 +50,38 @@
 			<key>defaults</key>
 			<string>com.gmoran.eclipse</string>
 			<key>key</key>
+			<string>reverseModeEnabled</string>
+			<key>label</key>
+			<string>Make Table Cells Darker</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
+			<string>cellSeparatorsEnabled</string>
+			<key>label</key>
+			<string>Show Table Cell Separators</string>
+			<key>PostNotification</key>
+			<string>com.gmoran.eclipse.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.gmoran.eclipse</string>
+			<key>key</key>
 			<string>darkenKeyboard</string>
 			<key>label</key>
 			<string>Color Keyboard</string>

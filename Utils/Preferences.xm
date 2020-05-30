@@ -102,7 +102,7 @@ static BOOL isBetterSettingsInstalled() {
 static BOOL isTweakEnabled(void) {
     if (IS_BETA_BUILD) {
         NSDate * currentDate = [NSDate date];
-        NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-05-30 12:00:00 +0600"];
+        NSDate * otherDate = [[NSDate alloc] initWithString:@"2020-06-05 12:00:00 +0600"];
         NSComparisonResult result = [currentDate compare:otherDate];
 
         if (result == NSOrderedAscending) { //Before Expiry

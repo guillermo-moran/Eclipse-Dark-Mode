@@ -47,32 +47,26 @@ static CGFloat const qHeaderCellFontSize = 30.f;
 		imageView.center = CGPointMake(imageView.center.x, containerView.frame.size.height / 3.f);
         
         
-        
         //BOOL listFileExists = YES;
         BOOL listFileExists = [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/me.gmoran.eclipse13.list"];
 
-                if (!listFileExists) {
-            
-            typeLabel.text = @"Pirated";
-            statusLabel.text = @":(";
-
-
-            [containerView addSubview:imageView];
-            [containerView addSubview:typeLabel];
-            [containerView addSubview:statusLabel];
-            
+        if (!listFileExists) {
+            typeLabel.text = @"Eclipse";
+            statusLabel.text = @"(Pirated)";   
         }
-        else {
-            
-            [containerView addSubview:imageView];
-            [containerView addSubview:typeLabel];
-            [containerView addSubview:statusLabel];
-            
-        }
+        
+        [containerView addSubview:imageView];
+        [containerView addSubview:typeLabel];
+        [containerView addSubview:statusLabel];
         
 	}
 
 	return self;
+}
+
+-(void)layoutSubviews {
+    [super layoutSubviews];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
