@@ -141,7 +141,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP    YP    YP    YP      Y888888P Y88888P Y88888P Y8888D'
 */
 
-// #include "UIKit/UITextField.xm"
+#include "UIKit/UITextField.xm"
 
 /*
  db    db d888888b db       .d8b.  d8888b. d88888b db
@@ -389,6 +389,8 @@ static void initializeApplications() {
     //isEnabled = isTweakEnabled();
 
     BOOL applicationIsEnabledInSettings = [[prefs objectForKey:[@"EnabledApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
+    BOOL appForceDarkIsEnabledInSettings = [[prefs objectForKey:[@"ForcedApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
+
     BOOL shouldAutoReplaceColors = NO;
 
 
@@ -413,7 +415,7 @@ static void initializeApplications() {
             %init(SystemUIColors);
         // }
 
-        if (customTextColorEnabled()) {
+        if (customTextColorEnabled() || appForceDarkIsEnabledInSettings) {
             %init(UILabelHooks)
         }
 

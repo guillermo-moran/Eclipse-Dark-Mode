@@ -29,6 +29,10 @@ db   8D 88   88 88      88   88 88 `88.   .88.
 
 %group SafariApp
 
+%hook NavigationBar
+
+%end
+
 %hook WKWebView
 
 -(void)_didCommitLoadForMainFrame {

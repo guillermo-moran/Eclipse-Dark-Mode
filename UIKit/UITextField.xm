@@ -7,150 +7,163 @@
     YP    YP    YP    YP    YP      Y888888P Y88888P Y88888P Y8888D'
 */
 
-@interface _UITextFieldContentView
+%hook UITextFieldBorderView
 
-@property (nonatomic, copy, readwrite) UIColor* backgroundColor;
-
-@end
-
-%hook _UITextFieldContentView
-
--(void)layoutSubviews {
-    %orig;
+-(void)setImage:(id)arg1 {
+    
+    BOOL isDark = ACTIVE_APPLICATION_USER_INTERFACE_STYLE == USER_INTERFACE_DARK;
     if (isEnabled) {
-        self.backgroundColor = [UIColor clearColor];
+        return;
     }
-}
-
-
-%end
-
-%hook _MFSearchAtomTextView
-
--(void)layoutSubviews {
     %orig;
-    if (isEnabled) {
-        [self setBackgroundColor:VIEW_COLOR];
-    }
 }
 
 %end
 
-%hook UISearchBar
+// @interface _UITextFieldContentView
 
--(void)drawRect:(CGRect)rect {
-    %orig;
-    if (isEnabled) {
-        [self setBarTintColor:NAV_COLOR];
-    }
-}
+// @property (nonatomic, copy, readwrite) UIColor* backgroundColor;
 
-%end
+// @end
 
-%hook UITextField
+// %hook _UITextFieldContentView
 
-%new
--(void)override {
-    if (isEnabled) {
-
-        //[self setKeyboardAppearance:UIKeyboardAppearanceDark];
-        if (!isLightColor(self.backgroundColor)) {
-
-            //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
-
-        }
-
-        [self setTextColor:TEXT_COLOR];
-        //self.textColor = TEXT_COLOR;
-    }
-}
-/*
- - (void)drawPlaceholderInRect:(CGRect)rect {
- [DARKER_ORANGE_COLOR setFill];
- [[self placeholder] drawInRect:rect withFont:[UIFont systemFontOfSize:12]];
- }
- */
-
-//-(void)setKeyboardAppearance:(int)arg1 ;
-
--(id)initWithFrame:(CGRect)arg1 {
-    id christmasPresents = %orig;
-    [self override];
-    return christmasPresents;
-}
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         self.backgroundColor = [UIColor clearColor];
+//     }
+// }
 
 
- -(id)initWithCoder:(id)arg1 {
-     id christmasPresents = %orig;
-     [self override];
-     return christmasPresents;
- }
+// %end
 
--(id)init {
-    id christmasPresents = %orig;
-    [self override];
-    return christmasPresents;
-}
-/*
- -(void)setKeyboardAppearance:(int)arg1 {
- if (isEnabled) {
- %orig(UIKeyboardAppearanceDark);
- return;
- }
- %orig;
- }
- */
+// %hook _MFSearchAtomTextView
 
--(void)setTextColor:(id)arg1 {
-    if (isEnabled) {
-        if (![self isKindOfClass:%c(SBSearchField)]) {
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         [self setBackgroundColor:VIEW_COLOR];
+//     }
+// }
 
-            if (!isLightColor(self.backgroundColor)) {
-                //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
-            }
+// %end
 
-            %orig(TEXT_COLOR);
-            return;
-        }
-    }
-    %orig;
-}
+// %hook UISearchBar
 
+// -(void)drawRect:(CGRect)rect {
+//     %orig;
+//     if (isEnabled) {
+//         [self setBarTintColor:NAV_COLOR];
+//     }
+// }
 
--(id)textColor {
-    UIColor* color = %orig;
-    if (isEnabled) {
+// %end
 
-        if (![self isKindOfClass:%c(SBSearchField)]) {
+// %hook UITextField
 
-            if (!isLightColor(self.backgroundColor)) {
+// %new
+// -(void)override {
+//     if (isEnabled) {
 
-                //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
-            }
-            color = TEXT_COLOR;
+//         //[self setKeyboardAppearance:UIKeyboardAppearanceDark];
+//         if (!isLightColor(self.backgroundColor)) {
 
-        }
-    }
-    return color;
-}
+//             //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
 
+//         }
 
--(void)drawRect:(CGRect)arg1 {
-    %orig;
-    if (isEnabled) {
-        if (![self isKindOfClass:%c(SBSearchField)]) {
+//         [self setTextColor:TEXT_COLOR];
+//         //self.textColor = TEXT_COLOR;
+//     }
+// }
+// /*
+//  - (void)drawPlaceholderInRect:(CGRect)rect {
+//  [DARKER_ORANGE_COLOR setFill];
+//  [[self placeholder] drawInRect:rect withFont:[UIFont systemFontOfSize:12]];
+//  }
+//  */
 
-            if (!isLightColor(self.backgroundColor)) {
-                [self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
-            }
+// //-(void)setKeyboardAppearance:(int)arg1 ;
+
+// -(id)initWithFrame:(CGRect)arg1 {
+//     id christmasPresents = %orig;
+//     [self override];
+//     return christmasPresents;
+// }
 
 
-            [self setTextColor:TEXT_COLOR];
-            //self.textColor = TEXT_COLOR;
+//  -(id)initWithCoder:(id)arg1 {
+//      id christmasPresents = %orig;
+//      [self override];
+//      return christmasPresents;
+//  }
 
-        }
-    }
-}
+// -(id)init {
+//     id christmasPresents = %orig;
+//     [self override];
+//     return christmasPresents;
+// }
+// /*
+//  -(void)setKeyboardAppearance:(int)arg1 {
+//  if (isEnabled) {
+//  %orig(UIKeyboardAppearanceDark);
+//  return;
+//  }
+//  %orig;
+//  }
+//  */
+
+// -(void)setTextColor:(id)arg1 {
+//     if (isEnabled) {
+//         if (![self isKindOfClass:%c(SBSearchField)]) {
+
+//             if (!isLightColor(self.backgroundColor)) {
+//                 //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+//             }
+
+//             %orig(TEXT_COLOR);
+//             return;
+//         }
+//     }
+//     %orig;
+// }
 
 
-%end
+// -(id)textColor {
+//     UIColor* color = %orig;
+//     if (isEnabled) {
+
+//         if (![self isKindOfClass:%c(SBSearchField)]) {
+
+//             if (!isLightColor(self.backgroundColor)) {
+
+//                 //[self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+//             }
+//             color = TEXT_COLOR;
+
+//         }
+//     }
+//     return color;
+// }
+
+
+// -(void)drawRect:(CGRect)arg1 {
+//     %orig;
+//     if (isEnabled) {
+//         if (![self isKindOfClass:%c(SBSearchField)]) {
+
+//             if (!isLightColor(self.backgroundColor)) {
+//                 [self setBackgroundColor:[VIEW_COLOR colorWithAlphaComponent:0.4]];
+//             }
+
+
+//             [self setTextColor:TEXT_COLOR];
+//             //self.textColor = TEXT_COLOR;
+
+//         }
+//     }
+// }
+
+
+// %end

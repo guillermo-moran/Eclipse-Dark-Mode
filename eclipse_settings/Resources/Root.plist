@@ -20,7 +20,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Choose which Applications should use Eclipse. Apps will not use custom colors if they are turned off in this menu.</string>
+			<string>Choose which Applications should use Eclipse. Apps will not use custom colors if they are turned off in this menu. Enable this before attempting to &quot;force&quot; an application to use dark mode.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -42,7 +42,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Applications</string>
+			<string>Enabled Applications</string>
 			<key>isController</key>
 			<true/>
 			<key>bundle</key>
@@ -64,7 +64,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Force Applications to use dark mode. Use this only if an application does not respond to dark mode when it is enabled under &quot;Enabled Applications&quot; and Eclipse is turned on.</string>
+			<string>This option will force an application to use dark mode. If toggling an application in the &quot;Enabled Applications&quot; menu is not working, use this. This option will also attempt to force text label color to white.</string>
 		</dict>
 		<dict>
 			<key>enabled</key>
