@@ -11,7 +11,7 @@
 
 //static CKUIThemeDark *darkTheme;
 
-%subclass CKUIThemeEclipse : CKUIThemeDark
+%subclass CKUIThemeEclipse : CKUITheme
 
 // -(id)messageAcknowledgmentPickerBackgroundColor {
 //
@@ -29,16 +29,16 @@
 //
 // }
 
--(id)conversationListBackgroundColor {
-        return VIEW_COLOR;
-}
--(id)conversationListCellColor {
-        return TABLE_COLOR;
-}
+// -(id)conversationListBackgroundColor {
+//         return VIEW_COLOR;
+// }
+// -(id)conversationListCellColor {
+//         return TABLE_COLOR;
+// }
 
--(id)transcriptBackgroundColor {
-        return VIEW_COLOR;
-}
+// -(id)transcriptBackgroundColor {
+//         return VIEW_COLOR;
+// }
 
 -(id)blue_balloonColors {
     if (tintMessageBubbles() && isEnabled) {

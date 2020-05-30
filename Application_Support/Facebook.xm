@@ -10,16 +10,48 @@
 
 %group Facebook
 
-%hook FBRichTextComponentView
+// // %hook FBRichTextComponentView
 
--(id)init {
-	id orig = %orig;
-	if (isEnabled) {
-		applyInvertFilter((UIView*)self);
-	}
-	return orig;
-}
+// // -(void)layoutSubviews {
+// // 	%orig;
+// // 	[RED_COLOR set];
+// // 	[self setColor: RED_COLOR];
+// // }
 
-%end
+// // -(void)setColor:(UIColor*)color {
+// // 	[RED_COLOR set];
+// // 	%orig(RED_COLOR);
+// // }
+
+// // -(UIColor*)color {
+// // 	return RED_COLOR;
+// // }
+
+// // %end
+
+// %hook FBRichTextView
+
+// -(void)layoutSubviews {
+// 	%orig;
+// 	[self setColor: RED_COLOR];
+// 	NSAttributedString* originalAttrStr = [self attributedString];
+// 	NSString* string = [originalAttrStr string];
+// 	// NSDictionary *attrs = @{ NSForegroundColorAttributeName : RED_COLOR };
+// 	[originalAttrStr addAttribute:NSForegroundColorAttributeName value: RED_COLOR range:NSMakeRange(0, string.length)];
+// 	// NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:string attributes:attrs];
+// 	[self setAttributedString: originalAttrStr];	
+// }
+
+
+// -(void)setColor:(UIColor*)color {
+// 	%orig(RED_COLOR);
+// 	[RED_COLOR set];
+// }
+
+// -(UIColor*)color {
+// 	return RED_COLOR;
+// }
+
+// %end
 
 %end

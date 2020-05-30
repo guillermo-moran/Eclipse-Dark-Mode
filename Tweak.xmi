@@ -196,7 +196,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
 //System Applications
 
 //Do not group SMS
-// #include "Application_Support/SMS.xm"
+#include "Application_Support/SMS.xm"
 //Do not group Contacts
 #include "Application_Support/Contacts.xm"
 
