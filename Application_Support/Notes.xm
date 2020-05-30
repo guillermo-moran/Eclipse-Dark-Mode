@@ -12,77 +12,53 @@
 
 %group NotesApp
 
-// /*
-// %hook UIColor
-// //such hacky
-//
-// +(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
-//
-//     id color = %orig;
-//
-//     if (isEnabled) {
-//         if (arg1 < .5) {
-//             return TEXT_COLOR;
-//         }
-//     }
-//     return %orig;
-// }
-// %end
-
-
-//
-
-%hook ICNoteEditorToolbarPlusView
-
--(id)plainView {
-    id view = %orig;
-    if (isEnabled) {
-        [view setBackgroundColor: VIEW_COLOR];
-    }
-    return view;
-}
-
--(id)plusView {
-    id view = %orig;
-    if (isEnabled) {
-        [view setBackgroundColor: TEXT_COLOR];
-    }
-    return view;
-}
-
-%end
-
-%hook _UIBarBackground
+%hook UITableViewCellContentView
 
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        [self setAlpha:0];
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, TABLE_COLOR);
+        [self setBackgroundColor: newColor];
     }
 }
 
 %end
 
-%hook _UITextContainerView
+%hook UISearchBar
 
-static BOOL hasInvertedTextContainer = false;
-
--(void)layoutSubviews {
+-(void)drawRect:(CGRect)arg1 {
     %orig;
-    if (isEnabled && !hasInvertedTextContainer) {
-        applyInvertFilter((UIView*)self);
-        hasInvertedTextContainer = true;
+    if (isEnabled) {
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, TABLE_COLOR);
+        [self setBackgroundColor: newColor];
     }
 }
 
 %end
 
-%hook _UINavigationBarBackground
+%hook ICNotesListTableViewCell
+
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, TABLE_COLOR);
+        [self setBackgroundColor: newColor];
+    }
+}
+
+%end
+
+%hook ICNoteContainerTableViewCell
 
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        [self setBackgroundColor:NAV_COLOR];
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, TABLE_COLOR);
+        [self setBackgroundColor: newColor];
     }
 }
 
@@ -93,11 +69,100 @@ static BOOL hasInvertedTextContainer = false;
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {
-        //[self removeFromSuperview];
-		[self setBackgroundColor:NAV_COLOR];
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, VIEW_COLOR);
+        [self setBackgroundColor: newColor];
     }
 }
 
 %end
+
+// // /*
+// // %hook UIColor
+// // //such hacky
+// //
+// // +(id)colorWithWhite:(float)arg1 alpha:(float)arg2 {
+// //
+// //     id color = %orig;
+// //
+// //     if (isEnabled) {
+// //         if (arg1 < .5) {
+// //             return TEXT_COLOR;
+// //         }
+// //     }
+// //     return %orig;
+// // }
+// // %end
+
+
+// //
+
+// %hook ICNoteEditorToolbarPlusView
+
+// -(id)plainView {
+//     id view = %orig;
+//     if (isEnabled) {
+//         [view setBackgroundColor: VIEW_COLOR];
+//     }
+//     return view;
+// }
+
+// -(id)plusView {
+//     id view = %orig;
+//     if (isEnabled) {
+//         [view setBackgroundColor: TEXT_COLOR];
+//     }
+//     return view;
+// }
+
+// %end
+
+// %hook _UIBarBackground
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         [self setAlpha:0];
+//     }
+// }
+
+// %end
+
+// %hook _UITextContainerView
+
+// static BOOL hasInvertedTextContainer = false;
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled && !hasInvertedTextContainer) {
+//         applyInvertFilter((UIView*)self);
+//         hasInvertedTextContainer = true;
+//     }
+// }
+
+// %end
+
+// %hook _UINavigationBarBackground
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         [self setBackgroundColor:NAV_COLOR];
+//     }
+// }
+
+// %end
+
+// %hook NotesTextureView
+
+// -(void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//         //[self removeFromSuperview];
+// 		[self setBackgroundColor:NAV_COLOR];
+//     }
+// }
+
+// %end
 
 %end
