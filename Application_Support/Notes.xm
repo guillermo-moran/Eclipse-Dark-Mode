@@ -66,6 +66,15 @@
 
 %hook NotesTextureView
 
+-(void)drawRect:(CGRect)arg1 {
+    %orig;
+    if (isEnabled) {
+        UIColor* original = (UIColor*)[self backgroundColor];
+        UIColor* newColor = createEclipseDynamicColor(original, VIEW_COLOR);
+        [self setBackgroundColor: newColor];
+    }
+}
+
 -(void)layoutSubviews {
     %orig;
     if (isEnabled) {

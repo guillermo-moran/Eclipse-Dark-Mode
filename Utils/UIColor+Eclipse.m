@@ -24,32 +24,30 @@
 
 +(BOOL)eclipseCustomNavColorsEnabled {
     NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
-    //return (prefs) ? [prefs[@"customNavColorsEnabled"] boolValue] : YES;
-    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+    return (prefs) ? [prefs[@"customNavColorsEnabled"] boolValue] : YES;
 }
 
 +(BOOL)eclipseCustomThemeColorsEnabled {
     NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
-    //return (prefs) ? [prefs[@"customThemeColorsEnabled"] boolValue] : YES;
-    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+    return (prefs) ? [prefs[@"customThemeColorsEnabled"] boolValue] : YES;
 }
 
 +(BOOL)eclipseCustomTintColorsEnabled {
     NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
-    //return (prefs) ? [prefs[@"customTintColorsEnabled"] boolValue] : YES;
-    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+    return (prefs) ? [prefs[@"customTintColorsEnabled"] boolValue] : YES;
+    // return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
 }
 
 +(BOOL)eclipseCustomStatusbarColorsEnabled {
     NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
-    //return (prefs) ? [prefs[@"customStatusbarColorsEnabled"] boolValue] : YES;
-    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+    return (prefs) ? [prefs[@"customStatusbarColorsEnabled"] boolValue] : YES;
+    // return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
 }
 
 +(BOOL)eclipseCustomTextColorsEnabled {
     NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
-    //return (prefs) ? [prefs[@"customTextColorsEnabled"] boolValue] : YES;
-    return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
+    return (prefs) ? [prefs[@"customTextColorsEnabled"] boolValue] : YES;
+    // return (prefs) ? [prefs[@"customColorsEnabled"] boolValue] : YES;
 }
 
 //Hex Colors
