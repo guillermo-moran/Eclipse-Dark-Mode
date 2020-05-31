@@ -239,8 +239,8 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 static void checkAppBlackList() {
     if (idIsEqual(@"com.facebook.Facebook")) {
-        // isEnabled = NO;
-        %init(Facebook);
+        isEnabled = NO;
+        // %init(Facebook);
     }
     if (idIsEqual(@"com.apple.calculator")) {
         isEnabled = NO;
@@ -252,6 +252,10 @@ static void checkAppBlackList() {
         if (isBetterSettingsInstalled()) {
             isEnabled = NO;
         }
+    }
+    if (idIsEqual(@"com.saurik.Cydia")) {
+        isEnabled = NO;
+        // %init(CydiaApp);
     }
 
 }
@@ -353,8 +357,9 @@ static void checkRunningApp() {
         %init(MobileStoreApp);
     }
 
-    if (idIsEqual(@"com.saurik.Cydia-")) {
-        %init(CydiaApp);
+    if (idIsEqual(@"com.saurik.Cydia")) {
+        isEnabled = NO;
+        // %init(CydiaApp);
     }
     if (idIsEqual(@"com.apple.Bridge")) {
         %init(WatchApp);
