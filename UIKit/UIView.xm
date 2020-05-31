@@ -34,14 +34,55 @@
 
 %hook UIViewController
 
+// -(void)viewDidLoad {
+//     %orig;
+//     UIView* window = self.view;
+
+//     if (!ranKeyWindowForTheFirstTime) {
+//         NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
+//         BOOL sysDarkModeEnabled = (n.intValue == 2);
+
+//         if (isEnabled) { // isEnabled means that both system dark mode and Eclipse are enabled in Settings
+            
+//             BOOL isAppStillLight = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 1);
+//             BOOL isAppUnsupported = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 0);
+//             BOOL isAppDark = (ACTIVE_APPLICATION_USER_INTERFACE_STYLE == 2);
+
+//             if (isAppDark) {
+//                 windowNeedsInterfaceOverride = NO; // Prevent override on apps that already support dark mode natively
+//                 // ranKeyWindowForTheFirstTime = YES;
+//             }
+            
+//             if ((isAppStillLight || isAppUnsupported) && windowNeedsInterfaceOverride && sysDarkModeEnabled ) { // App does not support dark mode
+//                 os_log(OS_LOG_DEFAULT, "ECLIPSE: Overriding user interface style to dark");
+//                 [window setOverrideUserInterfaceStyle: USER_INTERFACE_DARK]; // Force dark mode on all views through the key window
+//                  [window _setOverrideUserInterfaceStyle: USER_INTERFACE_DARK];
+//                 window.overrideUserInterfaceStyle = USER_INTERFACE_DARK;
+//                 didNeedInterfaceStyleOverride = YES;
+//                 // ranKeyWindowForTheFirstTime = YES;
+//             }
+
+//             os_log(OS_LOG_DEFAULT, "ECLIPSE: Current user interface style for app: %ld", ACTIVE_APPLICATION_USER_INTERFACE_STYLE);
+//         }
+//     }
+//     // NSString* executableName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
+//     // os_log(OS_LOG_DEFAULT, "ECLIPSE: Executable name is %@", executableName);
+
+
+//     // [window layoutSubviews]; // Probably not necessary
+
+//     // return window;
+// }
+
+
 -(long long)overrideUserInterfaceStyle {
-    NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
-    BOOL sysDarkModeEnabled = (n.intValue == 2);
-    BOOL appForceDarkIsEnabledInSettings = [[prefs objectForKey:[@"ForcedApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
+    // NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
+    // BOOL sysDarkModeEnabled = (n.intValue == 2);
+    // BOOL appForceDarkIsEnabledInSettings = [[prefs objectForKey:[@"ForcedApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
     
-    if (isEnabled && appForceDarkIsEnabledInSettings && sysDarkModeEnabled) {
-        return USER_INTERFACE_DARK;
-    }
+    // if (isEnabled && appForceDarkIsEnabledInSettings && sysDarkModeEnabled) {
+    //     return USER_INTERFACE_DARK;
+    // }
     return %orig;
 }
 

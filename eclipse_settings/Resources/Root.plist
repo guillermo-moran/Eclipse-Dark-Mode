@@ -64,7 +64,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>This option will force an application to use dark mode. If toggling an application in the &quot;Enabled Applications&quot; menu is not working, use this. This option will also attempt to force text label color to white.</string>
+			<string>This option will force an application to use dark mode. If an application that does not support dark mode after enabling it in &quot;Enabled Applications&quot;, toggle it inside of this menu.</string>
 		</dict>
 		<dict>
 			<key>enabled</key>
