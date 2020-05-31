@@ -1,7 +1,7 @@
 Package: me.gmoran.eclipse13
 Name: Eclipse for iOS 13
 Depends: mobilesubstrate, preferenceloader, applist, firmware (>= 13.0), com.creaturesurvive.libcscolorpicker
-Version: 7.0b5
+Version: 7.0.1-RC1
 Architecture: iphoneos-arm
 Description: Extensions for iOS 13's Dark Mode
 Depiction: http://gmoran.me/artemis/depictions/eclipse_13.html

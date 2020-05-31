@@ -76,13 +76,13 @@
 
 
 -(long long)overrideUserInterfaceStyle {
-    // NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
-    // BOOL sysDarkModeEnabled = (n.intValue == 2);
-    // BOOL appForceDarkIsEnabledInSettings = [[prefs objectForKey:[@"ForcedApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
+    NSNumber *n = (NSNumber* )[uikit_prefs objectForKey:INTERFACE_PREFS_KEY];
+    BOOL sysDarkModeEnabled = (n.intValue == 2);
+    BOOL appForceDarkIsEnabledInSettings = [[prefs objectForKey:[@"ForcedApps-" stringByAppendingString:[UIApplication displayIdentifier]]] boolValue];
     
-    // if (isEnabled && appForceDarkIsEnabledInSettings && sysDarkModeEnabled) {
-    //     return USER_INTERFACE_DARK;
-    // }
+    if (isEnabled && appForceDarkIsEnabledInSettings && sysDarkModeEnabled) {
+        return USER_INTERFACE_DARK;
+    }
     return %orig;
 }
 
