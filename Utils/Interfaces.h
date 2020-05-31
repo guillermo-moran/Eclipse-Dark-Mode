@@ -23,7 +23,7 @@
 
 #define IsiPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
-#define IS_BETA_BUILD YES
+#define IS_BETA_BUILD NO
 
 #define PREFS_DOMAIN @"com.gmoran.eclipse"
 #define PREFS_CHANGED_NOTIF "com.gmoran.eclipse.prefs-changed"
