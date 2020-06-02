@@ -113,6 +113,15 @@ static BOOL didOverrideColor = NO;
     }
 }
 
+-(void)layoutSubviews {
+    %orig;
+     if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+            UIColor* newColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+            [self setBackgroundColor: newColor];
+            [self setEclipsed: YES];
+        }
+}
+
 -(void)setBackgroundColor:(UIColor*)color {
     if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
         UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);

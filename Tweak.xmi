@@ -91,6 +91,31 @@ d8888b. d8888b. d88888b d88888b .d8888.
  ~Y8888P' Y888888P    YP    Y888888P Y88888P  `8b8' `8d8'
 */
 
+//Text Caret
+%hook UITextSelectionView
+
+-(UIView *)caretView {
+    UIView* orig = %orig;
+    [orig setTag: VIEW_EXCLUDE_TAG];
+    return orig;
+}
+
+-(id)caretViewColor {
+    UIColor* originalColor = %orig;
+    if (isEnabled) {
+        if (_selectedTint == 1) { // white... ugh
+            return createEclipseDynamicColor(originalColor, BABY_BLUE_COLOR);
+        }
+        else {
+            return createEclipseDynamicColor(originalColor, selectedTintColor());
+
+        }
+    }
+    return %orig;
+}
+
+%end
+
 #include "UIKit/UIView.xm"
 
 
@@ -105,25 +130,6 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 // #include "UIKit/UITextView.xm" Not sure we need this, forced dark mode handles it
 
-//Text Caret
-%hook UITextSelectionView
-
--(id)caretViewColor {
-    UIColor* originalColor = %orig;
-    [self setTag: VIEW_EXCLUDE_TAG];
-    if (isEnabled) {
-        if (_selectedTint == 1) { // white... ugh
-            return createEclipseDynamicColor(originalColor, BABY_BLUE_COLOR);
-        }
-        else {
-            return createEclipseDynamicColor(originalColor, selectedTintColor());
-
-        }
-    }
-    return %orig;
-}
-
-%end
 
 /*
     Activity Indicator
@@ -227,8 +233,6 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Telegram.xm"
 #include "Application_Support/Tweetbot.xm"
 #include "Application_Support/Tumblr.xm"
-#include "Application_Support/Snapchat.xm"
-#include "Application_Support/Soundcloud.xm"
 #include "Application_Support/FBMessenger.xm"
 #include "Application_Support/Tinder.xm"
 #include "Application_Support/Cydia.xm"
@@ -252,10 +256,6 @@ static void checkAppBlackList() {
         if (isBetterSettingsInstalled()) {
             isEnabled = NO;
         }
-    }
-    if (idIsEqual(@"com.saurik.Cydia")) {
-        isEnabled = NO;
-        // %init(CydiaApp);
     }
 
 }
@@ -290,13 +290,7 @@ static void checkRunningApp() {
     if (idIsEqual(@"net.whatsapp.WhatsApp")) {
         %init(WhatsappApp);
     }
-    //Added 6/4/14
-    if (idIsEqual(@"com.toyopagroup.picaboo")) {
-        //%init(SnapchatApp);
-    }
-    if (idIsEqual(@"com.soundcloud.TouchApp")) {
-        %init(SoundcloudApp);
-    }
+   
     //Added 9/19/14
     if (idIsEqual(@"com.facebook.Messenger")) {
         %init(FBMessenger);
@@ -358,8 +352,8 @@ static void checkRunningApp() {
     }
 
     if (idIsEqual(@"com.saurik.Cydia")) {
-        isEnabled = NO;
-        // %init(CydiaApp);
+        // isEnabled = NO;
+        %init(CydiaApp);
     }
     if (idIsEqual(@"com.apple.Bridge")) {
         %init(WatchApp);
