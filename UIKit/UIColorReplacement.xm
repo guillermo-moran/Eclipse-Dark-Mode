@@ -98,9 +98,11 @@ static BOOL bazziInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"
 // System Colors
 
 // + (id)colorWithRed:(double)red green:(double)green blue:(double)blue alpha:(double)alpha {
-//     //Let's make these darker in dark mode?
-//     UIColor* originalColor = %orig;
-//     return createEclipseDynamicColor(originalColor, [originalColor darkerColor]); 
+//     UIColor* orig = %orig;
+//     if (red == 0.0 && green == 122.0/255.0 && blue == 1.0) {
+// 		return createEclipseDynamicColor(orig, VIEW_COLOR);
+// 	}
+// 	return orig;
 // }
 
 // // Default tint

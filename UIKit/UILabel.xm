@@ -15,6 +15,8 @@
 
 %hook UILabel
 
+#define TABLE_LABEL objc_getClass("UITableViewLabel")
+
 %new
 -(BOOL)isSuperviewEclipsed {
     // if (isEnabled) {
@@ -24,27 +26,67 @@
     return YES;
 }
 
--(void)drawRect:(CGRect)arg1 {
-    %orig;
+// -(void)layoutSubviews {
+//     %orig;
 
-    if (isEnabled) {
-        if ([self isSuperviewEclipsed]) {
+//     if (isEnabled) {
+//         if ([self isSuperviewEclipsed]) {
 
-            UIColor* originalTextColor = self.textColor;
-            if (isTextDarkColor(originalTextColor)) {
-                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
-                [self setBackgroundColor:[UIColor clearColor]];
-                [self setTextColor:newColor];
+//             UIColor* originalTextColor = self.textColor;
+//             if (isTextDarkColor(originalTextColor)) {
+//                 UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+//                 [self setBackgroundColor:[UIColor clearColor]];
+//                 [self setTextColor:newColor];
+//             }
+//         }
+//     }
+// }
+
+-(void)setAttributedText:(NSAttributedString *)string {
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
+        NSMutableAttributedString* newString = [string mutableCopy];
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                %orig(newString);
+                return;
             }
         }
     }
-
+    %orig;
 }
 
--(void)layoutSubviews {
+-(NSAttributedString *)attributedText {
+    NSAttributedString* string = %orig;
+
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
+        NSMutableAttributedString* newString = [string mutableCopy];
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+        
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                return newString;
+            }
+        }
+    }
+    return string;
+}
+
+-(void)didMoveToWindow {
     %orig;
 
-    if (isEnabled) {
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
         if ([self isSuperviewEclipsed]) {
 
             UIColor* originalTextColor = self.textColor;
@@ -55,28 +97,36 @@
             }
         }
     }
-
 }
 
 -(void)setTextColor:(id)color {
 
-    if (isEnabled) {
-        // if (self.tag == 52961101) {
-        //     color = TEXT_COLOR;
-        //     %orig(color);
-        //     return;
-        // }
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
         if ([self isSuperviewEclipsed]) {
-
             UIColor* originalTextColor = color;
             if (isTextDarkColor(originalTextColor)) {
                 UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
                 [self setBackgroundColor:[UIColor clearColor]];
                 %orig(newColor);
+                return;
             }
         }
     }
     %orig(color);
+}
+
+-(UIColor*)textColor {
+    UIColor* orig = %orig;
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
+        if ([self isSuperviewEclipsed]) {
+            if (isTextDarkColor(orig)) {
+                UIColor* newColor = createEclipseDynamicColor(orig, TEXT_COLOR);
+                [self setBackgroundColor:[UIColor clearColor]];
+                return newColor;
+            }
+        }
+    }
+    return orig;
 }
 
 %end

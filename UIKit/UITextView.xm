@@ -9,233 +9,142 @@
 
 %hook UITextView
 
--(id)init {
-    id  wow = %orig;
+%new
+-(BOOL)isSuperviewEclipsed {
+    // if (isEnabled) {
+    //     return [self.superview isEclipsed];
+    // }
+    // return NO;
+    return YES;
+}
 
+// -(void)layoutSubviews {
+//     %orig;
+
+//     if (isEnabled) {
+//         if ([self isSuperviewEclipsed]) {
+
+//             UIColor* originalTextColor = self.textColor;
+//             if (isTextDarkColor(originalTextColor)) {
+//                 UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+//                 [self setBackgroundColor:[UIColor clearColor]];
+//                 [self setTextColor:newColor];
+//             }
+//         }
+//     }
+// }
+
+-(void)setAttributedText:(NSAttributedString *)string {
     if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
+        NSMutableAttributedString* newString = [string mutableCopy];
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
 
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
 
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return wow;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                %orig(newString);
+                return;
             }
         }
     }
-    return wow;
-}
-
--(id)initWithFrame:(CGRect)arg1 {
-    id  wow = %orig;
-
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return wow;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
-            }
-        }
-    }
-    return wow;
-}
-
--(id)initWithCoder:(id)arg1 {
-    id  wow = %orig;
-
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return wow;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
-            }
-        }
-    }
-    return wow;
-}
-
--(id)initWithFrame:(CGRect)arg1 font:(id)arg2 {
-
-    id  wow = %orig;
-
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return wow;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
-            }
-        }
-    }
-    return wow;
-}
-
--(id)initWithFrame:(CGRect)arg1 textContainer:(id)arg2 {
-    id  wow = %orig;
-
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return wow;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
-            }
-        }
-    }
-    return wow;
-}
-
-
-
-
-
--(id)backgroundColor {
-    UIColor* color = %orig;
-    if (isEnabled) {
-        if (!isLightColor(color)) {
-
-            color = [UIColor clearColor];
-        }
-    }
-    return color;
-}
-
--(id)textColor {
-    if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                return TEXT_COLOR;
-
-            }
-        }
-    }
-    return %orig;
-}
--(void)setFrame:(CGRect)arg1 {
     %orig;
+}
+
+// crashes slack, possibly others
+// -(NSAttributedString *)attributedText {
+//     NSAttributedString* string = %orig;
+
+//     if (isEnabled) {
+//         NSMutableAttributedString* newString = [string mutableCopy];
+//         if ([[newString string] length] > 0) {
+//             NSRange range = NSMakeRange(0, [[newString string] length]);
+        
+//             NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+//             UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+//             if (isTextDarkColor(originalColor)) {
+//                 UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+//                 [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+//                 return newString;
+//             }
+//         }
+//     }
+//     return string;
+// }
+
+// -(void)didMoveToWindow {
+//     %orig;
+
+//     if (isEnabled) {
+//         if ([self isSuperviewEclipsed]) {
+
+//             UIColor* originalTextColor = self.textColor;
+//             if (isTextDarkColor(originalTextColor)) {
+//                 UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+//                 [self setBackgroundColor:[UIColor clearColor]];
+//                 [self setTextColor:newColor];
+//             }
+//         }
+//     }
+// }
+
+-(void)setTextColor:(id)color {
 
     if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    return;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    [self setTextColor:TEXT_COLOR];
-                }
+        if ([self isSuperviewEclipsed]) {
+            UIColor* originalTextColor = color;
+            if (isTextDarkColor(originalTextColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalTextColor, TEXT_COLOR);
+                [self setBackgroundColor:[UIColor clearColor]];
+                %orig(newColor);
+                return;
             }
         }
     }
+    %orig(color);
 }
 
--(void)setTextColor:(UIColor*)color {
-    %orig;
-
+-(UIColor*)textColor {
+    UIColor* orig = %orig;
     if (isEnabled) {
-        if (!isLightColor(self.backgroundColor)) {
-
-            if (![self.superview isKindOfClass:[UIImageView class]]) {
-
-                id balloon = objc_getClass("CKBalloonTextView");
-
-                if ([self class] == balloon) {
-                    %orig;
-                }
-                else {
-                    [self setBackgroundColor:[UIColor clearColor]];
-                    %orig(TEXT_COLOR);
-                }
+        if ([self isSuperviewEclipsed]) {
+            if (isTextDarkColor(orig)) {
+                UIColor* newColor = createEclipseDynamicColor(orig, TEXT_COLOR);
+                [self setBackgroundColor:[UIColor clearColor]];
+                return newColor;
             }
         }
     }
+    return orig;
 }
-
-//These methods cause hanging
-
-/*
--(void)setFrame:(CGRect)arg1 {
-}
- */
-/*
--(void)setBounds:(CGRect)arg1 {
-}
-*/
-
-/*
--(void)layoutSubviews {
-}
- */
 
 %end
 
-%hook MFComposeRecipientTextView
+// %hook MFComposeRecipientTextView
 
-- (void)layoutSubviews {
-    %orig;
+// - (void)layoutSubviews {
+//     %orig;
 
-    if (isEnabled) {
-        [self setBackgroundColor:VIEW_COLOR];
-    }
+//     if (isEnabled) {
+//         [self setBackgroundColor:VIEW_COLOR];
+//     }
 
 
-}
-%end
+// }
+// %end
 
-%hook _MFAtomTextView
+// %hook _MFAtomTextView
 
-- (void)layoutSubviews {
-    %orig;
-    if (isEnabled) {
-       [self setTextColor:TEXT_COLOR];
-    }
+// - (void)layoutSubviews {
+//     %orig;
+//     if (isEnabled) {
+//        [self setTextColor:TEXT_COLOR];
+//     }
 
-}
-
-%end
+// }
+// 
+// %end

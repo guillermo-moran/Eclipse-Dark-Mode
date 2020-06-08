@@ -128,7 +128,7 @@ d8888b. d8888b. d88888b d88888b .d8888.
     YP    YP    YP    YP       YP    Y888888P Y88888P  `8b8' `8d8'
 */
 
-// #include "UIKit/UITextView.xm" Not sure we need this, forced dark mode handles it
+#include "UIKit/UITextView.xm" 
 
 
 /*
@@ -216,24 +216,21 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/iTunesStore.xm"
 #include "Application_Support/AppStore.xm"
 #include "Application_Support/WatchApp.xm"
-#include "Application_Support/Calendar.xm"
+// #include "Application_Support/Calendar.xm"
 #include "Application_Support/Maps.xm"
-#include "Application_Support/Photos.xm"
 // #include "Application_Support/Settings.xm"
 
 #include "UIKit/WiFiKit.xm"
 
 // Third Party App Support
 
-#include "Application_Support/WhatsApp.xm"
 // #include "Application_Support/Instagram.xm"
-#include "Application_Support/Twitter.xm"
 #include "Application_Support/Kik.xm"
+#include "Application_Support/Twitter.xm"
 #include "Application_Support/Threema.xm"
 #include "Application_Support/Telegram.xm"
-#include "Application_Support/Tweetbot.xm"
 #include "Application_Support/Tumblr.xm"
-#include "Application_Support/FBMessenger.xm"
+// #include "Application_Support/FBMessenger.xm"
 #include "Application_Support/Tinder.xm"
 #include "Application_Support/Cydia.xm"
 #include "Application_Support/YouTube.xm"
@@ -243,8 +240,8 @@ d8888b. d8888b. d88888b d88888b .d8888.
 
 static void checkAppBlackList() {
     if (idIsEqual(@"com.facebook.Facebook")) {
-        isEnabled = NO;
-        // %init(Facebook);
+        // isEnabled = NO;
+        %init(Facebook);
     }
     if (idIsEqual(@"com.apple.calculator")) {
         isEnabled = NO;
@@ -272,29 +269,25 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.tumblr.tumblr")) {
         %init(TumblrApp);
     }
-    if (idIsEqual(@"com.tapbots.Tweetbot3")) {
-        %init(TweetbotApp);
-    }
+    
     if (idIsEqual(@"ph.telegra.Telegraph")) {
         %init(TelegramApp);
     }
     if (idIsEqual(@"com.kik.chat")) {
         %init(KikApp);
     }
-    if (idIsEqual(@"com.atebits.Tweetie2")) {
-        %init(TwitterApp);
-    }
+    
     if (idIsEqual(@"com.burbn.instagram")) {
         // %init(InstagramApp);
     }
-    if (idIsEqual(@"net.whatsapp.WhatsApp")) {
-        %init(WhatsappApp);
+    if (idIsEqual(@"com.atebits.Tweetie2")) {
+        %init(TwitterApp);
     }
    
     //Added 9/19/14
-    if (idIsEqual(@"com.facebook.Messenger")) {
-        %init(FBMessenger);
-    }
+    // if (idIsEqual(@"com.facebook.Messenger")) {
+    //     %init(FBMessenger);
+    // }
     //Added 9/28
     if (idIsEqual(@"ch.threema.iapp")) {
         %init(ThreemaApp);
@@ -340,10 +333,10 @@ static void checkRunningApp() {
         %init(AppstoreApp, AppStoreSearchHeaderView = objc_getClass("AppStore.SearchHeaderView"), FadeInDynamicTypeButton = objc_getClass("AppStore.FadeInDynamicTypeButton"));
 
     }
-    if (idIsEqual(@"com.apple.mobilecal")) {
-        %init(CalendarApp);
-        %init(CalendarFix);
-    }
+    // if (idIsEqual(@"com.apple.mobilecal")) {
+    //     %init(CalendarApp);
+    //     %init(CalendarFix);
+    // }
     if (idIsEqual(@"com.apple.MobileAddressBook")) {
         %init(ContactsApp);
     }
@@ -361,9 +354,7 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.apple.Maps")) {
         %init(MapsApp);
     }
-    if (idIsEqual(@"com.apple.mobileslideshow")) {
-        //%init(PhotosApp);
-    }
+    
     if (idIsEqual(@"com.apple.Preferences")) {
         if (!isBetterSettingsInstalled()) {
             %init(WiFiKitFix);
@@ -412,16 +403,11 @@ static void initializeApplications() {
             _adaptiveColor = generatedAdaptiveColor();
         }
 
+        %init(SystemUIColors);
+        
         %init(_ungrouped);
 
-
-        // if (!idIsEqual(@"com.apple.mobilesafari")) {
-            %init(SystemUIColors);
-        // }
-
-        if (customTextColorEnabled() || appForceDarkIsEnabledInSettings) {
-            %init(UILabelHooks)
-        }
+        %init(UILabelHooks);
 
         //Fix clock app crashing
         isClockApp = idIsEqual(@"com.apple.mobiletimer");
@@ -431,7 +417,6 @@ static void initializeApplications() {
         }
 
         if (shouldAutoReplaceColors && !idIsEqual(@"com.apple.Preferences")) {
-
             %init(AutoReplaceColor);
         }
 
@@ -443,23 +428,23 @@ static void initializeApplications() {
 
 }
 
-// %hook NSBundle
+%hook NSBundle
 
-// -(NSDictionary *)infoDictionary {
-//     NSDictionary* originalDict = %orig;
-//     NSMutableDictionary* mutableDict = [originalDict mutableCopy];
-//     [mutableDict removeObjectForKey: @"UIUserInterfaceStyle"];
-//     return mutableDict;
-// }
+-(NSDictionary *)infoDictionary {
+    NSDictionary* originalDict = %orig;
+    NSMutableDictionary* mutableDict = [originalDict mutableCopy];
+    [mutableDict removeObjectForKey: @"UIUserInterfaceStyle"];
+    return mutableDict;
+}
 
-// -(id)objectForInfoDictionaryKey:(NSString*)key {
-//     if ([key isEqualToString: @"UIUserInterfaceStyle"]) {
-//         return nil;
-//     }
-//     return %orig;
-// }
+-(id)objectForInfoDictionaryKey:(NSString*)key {
+    if ([key isEqualToString: @"UIUserInterfaceStyle"]) {
+        return nil;
+    }
+    return %orig;
+}
 
-// %end
+%end
 
 // %hook UIWindow
 

@@ -29,29 +29,103 @@
 
 // // %end
 
-// %hook FBRichTextView
+%hook FBRichTextView
 
-// -(void)layoutSubviews {
-// 	%orig;
-// 	[self setColor: RED_COLOR];
-// 	NSAttributedString* originalAttrStr = [self attributedString];
-// 	NSString* string = [originalAttrStr string];
-// 	// NSDictionary *attrs = @{ NSForegroundColorAttributeName : RED_COLOR };
-// 	[originalAttrStr addAttribute:NSForegroundColorAttributeName value: RED_COLOR range:NSMakeRange(0, string.length)];
-// 	// NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:string attributes:attrs];
-// 	[self setAttributedString: originalAttrStr];	
-// }
+-(void)setAttributedString:(NSAttributedString *)string {
+    if (isEnabled) {
+        NSMutableAttributedString* newString = [string mutableCopy];
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                %orig(newString);
+                return;
+            }
+        }
+    }
+    %orig;
+}
+
+-(NSAttributedString *)attributedString {
+    NSAttributedString* string = %orig;
+
+    if (isEnabled) {
+        NSMutableAttributedString* newString = [string mutableCopy];
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+        
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                return newString;
+            }
+        }
+    }
+    return string;
+}
+
+-(void)layoutSubviews {
+	%orig;
+    if (isEnabled) {
+        NSMutableAttributedString* newString = [[self attributedString] mutableCopy];
+
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+        
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                [self setAttributedString: newString];
+            }
+        }
+	    
+
+        NSAttributedString* attrString = MSHookIvar<NSAttributedString*>(self, "_attributedString");
+        NSMutableAttributedString* newStringIvar = [attrString mutableCopy];
+
+        if ([[newStringIvar string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newStringIvar string] length]);
+        
+            NSDictionary* attributesFromString = [newStringIvar attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (isTextDarkColor(originalColor)) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newStringIvar addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                attrString = newStringIvar;
+            }
+        }
+
+        [self setColor: TEXT_COLOR];
+    }
+}
 
 
-// -(void)setColor:(UIColor*)color {
-// 	%orig(RED_COLOR);
-// 	[RED_COLOR set];
-// }
+-(void)setColor:(UIColor*)color {
+    if (isEnabled) {
+        %orig(TEXT_COLOR);
+    }
+	%orig;
+}
 
-// -(UIColor*)color {
-// 	return RED_COLOR;
-// }
+-(UIColor*)color {
+	if (isEnabled) {
+        return TEXT_COLOR;
+    }
+    return %orig;
+}
 
-// %end
+%end
 
 %end

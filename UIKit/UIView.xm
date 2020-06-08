@@ -25,12 +25,6 @@
 
 %end
 
-@interface UIView(Eclipse)
--(void)override;
-
-@property (nonatomic) BOOL eclipsed;
-
-@end
 
 %hook UIViewController
 
@@ -88,9 +82,19 @@
 
 %end
 
+@interface UIView (Eclipse)
+
+@property (nonatomic) BOOL eclipsed;
+@property (nonatomic, retain) UIColor* eclipseColor;
+
+-(void)override;
+
+@end
 
 %hook UIView
+
 %property (nonatomic) BOOL eclipsed;
+%property (nonatomic, retain) UIColor* eclipseColor;
 
 //HBFPBackgroundView == FlagPaint
 
@@ -106,8 +110,10 @@ static BOOL didOverrideColor = NO;
     if (isEnabled) {
 
         if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
-            UIColor* newColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
-            [self setBackgroundColor: newColor];
+            if (!self.eclipseColor) {
+                self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+            }
+            [self setBackgroundColor: self.eclipseColor];
             [self setEclipsed: YES];
         }
     }
@@ -116,16 +122,31 @@ static BOOL didOverrideColor = NO;
 -(void)layoutSubviews {
     %orig;
      if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
-            UIColor* newColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
-            [self setBackgroundColor: newColor];
+            if (!self.eclipseColor) {
+                self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+            }
+            [self setBackgroundColor: self.eclipseColor];
+            [self setEclipsed: YES];
+        }
+}
+
+-(void)didMoveToWindow {
+    %orig;
+     if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+            if (!self.eclipseColor) {
+                self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+            }
+            [self setBackgroundColor: self.eclipseColor];
             [self setEclipsed: YES];
         }
 }
 
 -(void)setBackgroundColor:(UIColor*)color {
     if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
-        UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
-        %orig(eclipseColor);
+        if (!self.eclipseColor) {
+            self.eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        }
+        %orig(self.eclipseColor);
         [self setEclipsed: YES];
         return;
     }
@@ -138,9 +159,11 @@ static BOOL didOverrideColor = NO;
     id color = %orig;
 
     if (isLightColor(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
-        UIColor* eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        if (!self.eclipseColor) {
+            self.eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
+        }
         [self setEclipsed: YES];
-        return eclipseColor;
+        return self.eclipseColor;
     }
     return color;
 }
@@ -229,10 +252,12 @@ id ok = %orig;
 -(void)setFrame:(CGRect)arg1 {
     %orig;
     if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
-        [self setBackgroundColor:createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR)];
+        if (!self.eclipseColor) {
+            self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
+        }
+        [self setBackgroundColor: self.eclipseColor];
         [self setEclipsed: YES];
     }
-
 }
 
 

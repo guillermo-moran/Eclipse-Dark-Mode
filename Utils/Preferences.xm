@@ -296,13 +296,6 @@ static UIColor* textColor(void) {
     }
 
     UIColor* eclipseTextColor = [UIColor colorWithRed:230.0/255.0f green:230.0/255.0f blue:230.0/255.0f alpha:1.0f];
-    // if (@available(iOS 13.0, *)) {
-    //     return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
-    //         return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-    //             eclipseColor :             // Dark Mode Color
-    //             [UIColor labelColor];  // Light Mode Color
-    //     }];
-    // }         
     return eclipseTextColor;
 }
 static UIColor* selectedBarColor(void) {
