@@ -29,6 +29,71 @@
 
 // // %end
 
+// %hook NSString
+
+// -(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
+
+// 	// if (isPaidCydiaPackage) {
+// 	//   [selectedTintColor() set];
+// 	// }
+// 	//else {
+// 	if (isEnabled) {
+// 		[TEXT_COLOR set];
+// 	}
+// 	//}
+// 	return %orig;
+// }
+
+// %end
+
+%hook FDSTetraPressStateScaleComponentView
+
+-(id)init {
+    id x = %orig;
+    if (isEnabled) {
+        UIImage* image = [self image];
+        applyInvertFilter((UIView*)image);
+    }
+    return x;
+}
+
+%end
+
+%hook CKButtonWithExtendedTapArea
+
+-(void)layoutSubviews {
+    %orig;
+    if (isEnabled) {
+        [self setAlpha: 0.5];
+    }
+}
+
+%end
+
+%hook RCTView
+
+-(id)init {
+    id x = %orig;
+    if (isEnabled) {
+        applyInvertFilter((UIView*)self);
+    }
+    return x;
+}
+
+%end
+
+%hook FBUIExpandableButton
+
+-(id)init {
+    id x = %orig;
+    if (isEnabled) {
+        applyInvertFilter((UIView*)self);
+    }
+    return x;
+}
+
+%end
+
 %hook FBRichTextView
 
 -(void)setAttributedString:(NSAttributedString *)string {
@@ -36,11 +101,12 @@
         NSMutableAttributedString* newString = [string mutableCopy];
         if ([[newString string] length] > 0) {
             NSRange range = NSMakeRange(0, [[newString string] length]);
+            [newString removeAttribute: NSForegroundColorAttributeName range: range];
 
             NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
             UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
 
-            if (isTextDarkColor(originalColor)) {
+            if (true) {
                 UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
                 [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
                 %orig(newString);
@@ -58,11 +124,12 @@
         NSMutableAttributedString* newString = [string mutableCopy];
         if ([[newString string] length] > 0) {
             NSRange range = NSMakeRange(0, [[newString string] length]);
+            [newString removeAttribute: NSForegroundColorAttributeName range: range];
         
             NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
             UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
 
-            if (isTextDarkColor(originalColor)) {
+            if (true) {
                 UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
                 [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
                 return newString;
@@ -70,6 +137,45 @@
         }
     }
     return string;
+}
+
+-(void)setFrame:(CGRect*)frame {
+	%orig;
+    if (isEnabled) {
+        NSMutableAttributedString* newString = [[self attributedString] mutableCopy];
+
+        if ([[newString string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newString string] length]);
+        
+            NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (true) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                [self setAttributedString: newString];
+            }
+        }
+	    
+
+        NSAttributedString* attrString = MSHookIvar<NSAttributedString*>(self, "_attributedString");
+        NSMutableAttributedString* newStringIvar = [attrString mutableCopy];
+
+        if ([[newStringIvar string] length] > 0) {
+            NSRange range = NSMakeRange(0, [[newStringIvar string] length]);
+        
+            NSDictionary* attributesFromString = [newStringIvar attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
+            UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
+
+            if (true) {
+                UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+                [newStringIvar addAttribute:NSForegroundColorAttributeName value:newColor range:range];
+                attrString = newStringIvar;
+            }
+        }
+
+        [self setColor: TEXT_COLOR];
+    }
 }
 
 -(void)layoutSubviews {
@@ -83,7 +189,7 @@
             NSDictionary* attributesFromString = [newString attributesAtIndex:0 longestEffectiveRange:nil inRange:range];
             UIColor* originalColor = [attributesFromString objectForKey:NSForegroundColorAttributeName];
 
-            if (isTextDarkColor(originalColor)) {
+            if (true) {
                 UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
                 [newString addAttribute:NSForegroundColorAttributeName value:newColor range:range];
                 [self setAttributedString: newString];
