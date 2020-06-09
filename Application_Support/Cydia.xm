@@ -15,6 +15,43 @@ extern "C" void UISetColor(CGColorRef color);
 
 static BOOL isPaidCydiaPackage;
 
+%hook UIView
+
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled && isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]]) {
+        [self setBackgroundColor: VIEW_COLOR];
+    }
+}
+
+-(UIColor*)backgroundColor {
+	UIColor* color = %orig;
+	if (isEnabled && isLightColor(color) && ![color isEqual:[UIColor clearColor]]) {
+        return VIEW_COLOR;
+    }
+	return color;
+}
+
+%end
+
+%hook UITabBar
+
+-(UIColor *)unselectedItemTintColor {
+	if (isEnabled) {
+		return [UIColor whiteColor];
+	}
+	return %orig;
+}
+
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+		[self setUnselectedItemTintColor: [UIColor whiteColor]];
+	}
+}
+
+%end
+
 %hook _UIBarBackground
 
 -(void)layoutSubviews {
@@ -70,9 +107,17 @@ static BOOL isPaidCydiaPackage;
 
 %hook CyteTableViewCellContentView
 
--(void)setFrame:(CGRect)frame {
+-(id)init {
+	id x = %orig;
+	if (isEnabled) {
+		[self setBackgroundColor: TABLE_COLOR];
+	}
+	return x;
+}
+
+-(void)didMoveToWindow {
 	%orig;
-	[self setBackgroundColor: VIEW_COLOR];
+	[self setBackgroundColor: TABLE_COLOR];
 }
 
 -(void)layoutSubviews {
@@ -80,6 +125,14 @@ static BOOL isPaidCydiaPackage;
 	if (isEnabled) {
 		[self setBackgroundColor: TABLE_COLOR];
 	}
+}
+
+-(void)setBackgroundColor:(UIColor*)color {
+	if (isEnabled) {
+		%orig(TABLE_COLOR);
+		return;
+	}
+	%orig;
 }
 
 -(id)backgroundColor {
@@ -114,7 +167,7 @@ static BOOL isPaidCydiaPackage;
 
 %hook _UITableViewCellHeaderFooterContentView
 
--(void)setFrame:(CGRect)frame {
+-(void)layoutSubviews {
 	%orig;
 	if (isEnabled) {
 		[self setBackgroundColor: VIEW_COLOR];
@@ -132,6 +185,32 @@ static BOOL isPaidCydiaPackage;
 	}
 }
 
+-(UIColor*)backgroundColor {
+	if (isEnabled) {
+		return [UIColor clearColor];
+	}
+	return %orig;
+}
+
+%end
+
+%hook UITableViewCell 
+
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+        [self setBackgroundColor: TABLE_COLOR];
+    }
+}
+
+-(UIColor*)backgroundColor {
+	UIColor* color = %orig;
+	if (isEnabled) {
+        return TABLE_COLOR;
+    }
+	return color;
+}
+
 %end
 
 %hook PackageCell
@@ -141,25 +220,51 @@ static BOOL isPaidCydiaPackage;
 	%orig;
 }
 
+-(void)layoutSubviews {
+	%orig;
+	if (isEnabled) {
+        [self setBackgroundColor: TABLE_COLOR];
+    }
+}
+
+-(UIColor*)backgroundColor {
+	UIColor* color = %orig;
+	if (isEnabled) {
+        return TABLE_COLOR;
+    }
+	return color;
+}
+
+// - (void) drawSummaryContentRect:(CGRect)rect {
+// 	%orig;
+// 	if (isEnabled) {
+// 		UISetColor([UIColor redColor].CGColor);
+// 	}
+// }
+
+// - (void) drawNormalContentRect:(CGRect)rect {
+// 	%orig;
+// 	if (isEnabled) {
+// 		UISetColor([UIColor redColor].CGColor);
+// 	}
+// }
+
 %end
 
 %hook NSString
 
-// -(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
+-(CGSize)drawAtPoint:(CGPoint)arg1 forWidth:(double)arg2 withFont:(id)arg3 lineBreakMode:(long long)arg4 {
 
-// 	// if (isPaidCydiaPackage) {
-// 	//   [selectedTintColor() set];
-// 	// }
-// 	//else {
-// 	if (isEnabled) {
-// 		[TEXT_COLOR set];
-// 	}
-
-// 	//}
-
-
-// 	return %orig;
-// }
+	// if (isPaidCydiaPackage) {
+	//   [selectedTintColor() set];
+	// }
+	//else {
+	if (isEnabled) {
+		[TEXT_COLOR set];
+	}
+	//}
+	return %orig;
+}
 
 %end
 

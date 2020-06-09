@@ -239,10 +239,6 @@ d8888b. d8888b. d88888b d88888b .d8888.
 #include "Application_Support/Facebook.xm"
 
 static void checkAppBlackList() {
-    if (idIsEqual(@"com.facebook.Facebook")) {
-        // isEnabled = NO;
-        %init(Facebook);
-    }
     if (idIsEqual(@"com.apple.calculator")) {
         isEnabled = NO;
     }
@@ -364,7 +360,10 @@ static void checkRunningApp() {
     if (idIsEqual(@"com.google.Gmail")) {
         %init(GMail);
     }
-
+    if (idIsEqual(@"com.facebook.Facebook")) {
+        // isEnabled = NO;
+        %init(Facebook);
+    }
 }
 
 static void initializeApplications() {
