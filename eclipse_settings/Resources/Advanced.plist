@@ -134,7 +134,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -150,7 +150,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
@@ -160,7 +160,7 @@
 			<key>key</key>
 			<string>selectedSplashScreenColor</string>
 			<key>label</key>
-			<string>Loading Screen Color (Coming Soon)</string>
+			<string>Loading Screen Color</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 			<key>detail</key>
