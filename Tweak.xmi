@@ -428,20 +428,15 @@ static void initializeApplications() {
 
 }
 
-%hook NSBundle
+// TO-DO: Put this in a newsapp hook.
+%hook SXTextView
 
--(NSDictionary *)infoDictionary {
-    NSDictionary* originalDict = %orig;
-    NSMutableDictionary* mutableDict = [originalDict mutableCopy];
-    [mutableDict removeObjectForKey: @"UIUserInterfaceStyle"];
-    return mutableDict;
-}
-
--(id)objectForInfoDictionaryKey:(NSString*)key {
-    if ([key isEqualToString: @"UIUserInterfaceStyle"]) {
-        return nil;
+-(id)init {
+    id view = %orig;
+    if (isEnabled) {
+        applyInvertFilter((UIView*)self);
     }
-    return %orig;
+    return view;
 }
 
 %end

@@ -119,6 +119,11 @@ static BOOL didOverrideColor = NO;
     }
 }
 
+// -(void)traitCollectionDidChange:(id)arg1 {
+//     os_log(OS_LOG_DEFAULT, "ECLIPSE: TRAIT COLLECTION CHANGED");
+//     %orig;
+// }
+
 -(void)layoutSubviews {
     %orig;
      if (isLightColor(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
