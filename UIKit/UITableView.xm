@@ -66,21 +66,23 @@
 
 
 
-// -(void)setBackgroundColor:(id)arg1 {
-//
-//     if (isEnabled) {
-//         %orig(TABLE_COLOR);
-//         return;
-//     }
-//     %orig;
-// }
-//
-// -(id)backgroundColor {
-//     if (isEnabled) {
-//         return TABLE_COLOR;
-//     }
-//     return %orig;
-// }
+-(void)setBackgroundColor:(UIColor*)originalColor {
+
+    if (isEnabled && ![originalColor isEqual:[UIColor clearColor]] && originalColor != nil) { // should we check isLight?
+        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+        %orig(dynamicColor);
+    }
+    %orig;
+}
+
+-(id)backgroundColor {
+     UIColor* originalColor = %orig;
+    if (isEnabled && ![originalColor isEqual:[UIColor clearColor]] && originalColor != nil) { // should we check isLight?
+        UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+        return dynamicColor;
+    }
+    return originalColor;
+}
 
 
 
@@ -333,6 +335,19 @@
             UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
             [label setTextColor:newColor];
         }
+    }
+
+
+    return label;
+}
+
+-(id)_textLabel {
+    UILabel* label = %orig;
+
+    if (isEnabled) {
+        UIColor* originalColor = [label textColor];
+        UIColor* newColor = createEclipseDynamicColor(originalColor, TEXT_COLOR);
+        [label setTextColor:newColor];
     }
 
 
