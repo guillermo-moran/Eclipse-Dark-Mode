@@ -1,0 +1,9 @@
+Package: com.gmoran.eclipsesb
+Name: EclipseSB
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Guillermo Moran
+Author: Guillermo Moran
+Section: Tweaks

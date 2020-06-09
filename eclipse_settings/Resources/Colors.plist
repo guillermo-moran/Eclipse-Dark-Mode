@@ -238,7 +238,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>default</key>
 			<integer>0</integer>
 			<key>defaults</key>
@@ -246,7 +246,7 @@
 			<key>key</key>
 			<string>statusbarTint</string>
 			<key>label</key>
-			<string>Statusbar Color (Coming Soon)</string>
+			<string>Statusbar Color</string>
 			<key>PostNotification</key>
 			<string>com.gmoran.eclipse.prefs-changed</string>
 			<key>detail</key>
