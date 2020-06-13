@@ -6,7 +6,7 @@ static UIColor* createEclipseDynamicColor(UIColor* lightColor, UIColor* darkColo
 
         return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
             return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-                darkColor :     // Dark Mode Color
+                [darkColor colorWithAlphaComponent:CGColorGetAlpha(resolvedDefaultColor.CGColor)] :     // Dark Mode Color
                 resolvedDefaultColor;   // Light Mode Color
         }];
     }         
@@ -59,10 +59,7 @@ static BOOL isDarkColor(UIColor* color) {
 
     //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:TINT_COLOR]));
 
-    if ((red >= 0.5) || (green >= 0.5) || (blue >= 0.5)) {
-        return NO;
-    }
-    if (white >= 0.5 && alpha > 0.7) {
+    if (((red <= 0.4) || (green <= 0.4) || (blue <= 0.4)) && white < 0.7 && alpha > 0.5) {
         return YES;
     }
     return NO;

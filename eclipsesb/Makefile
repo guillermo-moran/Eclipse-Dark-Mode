@@ -1,8 +1,7 @@
 export THEOS=/opt/theos
 
 GO_EASY_ON_ME = 1
-SDKVERSION = 11.2
-SYSROOT = /opt/theos/sdks/iPhoneOS11.2.sdk
+SDKVERSION = 13.0
 ARCHS = arm64 arm64e
 
 

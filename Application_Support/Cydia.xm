@@ -37,18 +37,19 @@ static BOOL isPaidCydiaPackage;
 %hook UITabBar
 
 -(UIColor *)unselectedItemTintColor {
+    UIColor* originalColor = %orig;
 	if (isEnabled) {
-		return [UIColor whiteColor];
+		return createEclipseDynamicColor(originalColor, [UIColor whiteColor]);
 	}
 	return %orig;
 }
 
--(void)layoutSubviews {
-	%orig;
-	if (isEnabled) {
-		[self setUnselectedItemTintColor: [UIColor whiteColor]];
-	}
-}
+// -(void)layoutSubviews {
+// 	%orig;
+// 	if (isEnabled) {
+// 		[self setUnselectedItemTintColor: [UIColor whiteColor]];
+// 	}
+// }
 
 %end
 

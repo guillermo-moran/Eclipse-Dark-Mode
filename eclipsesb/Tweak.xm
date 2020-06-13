@@ -310,6 +310,21 @@ static UIColor* splashScreenColor(void) {
     }
 }
 
+static UIColor* createEclipseDynamicColor(UIColor* lightColor, UIColor* darkColor) {
+    if (@available(iOS 13.0, *)) {
+
+        UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight];
+        UIColor* resolvedDefaultColor = lightColor ? [lightColor resolvedColorWithTraitCollection:traitCollection] : [UIColor clearColor];
+
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
+            return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
+                darkColor :     // Dark Mode Color
+                resolvedDefaultColor;   // Light Mode Color
+        }];
+    }         
+    return lightColor ? lightColor : [UIColor clearColor];
+}
+
 //hooks
 
 /*
@@ -458,18 +473,18 @@ static UIColor* splashScreenColor(void) {
  @end
  %hook _UIStatusBar
 
- -(void)layoutSubviews {
-     %orig;
-     if (isTweakEnabled() && !disableInSB() && colorSBStatusBar()) {
-         self.foregroundColor = selectedStatusbarTintColor();
-         //self.foregroundColor = selectedStatusbarTintColor();
-     }
- }
+//  -(void)layoutSubviews {
+//      %orig;
+//      if (isTweakEnabled() && !disableInSB() && colorSBStatusBar()) {
+//          self.foregroundColor = selectedStatusbarTintColor();
+//          //self.foregroundColor = selectedStatusbarTintColor();
+//      }
+//  }
 
- -(id)foregroundColor {
+-(id)foregroundColor {
     UIColor* color = %orig;
-    if (isTweakEnabled() && !disableInSB() && colorSBStatusBar()) {
-        color = selectedStatusbarTintColor();
+    if (isTweakEnabled() && !disableInSB() && colorSBStatusBar() ) {
+        color = createEclipseDynamicColor(color, selectedStatusbarTintColor());
     }
     return color;
 }
@@ -480,11 +495,12 @@ static UIColor* splashScreenColor(void) {
 
 -(id)foregroundColor {
     UIColor* color = %orig;
-    if (isTweakEnabled() && !disableInSB() && colorSBStatusBar()) {
-        color = selectedStatusbarTintColor();
+    if (isTweakEnabled() && !disableInSB() && colorSBStatusBar() ) {
+        color = createEclipseDynamicColor(color, selectedStatusbarTintColor());
     }
     return color;
 }
+
 %end
 
 /*

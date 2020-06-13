@@ -55,7 +55,7 @@
         // }
         
 
-        [self setBackgroundColor:newBarColor];
+        [self setBackgroundColor:[newBarColor colorWithAlphaComponent:1.0]];
         // [self setHidden: NO];
         // if (selectedNavColor() == -1) {
         //     id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
@@ -82,7 +82,7 @@
 
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: newBarBgColor];
+        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
     }
 }
 
@@ -138,12 +138,12 @@
      if (isEnabled) {
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: newBarBgColor];
+        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
 
         // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
-        UIColor* originalUnselectedImageTintColor = [self selectedImageTintColor];
-        UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
-        [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
+        // UIColor* originalUnselectedImageTintColor = [self unselectedItemTintColor];
+        // UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
+        // [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
 
 
         // self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
@@ -156,17 +156,25 @@
     if (isEnabled) {
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: newBarBgColor];
+        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
 
         // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
-        UIColor* originalUnselectedImageTintColor = [self selectedImageTintColor];
-        UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
-        [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
+        // UIColor* originalUnselectedImageTintColor = [self unselectedItemTintColor];
+        // UIColor* newUnselectedImageTintColor = [UIColor whiteColor];
+        // [self setUnselectedItemTintColor: createEclipseDynamicColor(originalUnselectedImageTintColor, newUnselectedImageTintColor)];
 
 
         // self.backgroundColor = NAV_COLOR; //Fuck you, Whatsapp.
 
     }
+}
+
+-(UIColor *)unselectedItemTintColor {
+    UIColor* originalColor = %orig;
+	if (isEnabled) {
+		return createEclipseDynamicColor([UIColor grayColor], [UIColor whiteColor]);
+	}
+	return %orig;
 }
 
 // -(void)setBarTintColor:(id)arg1 {
@@ -205,7 +213,7 @@
         UIColor* originalBarBgColor = [self barTintColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
         // [self setBackgroundColor: newBarBgColor];
-        [self setBarTintColor:newBarBgColor];
+        [self setBarTintColor: [newBarBgColor colorWithAlphaComponent:1.0]];
         return;
     }
     %orig;
@@ -216,7 +224,7 @@
     if (isEnabled && !(IsiPad)) {
         UIColor* originalBarBgColor = [self barTintColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        %orig(newBarBgColor);
+        %orig([newBarBgColor colorWithAlphaComponent:1.0]);
         return;
     }
     %orig;
