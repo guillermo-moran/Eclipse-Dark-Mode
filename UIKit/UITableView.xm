@@ -372,37 +372,34 @@
     }
 }
 
-// -(void)setBackgroundColor:(id)arg1 {
+-(void)setBackgroundColor:(id)arg1 {
 
-//     if (isEnabled) {
+    if (isEnabled) {
 
-//         if (!isLightColor(arg1) && ![arg1 isEqual:[UIColor clearColor]]) {
-//             //[self.textLabel setTextColor:TEXT_COLOR];
-//             UIColor* dynamicColor = createEclipseDynamicColor(arg1, TABLE_COLOR);
-//             [self setBackgroundColor:dynamicColor];
-
-//             arg1 = dynamicColor;
-//         }
-//     }
-
-
-//         %orig(arg1);
-// }
+        if (!isLightColor(arg1) && ![arg1 isEqual:[UIColor clearColor]]) {
+            //[self.textLabel setTextColor:TEXT_COLOR];
+            UIColor* dynamicColor = createEclipseDynamicColor(arg1, TABLE_COLOR);
+            %orig(dynamicColor);
+            return;
+        }
+    }
+    %orig;
+}
 
 
-// -(id)backgroundColor {
-//     if (isEnabled) {
-//         UIColor* originalColor = %orig;
-//         if (!isLightColor(originalColor) && ![originalColor isEqual:[UIColor clearColor]]) {
-//             //[((UITableViewCell*)self).textLabel setTextColor:TEXT_COLOR];
+-(id)backgroundColor {
+    if (isEnabled) {
+        UIColor* originalColor = %orig;
+        if (!isLightColor(originalColor) && ![originalColor isEqual:[UIColor clearColor]]) {
+            //[((UITableViewCell*)self).textLabel setTextColor:TEXT_COLOR];
 
-//             UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
-//             [self setBackgroundColor:dynamicColor];
-//         }
-//     }
+            UIColor* dynamicColor = createEclipseDynamicColor(originalColor, TABLE_COLOR);
+            return dynamicColor;
+        }
+    }
 
-//     return %orig;
-// }
+    return %orig;
+}
 
 
 -(id)selectionTintColor {

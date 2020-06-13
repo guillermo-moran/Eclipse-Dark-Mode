@@ -55,7 +55,7 @@
         // }
         
 
-        [self setBackgroundColor:[newBarColor colorWithAlphaComponent:1.0]];
+        [self setBackgroundColor:newBarColor];
         // [self setHidden: NO];
         // if (selectedNavColor() == -1) {
         //     id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
@@ -82,7 +82,7 @@
 
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
+        [self setBackgroundColor: newBarBgColor];
     }
 }
 
@@ -138,7 +138,7 @@
      if (isEnabled) {
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
+        [self setBackgroundColor: newBarBgColor];
 
         // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
         // UIColor* originalUnselectedImageTintColor = [self unselectedItemTintColor];
@@ -156,7 +156,7 @@
     if (isEnabled) {
         UIColor* originalBarBgColor = [self backgroundColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        [self setBackgroundColor: [newBarBgColor colorWithAlphaComponent:1.0]];
+        [self setBackgroundColor: newBarBgColor];
 
         // UIColor* originalSelectedImageTintColor = [self selectedImageTintColor];
         // UIColor* originalUnselectedImageTintColor = [self unselectedItemTintColor];
@@ -213,7 +213,7 @@
         UIColor* originalBarBgColor = [self barTintColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
         // [self setBackgroundColor: newBarBgColor];
-        [self setBarTintColor: [newBarBgColor colorWithAlphaComponent:1.0]];
+        [self setBarTintColor:newBarBgColor];
         return;
     }
     %orig;
@@ -224,7 +224,7 @@
     if (isEnabled && !(IsiPad)) {
         UIColor* originalBarBgColor = [self barTintColor];
         UIColor* newBarBgColor = createEclipseDynamicColor(originalBarBgColor, NAV_COLOR);
-        %orig([newBarBgColor colorWithAlphaComponent:1.0]);
+        %orig(newBarBgColor);
         return;
     }
     %orig;

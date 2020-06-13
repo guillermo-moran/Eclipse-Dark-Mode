@@ -3,10 +3,11 @@ static UIColor* createEclipseDynamicColor(UIColor* lightColor, UIColor* darkColo
 
         UITraitCollection *traitCollection = [UITraitCollection traitCollectionWithUserInterfaceStyle:UIUserInterfaceStyleLight];
         UIColor* resolvedDefaultColor = lightColor ? [lightColor resolvedColorWithTraitCollection:traitCollection] : [UIColor clearColor];
+        UIColor* resolvedDarkColor = lightColor ? [darkColor colorWithAlphaComponent:CGColorGetAlpha(resolvedDefaultColor.CGColor)] : darkColor;
 
         return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traits) {
             return traits.userInterfaceStyle == UIUserInterfaceStyleDark ?
-                [darkColor colorWithAlphaComponent:CGColorGetAlpha(resolvedDefaultColor.CGColor)] :     // Dark Mode Color
+                [resolvedDarkColor colorWithAlphaComponent: 1.0] :     // Dark Mode Color
                 resolvedDefaultColor;   // Light Mode Color
         }];
     }         
@@ -59,7 +60,7 @@ static BOOL isDarkColor(UIColor* color) {
 
     //return ((white >= 0.5) && (red >= 0.5) && (green >= 0.5)  && (blue >= 0.5) && (alpha >= 0.4) && (![color isEqual:TINT_COLOR]));
 
-    if (((red <= 0.4) || (green <= 0.4) || (blue <= 0.4)) && white < 0.7 && alpha > 0.5) {
+    if ((white <= 0.3) && (alpha > 0.9) && color && !idIsEqual(@"com.apple.mobilemail") && !idIsEqual(@"com.apple.mobiletimer")) {
         return YES;
     }
     return NO;
