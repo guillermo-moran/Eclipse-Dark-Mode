@@ -55,11 +55,37 @@ static BOOL isPaidCydiaPackage;
 
 %hook _UIBarBackground
 
+// static UIView* barBgView;
+
 -(void)layoutSubviews {
-	%orig;
-	if (isEnabled) {
-		[self setBackgroundColor: NAV_COLOR];
-	}
+    %orig;
+    if (isEnabled) {
+
+        UIColor* originalBarColor = (UIColor*)[self backgroundColor];
+        UIColor* newBarColor = createEclipseDynamicColor(originalBarColor, NAV_COLOR);
+
+        // if (!barBgView) {
+        //     // [barBgView removeFromSuperview];
+        //     // [barBgView release];
+        //     // barBgView = nil;
+        //     barBgView = [[UIView alloc] initWithFrame:[self frame]];
+        //     [barBgView setBackgroundColor: createEclipseDynamicColor([UIColor clearColor], NAV_COLOR)];
+        //     [self addSubview: barBgView];
+        // }
+        
+		[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
+        [self setBackgroundColor:newBarColor];
+        // [self setHidden: NO];
+        // if (selectedNavColor() == -1) {
+        //     id _backgroundEffectView = MSHookIvar<id>(self, "_backgroundEffectView");
+        //     [_backgroundEffectView setHidden:YES];
+        // }
+        id effectView1 = MSHookIvar<id>(self, "_effectView1");
+        id effectView2 = MSHookIvar<id>(self, "_effectView2");
+        BOOL isDark = ACTIVE_APPLICATION_USER_INTERFACE_STYLE == USER_INTERFACE_DARK;
+        [effectView1 setHidden: isDark];
+        [effectView2 setHidden: isDark];
+    }
 }
 
 %end

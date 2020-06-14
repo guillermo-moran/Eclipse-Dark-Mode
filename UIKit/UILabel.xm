@@ -117,7 +117,7 @@
 
 -(UIColor*)textColor {
     UIColor* orig = %orig;
-    if (isEnabled && ![self isKindOfClass: TABLE_LABEL]) {
+    if (isEnabled && ![self isKindOfClass: TABLE_LABEL] && !idIsEqual(@"net.kortina.labs.Venmo")) {
         if ([self isSuperviewEclipsed]) {
             if (isTextDarkColor(orig)) {
                 UIColor* newColor = createEclipseDynamicColor(orig, TEXT_COLOR);

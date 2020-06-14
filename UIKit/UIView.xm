@@ -109,7 +109,7 @@ static BOOL didOverrideColor = NO;
 -(void)override {
     if (isEnabled) {
 
-        if ((isDarkColor(self.backgroundColor) || isLightColor(self.backgroundColor)) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+        if (shouldEclipse(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
             if (!self.eclipseColor) {
                 self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
             }
@@ -126,7 +126,7 @@ static BOOL didOverrideColor = NO;
 
 -(void)layoutSubviews {
     %orig;
-     if ((isDarkColor(self.backgroundColor) || isLightColor(self.backgroundColor)) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+     if (shouldEclipse(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
             if (!self.eclipseColor) {
                 self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
             }
@@ -137,7 +137,7 @@ static BOOL didOverrideColor = NO;
 
 -(void)didMoveToWindow {
     %orig;
-     if ((isDarkColor(self.backgroundColor) || isLightColor(self.backgroundColor)) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+     if (shouldEclipse(self.backgroundColor) && ![self.backgroundColor isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
             if (!self.eclipseColor) {
                 self.eclipseColor = createEclipseDynamicColor(self.backgroundColor, VIEW_COLOR);
             }
@@ -147,7 +147,7 @@ static BOOL didOverrideColor = NO;
 }
 
 -(void)setBackgroundColor:(UIColor*)color {
-    if ((isDarkColor(color) || isLightColor(color)) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+    if (shouldEclipse(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
         if (!self.eclipseColor) {
             self.eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
         }
@@ -163,7 +163,7 @@ static BOOL didOverrideColor = NO;
 -(id)backgroundColor {
     id color = %orig;
 
-    if ((isDarkColor(color) || isLightColor(color)) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
+    if (shouldEclipse(color) && ![color isEqual:[UIColor clearColor]] && ([self class] != CARET) && (self.tag != VIEW_EXCLUDE_TAG)) {
         if (!self.eclipseColor) {
             self.eclipseColor = createEclipseDynamicColor(color, VIEW_COLOR);
         }
