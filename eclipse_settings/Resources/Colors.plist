@@ -41,6 +41,7 @@
 			<string>PSListItemsController</string>
 			<key>validValues</key>
 			<array>
+				<string>-1</string>
 				<string>0</string>
 				<integer>1</integer>
 				<integer>2</integer>
@@ -62,6 +63,7 @@
 			</array>
 			<key>shortTitles</key>
 			<array>
+				<string>PITCH BLACK</string>
 				<string>Midnight</string>
 				<string>Night</string>
 				<string>Graphite</string>
@@ -83,6 +85,7 @@
 			</array>
 			<key>validTitles</key>
 			<array>
+				<string>PITCH BLACK</string>
 				<string>Midnight</string>
 				<string>Night</string>
 				<string>Graphite</string>
@@ -120,6 +123,7 @@
 			<string>PSListItemsController</string>
 			<key>validValues</key>
 			<array>
+				<string>-1</string>
 				<string>0</string>
 				<integer>1</integer>
 				<integer>2</integer>
@@ -141,6 +145,7 @@
 			</array>
 			<key>shortTitles</key>
 			<array>
+				<string>PITCH BLACK</string>
 				<string>Midnight</string>
 				<string>Night</string>
 				<string>Graphite</string>
@@ -162,6 +167,7 @@
 			</array>
 			<key>validTitles</key>
 			<array>
+				<string>PITCH BLACK</string>
 				<string>Midnight</string>
 				<string>Night</string>
 				<string>Graphite</string>

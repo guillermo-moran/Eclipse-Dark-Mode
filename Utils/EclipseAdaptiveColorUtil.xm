@@ -81,7 +81,7 @@ static BOOL isDarkColor(UIColor* color) {
     const CGFloat *componentColors = CGColorGetComponents(resolvedLightColor.CGColor);
 
     CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
-    if (colorBrightness < 0.5 && (alpha > 0.9) && ![resolvedLightColor isEqual:[UIColor clearColor]] && color)
+    if (colorBrightness < 0.5 && (alpha > 0.9) && ![resolvedLightColor isEqual:[UIColor clearColor]] && color && !(red <= 0.5) || (green <= 0.5) || (blue <= 0.5))
     {
         return true;
     }
@@ -92,16 +92,11 @@ static BOOL isDarkColor(UIColor* color) {
 }
 
 static BOOL shouldEclipse(UIColor* color) {
-    BOOL isLight = isLightColor(color);
-    BOOL isDark = isDarkColor(color);
 
-    if (isLight) {
+    if (isLightColor(color)) {
         return true;
     }
-    else if (isLight && isDark) {
-        return false;
-    }
-    else if (isDark) {
+    else if (isDarkColor(color)) {
         return true;
     }
     return false;

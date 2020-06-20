@@ -140,7 +140,11 @@
         }
     }
 
-    if (number == 0) {
+    if (number == -1) {
+        return PITCH_VIEW_COLOR;
+    }
+
+    else if (number == 0) {
         return MIDNIGHT_VIEW_COLOR;
     }
     else if (number == 1) {
@@ -213,7 +217,11 @@
         }
     }
 
-    if (number == 0) {
+    if (number == -1) {
+        return PITCH_TABLE_COLOR;
+    }
+
+    else if (number == 0) {
         return MIDNIGHT_TABLE_COLOR;
     }
 
@@ -286,7 +294,11 @@
         }
     }
 
-    if (number == 0) {
+    if (number == -1) {
+        return PITCH_BAR_COLOR;
+    }
+
+    else if (number == 0) {
         return MIDNIGHT_BAR_COLOR;
     }
     else if (number == 1) {
@@ -687,6 +699,10 @@ struct pixel {
 */
 //Table Colors
 
++(UIColor*)pitchBlackTableColor {
+    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+}
+
 +(UIColor*)midnightTableColor {
     return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
 }
@@ -762,6 +778,10 @@ struct pixel {
 
 //View Colors
 
++(UIColor*)pitchBlackViewColor {
+    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+}
+
 +(UIColor*)midnightViewColor {
     return [UIColor colorWithRed: 0.02 green: 0.02 blue: 0.02 alpha: 1.00];
 }
@@ -835,6 +855,10 @@ struct pixel {
 }
 
 //Nav Bar Colors
+
++(UIColor*)pitchBlackBarColor {
+    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+}
 
 +(UIColor*)midnightBarColor {
     return [UIColor colorWithRed: 0.03 green: 0.03 blue: 0.03 alpha: 1.00];

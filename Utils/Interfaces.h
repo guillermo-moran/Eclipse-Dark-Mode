@@ -62,6 +62,8 @@
 
 //Table Colors
 
+#define PITCH_TABLE_COLOR [UIColor pitchBlackTableColor]
+
 #define MIDNIGHT_TABLE_COLOR [UIColor midnightTableColor]
 // #define MIDNIGHT_TABLE_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
 
@@ -102,6 +104,8 @@
 
 //View Colors (Table - 10 or 15)
 
+#define PITCH_VIEW_COLOR [UIColor pitchBlackViewColor]
+
 #define MIDNIGHT_VIEW_COLOR [UIColor midnightViewColor]
 // #define MIDNIGHT_VIEW_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
 
@@ -141,6 +145,8 @@
 
 
 //Nav Colors (Table - 30)
+
+#define PITCH_BAR_COLOR [UIColor pitchBlackBarColor]
 
 #define MIDNIGHT_BAR_COLOR [UIColor midnightBarColor]
 // #define MIDNIGHT_BAR_COLOR [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0]
