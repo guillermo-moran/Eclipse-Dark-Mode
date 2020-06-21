@@ -483,6 +483,14 @@ static UIColor* createEclipseDynamicColor(UIColor* lightColor, UIColor* darkColo
 
 -(id)foregroundColor {
     UIColor* color = %orig;
+
+    NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
+    int number = [[prefs objectForKey:@"statusbarTint"] intValue];
+
+    if (number == -1) {
+        return color;
+    }
+
     if (isTweakEnabled() && !disableInSB() && colorSBStatusBar() ) {
         color = createEclipseDynamicColor(color, selectedStatusbarTintColor());
     }
@@ -495,6 +503,14 @@ static UIColor* createEclipseDynamicColor(UIColor* lightColor, UIColor* darkColo
 
 -(id)foregroundColor {
     UIColor* color = %orig;
+
+    NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:PREFS_FILE_PATH];
+    int number = [[prefs objectForKey:@"statusbarTint"] intValue];
+
+    if (number == -1) {
+        return color;
+    }
+    
     if (isTweakEnabled() && !disableInSB() && colorSBStatusBar() ) {
         color = createEclipseDynamicColor(color, selectedStatusbarTintColor());
     }

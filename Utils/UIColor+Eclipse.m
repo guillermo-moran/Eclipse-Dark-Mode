@@ -368,7 +368,7 @@
             return [UIColor eclipseStatusbarHexColor];
         }
     }
-
+    
     if (number == 0) {
         //return textColor(); //White
         return WHITE_COLOR;
