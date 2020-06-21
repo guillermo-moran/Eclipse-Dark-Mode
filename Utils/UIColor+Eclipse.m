@@ -700,11 +700,11 @@ struct pixel {
 //Table Colors
 
 +(UIColor*)pitchBlackTableColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:0.001 green:0.001 blue:0.001 alpha:1.0];
 }
 
 +(UIColor*)midnightTableColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:0.1f/255.0f green:0.1f/255.0f blue:0.1f/255.0f alpha:1.0];
 }
 
 +(UIColor*)nightTableColor {
@@ -779,7 +779,7 @@ struct pixel {
 //View Colors
 
 +(UIColor*)pitchBlackViewColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:0.001 green:0.001 blue:0.001 alpha:1.0];
 }
 
 +(UIColor*)midnightViewColor {
@@ -857,7 +857,7 @@ struct pixel {
 //Nav Bar Colors
 
 +(UIColor*)pitchBlackBarColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:0.001 green:0.001 blue:0.001 alpha:1.0];
 }
 
 +(UIColor*)midnightBarColor {
