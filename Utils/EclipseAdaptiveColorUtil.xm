@@ -81,7 +81,10 @@ static BOOL isDarkColor(UIColor* color) {
     const CGFloat *componentColors = CGColorGetComponents(resolvedLightColor.CGColor);
 
     CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
-    if (colorBrightness < 0.5 && (alpha > 0.9) && ![resolvedLightColor isEqual:[UIColor clearColor]] && color && !(red <= 0.5) || (green <= 0.5) || (blue <= 0.5))
+    if ((red >= 0.5) || (green >= 0.5) || (blue >= 0.5)) {
+        return false;
+    }
+    if (colorBrightness < 0.5 && (alpha > 0.9) && ![resolvedLightColor isEqual:[UIColor clearColor]] && color)
     {
         return true;
     }
