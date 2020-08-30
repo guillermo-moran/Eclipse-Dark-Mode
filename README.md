@@ -1,35 +1,7 @@
-# EclipseX - A Universal Nightmode (and more) for iOS 11
-Information regarding EclipseX developer API's will be posted here, to aid developers in developing extensions for EclipseX, as well as tweaks compatible with it.
+# Eclipse Dark Mode - A 'universal' UI tweak that enables dark mode on your iOS Device (iOS 7 - iOS 13)
 
-## Extending Eclipse
+Eclipse is an iOS jailbreak 'tweak' designed to implement customizable settings on your iOS device that allow the user to personalize their system's interface, including dark mode (before Apple implemented it in iOS 13, 6 years after this), but the possibilities are unlimited in terms of color choices, thanks to it's pre-set color choices and third party color wheel libraries.
 
+# Licensing
 
-
-## API Information
-
-#### Determining if Eclipse is enabled
-
-```
-NSDictionary *eclipsePrefs = [[[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.gmoran.eclipse.plist"]?:[NSDictionary dictionary] copy];
-
-BOOL eclipseTweakEnabled = [[eclipsePrefs objectForKey:@"enabled"] boolValue];
-
-BOOL applicationIsEnabled = [[eclipsePrefs objectForKey:[@"EnabledApps-" stringByAppendingString:[NSBundle mainBundle].bundleIdentifier]]] boolValue];
-
-BOOL isEclipseEnabledInCurrentApplication = eclipseTweakEnabled && applicationIsEnabled;
-
-if (isEclipseEnabledInCurrentApplication) {
-    //handle tweak being enabled inside the current process
-}
-
-
-```
-
-#### Having Eclipse ignore your UIView (Beta Feature)
-```
-UIView* viewToIgnore;
-viewToIgnore.tag = 199;
-
-// Eclipse automatically ignores all views tagged "199"
-
-```
+Eclipse Dark Mode and all of it's versions are licensed under the Commons Clause License. Please see the LICENSE.md file provided in the source code download for more information.
