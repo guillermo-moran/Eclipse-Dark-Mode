@@ -301,7 +301,7 @@ static UIColor* textColor(void) {
 static UIColor* selectedBarColor(void) {
 
     if (adaptiveUIEnabled()) {
-        return [[[_adaptiveColor darkerColor] darkerColor] darkerColor];
+        return [[[generatedAdaptiveColor() darkerColor] darkerColor] darkerColor];
     }
     else {
         return [UIColor eclipseSelectedNavColor];
@@ -310,7 +310,7 @@ static UIColor* selectedBarColor(void) {
 
 static UIColor* selectedTableColor(void) {
     if (adaptiveUIEnabled()) {
-        return [_adaptiveColor darkerColor];
+        return [generatedAdaptiveColor() darkerColor];
     }
     if (reverseModeEnabled()) {
         return [UIColor eclipseSelectedViewColor];
@@ -322,7 +322,7 @@ static UIColor* selectedTableColor(void) {
 
 static UIColor* selectedViewColor(void) {
     if (adaptiveUIEnabled()) {
-        return [[_adaptiveColor darkerColor] darkerColor];
+        return [[generatedAdaptiveColor() darkerColor] darkerColor];
     }
     if (reverseModeEnabled()) {
         return [UIColor eclipseSelectedTableColor];
@@ -346,7 +346,7 @@ static UIColor* keyboardColor(void) {
     int number = selectedKeyboardColor();
 
     if (adaptiveUIEnabled()) {
-        return [_adaptiveColor darkerColor];
+        return [generatedAdaptiveColor() darkerColor];
     }
 
     /*
@@ -472,7 +472,7 @@ static UIColor* selectedStatusbarTintColor(void) {
 static UIColor* selectedTintColor(void) {
 
     if (adaptiveUIEnabled()) {
-        return [[_adaptiveColor lighterColor] lighterColor];
+        return [[generatedAdaptiveColor() lighterColor] lighterColor];
     }
     return [UIColor eclipseSelectedTintColor];
 }
